@@ -1,0 +1,12 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: happy
+      TZ: Asia/Seoul
+    ports:
+      - "5432:5432"
+    command: >
+      postgres -c log_statement=all -c logging_collector=off -c log_destination=stderr
