@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: ko-KR
+early_access: false
+#tone_instructions:
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+  high_level_summary: true
+  high_level_summary_placeholder: '@coderabbitai summary'
+  auto_title_placeholder: '@coderabbitai title'
+  poem: false
+  review_status: true
+  collapse_walkthrough: false #접기
+  suggested_reviewers: false
+
+  finishing_touches:
+    docstrings:
+      enabled: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+
+    base_branches:
+      - "/*"
+
+  path_instructions:
+    - path: src/test/java/**/*.java
+      instructions: >-
+        테스트명은 아무렇게나 짓되, @Displayname 등을 사용해 상세한 설명을 포함할 것
+
+chat:
+  auto_reply: true
+#  integrations:
+#    jira:
+
+
+
+
