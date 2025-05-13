@@ -31,6 +31,9 @@ reviews:
       instructions: >-
         테스트명은 아무렇게나 짓되, @Displayname 등을 사용해 상세한 설명을 포함할 것
 
+  path_filters:
+    - '!.coderabbit.yaml'
+
 chat:
   auto_reply: true
 #  integrations:
