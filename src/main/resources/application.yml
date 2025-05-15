@@ -10,7 +10,7 @@ spring:
     open-in-view: false
 
 
---- #dev
+--- # dev
 spring.config.activate.on-profile: dev
 spring:
   datasource:
@@ -27,7 +27,7 @@ spring:
 
 
 
---- #prod
+--- # prod
 spring.config.activate.on-profile: prod
 server.port: ${SERVER_PORT:80} # default http
 spring:

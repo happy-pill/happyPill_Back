@@ -1,7 +1,7 @@
 package com.happypill.api.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.management.ManagementFactory;
@@ -16,17 +16,17 @@ public class TestController {
                     ManagementFactory.getRuntimeMXBean().getStartTime()
             );
 
-    @RequestMapping("/health")
+    @GetMapping("/health")
     public void healthCheck() {
 
     }
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String hello() {
         return "Hello!!!";
     }
 
-    @RequestMapping("/started-at")
+    @GetMapping("/started-at")
     public Instant startTime() {
         return STARTUP_INSTANT;
     }
