@@ -12,7 +12,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "Category_info")
+@Table(name = "category_info")
 public class CategoryInfo extends BaseEntity{
 
     @Id

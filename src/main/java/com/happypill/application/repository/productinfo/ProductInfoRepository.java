@@ -1,4 +1,4 @@
-package com.happypill.application.repository.productInfo;
+package com.happypill.application.repository.productinfo;
 
 import com.happypill.application.entity.ProductInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
