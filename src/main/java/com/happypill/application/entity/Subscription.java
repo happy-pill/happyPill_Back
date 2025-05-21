@@ -1,29 +1,33 @@
 package com.happypill.application.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
+
+import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Subscriptions")
+@NoArgsConstructor(access = PROTECTED)
+@Table(name = "subscriptions")
 public class Subscription extends BaseEntity{
 
     @Id
-    @Column(name = "subscription_id")
     private Long subscriptionId;
 
     @Column(name = "expired_date", columnDefinition = "TIMESTAMPTZ")
-    private Date expiredDate;
+    private ZonedDateTime expiredDate;
 
-    @Column(name = "is_completed")
-    private Boolean isCompleted;
+    private boolean isCompleted;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_line_id", nullable = false)
     private OrderLine orderLine;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private HappypillUser user;
 }

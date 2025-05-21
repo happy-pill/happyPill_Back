@@ -1,27 +1,23 @@
 package com.happypill.application.entity;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import static lombok.AccessLevel.PROTECTED;
 
-@Entity(name = "Categories")
+@Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Categories")
+@NoArgsConstructor(access = PROTECTED)
+@Table(name = "categories")
 public class Category extends BaseEntity{
 
     @Id
-    @Column(name = "category_id")
     private Long categoryId;
 
-    private String thumbnail;
+    private String thumbnailUrl;
 
-    @OneToMany
-    private List<CategoryInfo> categoryInfoList;
-
-    @OneToMany
-    private List<Product> products;
+    private String bannerUrl;
 }

@@ -1,42 +1,30 @@
 package com.happypill.application.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Products")
+@NoArgsConstructor(access = PROTECTED)
+@Table(name = "products")
 public class Product extends BaseEntity{
 
     @Id
-    @Column(name = "product_id")
     private Long productId;
 
     private Integer stock;
 
-    @Column(name = "is_available")
-    private Boolean isAvailable;
+    private boolean isAvailable;
 
-    private String thumbnail;
+    private String thumbnailUrl;
 
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
-    @OneToMany
-    private List<ProductInfo> productInfoList;
-
-    @OneToMany
-    private List<OrderLine> orderLines;
-
-    @OneToMany
-    private List<ProductPrice> productPrices;
 }

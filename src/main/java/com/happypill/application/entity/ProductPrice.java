@@ -1,26 +1,26 @@
 package com.happypill.application.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "ProductPrices")
+@NoArgsConstructor(access = PROTECTED)
+@Table(name = "product_prices")
 public class ProductPrice extends BaseEntity{
 
     @Id
-    @Column(name = "product_price_id")
     private Long productPriceId;
 
     private Integer price;
 
-    @Column(name = "is_used")
-    private Boolean isUsed;
+    private boolean isUsed;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 }

@@ -1,34 +1,30 @@
 package com.happypill.application.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "OrderLines")
+@NoArgsConstructor(access = PROTECTED)
+@Table(name = "order_lines")
 public class OrderLine extends BaseEntity{
 
     @Id
-    @Column(name = "order_line_id")
     private Long orderLineId;
 
     private Integer price;
 
     private Integer month;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    @OneToMany
-    private List<Subscription> subscriptions;
 }

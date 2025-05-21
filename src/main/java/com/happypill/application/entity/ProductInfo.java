@@ -3,44 +3,42 @@ package com.happypill.application.entity;
 
 import com.happypill.application.entity.enums.Language;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "ProductInfo")
+@NoArgsConstructor(access = PROTECTED)
+@Table(name = "product_info")
 public class ProductInfo extends BaseEntity{
 
     @Id
-    @Column(name = "product_info_id")
     private Long productInfoId;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private Language language;
 
     private String name;
 
-    @Column(name = "quantity_details")
     private String quantityDetails;
 
-    @Column(name = "warning_message")
     private String warningMessage;
 
     private String usage;
 
-    @Column(name = "content_image")
     private String contentImage;
 
     private String description;
 
     private String company;
 
-    @Column(name = "brief_description")
     private String briefDescription;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 }
