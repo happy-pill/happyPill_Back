@@ -6,8 +6,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
@@ -39,6 +41,6 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "user_id", nullable = false)
     private HappypillUser user;
 
-    @OneToMany
-    private List<OrderLine> orderLines;
+    @OneToMany(mappedBy = "order_id", fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    private List<OrderLine> orderLines = new ArrayList<>();
 }
