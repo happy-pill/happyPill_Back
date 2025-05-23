@@ -9,5 +9,10 @@ class HappypillApplicationTests {
     @Test
     void contextLoads() {
     }
-    
+
+    @Test
+    void tt() {
+        throw new RuntimeException();
+    }
+
 }
