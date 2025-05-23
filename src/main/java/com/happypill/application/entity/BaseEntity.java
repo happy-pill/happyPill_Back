@@ -8,7 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 
 @Getter
 @MappedSuperclass
@@ -16,10 +16,10 @@ import java.time.Instant;
 public abstract class BaseEntity {
 
     @CreatedDate
-    @Column(updatable = false)
-    private Instant createdAt;
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMPTZ")
+    private ZonedDateTime createdAt;
 
     @LastModifiedDate
-    @Column
-    private Instant updatedAt;
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMPTZ")
+    private ZonedDateTime updatedAt;
 }
