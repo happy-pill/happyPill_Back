@@ -41,6 +41,6 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "user_id", nullable = false)
     private HappypillUser user;
 
-    @OneToMany(mappedBy = "order_id", fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", fetch = LAZY, cascade = ALL, orphanRemoval = true)
     private List<OrderLine> orderLines = new ArrayList<>();
 }
