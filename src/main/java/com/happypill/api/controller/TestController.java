@@ -5,16 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.management.ManagementFactory;
-import java.time.Instant;
 
 @RestController
 @RequiredArgsConstructor
 public class TestController {
 
-    private static final Instant STARTUP_INSTANT =
-            Instant.ofEpochMilli(
-                    ManagementFactory.getRuntimeMXBean().getStartTime()
-            );
+    private final long startupTimestamp = ManagementFactory.getRuntimeMXBean().getStartTime();
 
     @GetMapping("/health")
     public void healthCheck() {
@@ -27,8 +23,8 @@ public class TestController {
     }
 
     @GetMapping("/started-at")
-    public Instant startTime() {
-        return STARTUP_INSTANT;
+    public long startTime() {
+        return startupTimestamp;
     }
 
 }

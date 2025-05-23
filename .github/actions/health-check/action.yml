@@ -1,0 +1,45 @@
+name: health-check
+description: Simple HTTP health probe
+
+inputs:
+  base_url:
+    description: Base URL (e.g. https://example.com)
+    required: true
+  health_check_path:
+    description: Path to append to base_url
+    default: /health
+  attempts:
+    description: How many times to try
+    default: "10"
+  interval:
+    description: Seconds to wait between attempts
+    default: "10"
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        URL="${{ inputs.base_url }}${{ inputs.health_check_path }}"
+        MAX=${{ inputs.attempts }}
+        GAP=${{ inputs.interval }}
+        
+        echo "Probing $URL  (max $MAX attempts, $GAP-s interval)"
+        
+        for i in $(seq 1 "$MAX"); do
+          echo "Attempt $i …"
+          if curl --silent --fail --max-time 5 "$URL"; then
+            echo "Health-check succeeded"
+            exit 0
+          fi
+        
+          REMAIN=$(( MAX - i ))
+          if [ "$REMAIN" -gt 0 ]; then
+            echo "Health-check failed (will retry in ${GAP}s, ${REMAIN} attempts left)"
+            sleep "$GAP"
+          else
+            echo "Health-check failed (no attempts left)"
+          fi
+        done
+        echo "Health-check failed $MAX times" >&2
+        exit 1
