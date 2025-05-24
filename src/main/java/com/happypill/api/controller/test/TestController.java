@@ -1,4 +1,4 @@
-package com.happypill.api.controller;
+package com.happypill.api.controller.test;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +15,6 @@ public class TestController {
     @GetMapping("/health")
     public void healthCheck() {
 
-    }
-
-    @GetMapping("/")
-    public String hello() {
-        return "Hello!!!";
     }
 
     @GetMapping("/started-at")
