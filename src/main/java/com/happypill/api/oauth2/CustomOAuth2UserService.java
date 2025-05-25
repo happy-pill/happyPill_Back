@@ -28,7 +28,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        log.info("userRequest = {}", userRequest);
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         OAuth2User oAuth2User = (userRequest instanceof OidcUserRequest oidcReq)
