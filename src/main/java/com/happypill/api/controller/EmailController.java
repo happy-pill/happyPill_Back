@@ -24,10 +24,9 @@ public class EmailController {
 
     @PostMapping("/verification-request")
     public ResponseEntity<?> requestEmailCode(@Valid @RequestBody EmailVerifyRequest request
-                                              //@AuthenticationPrincipal OAuth2UserPrincipal oAuth2UserPrincipal
-    ){
-        //if(oAuth2UserPrincipal == null)
-            //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse("로그인이 필요합니다."));
+                                              @AuthenticationPrincipal OAuth2UserPrincipal oAuth2UserPrincipal){
+        if(oAuth2UserPrincipal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse("로그인이 필요합니다."));
         emailService.sendEmail("cdh3946@gmail.com", request.newEmail());
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("인증코드가 전송되었습니다."));
     }
