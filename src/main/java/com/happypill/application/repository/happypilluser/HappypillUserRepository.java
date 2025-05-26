@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HappypillUserRepository extends JpaRepository<HappypillUser, Long> {
 
+    boolean existsByNotifyEmail(String email);
+
+    boolean existsByLoginEmail(String email);
+
 }

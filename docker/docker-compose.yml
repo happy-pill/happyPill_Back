@@ -10,3 +10,11 @@ services:
       - "5432:5432"
     command: >
       postgres -c log_statement=all -c logging_collector=off -c log_destination=stderr
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes", "--bind", "0.0.0.0", "--protected-mode", "no"]

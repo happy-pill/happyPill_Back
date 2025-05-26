@@ -7,8 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class HappypillApplicationTests {
 
     @Test
-    void contextLoads() {
-    }
+    void contextLoads() {}
 
     @Test
     void err() {

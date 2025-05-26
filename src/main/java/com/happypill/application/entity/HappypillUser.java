@@ -25,8 +25,11 @@ public class HappypillUser extends BaseEntity{
 
     private String loginEmail;
 
+    private String notifyEmail;
+
     private boolean isDeleted;
 
     @Enumerated(STRING)
     private Role role;
 }
+
