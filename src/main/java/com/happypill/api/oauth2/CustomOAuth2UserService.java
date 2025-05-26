@@ -22,7 +22,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     //로그인 확장시 사용
     private final OidcUserService oidcDelegate = new OidcUserService();
-//    private final DefaultOAuth2UserService oauth2Delegate = new DefaultOAuth2UserService();
+    private final DefaultOAuth2UserService oauth2Delegate = new DefaultOAuth2UserService();
 
     private final List<OAuth2UserProvisionStrategy> provisionStrategies;
 
@@ -32,7 +32,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuth2User oAuth2User = (userRequest instanceof OidcUserRequest oidcReq)
                 ? oidcDelegate.loadUser(oidcReq)
-                : new DefaultOAuth2UserService().loadUser(userRequest);
+                : oauth2Delegate.loadUser(userRequest);
         try {
             HappypillUser user = provisionStrategies
                     .stream()
