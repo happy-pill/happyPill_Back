@@ -9,6 +9,20 @@ spring:
   jpa:
     open-in-view: false
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_ID}
+    password: ${EMAIL_PW}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
+
   security:
     oauth2:
       client:
@@ -64,6 +78,12 @@ spring:
     properties:
       hibernate.hibernate.format_sql: true
 
+  cache:
+    type: redis
+    data:
+      redis:
+        host: localhost
+        port: 6379
 
 
 --- # prod
@@ -77,3 +97,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop  # validate
+
+  cache:
+    type: redis
+    data:
+      redis:
+        host: ${SERVER_HOST}
+        port: 6379

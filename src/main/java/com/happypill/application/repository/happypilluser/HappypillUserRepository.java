@@ -9,4 +9,9 @@ import java.util.Optional;
 public interface HappypillUserRepository extends JpaRepository<HappypillUser, Long> {
     
     Optional<HappypillUser> findBySocialSub(@Param("socialSub") String socialSub);
+
+    boolean existsByNotifyEmail(String email);
+
+    boolean existsByLoginEmail(String email);
+
 }

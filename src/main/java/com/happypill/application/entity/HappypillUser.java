@@ -34,12 +34,14 @@ public class HappypillUser extends BaseEntity {
 
     private String loginEmail;
 
+    private String notifyEmail;
+
     private boolean isDeleted;
 
     @Enumerated(STRING)
     private Role role;
 
     public static HappypillUser ofSocial(@Nullable Long id, String nickName, Provider provider, String socialSub, String loginEmail, Role role) {
-        return new HappypillUser(id, nickName, provider, socialSub, loginEmail, false, role);
+        return new HappypillUser(id, nickName, provider, socialSub, loginEmail, loginEmail,false, role);
     }
 }
