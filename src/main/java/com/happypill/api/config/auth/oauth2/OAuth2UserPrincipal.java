@@ -1,4 +1,4 @@
-package com.happypill.api.oauth2;
+package com.happypill.api.config.auth.oauth2;
 
 import com.happypill.application.entity.enums.Role;
 import lombok.AllArgsConstructor;

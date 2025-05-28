@@ -1,6 +1,6 @@
-package com.happypill.api.oauth2;
+package com.happypill.api.config.auth.oauth2;
 
-import com.happypill.api.oauth2.userprovision.OAuth2UserProvisionStrategy;
+import com.happypill.api.config.auth.oauth2.userprovision.OAuth2UserProvisionStrategy;
 import com.happypill.application.entity.HappypillUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

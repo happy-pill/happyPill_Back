@@ -1,4 +1,4 @@
-package com.happypill.api.oauth2.userprovision;
+package com.happypill.api.config.auth.oauth2.userprovision;
 
 import com.happypill.application.entity.HappypillUser;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
