@@ -1,33 +1,56 @@
 package com.happypill.application.exception;
 
 import com.happypill.application.exception.custom.EmailException;
-import com.happypill.application.service.dto.response.ApiResponse;
-import org.springframework.http.ResponseEntity;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.Instant;
+
+@RestControllerAdvice
 public class GlobalExceptionHandler {
-    //이메일 전송 로직에서 예외 발생 시 예외처리
+
+    // 이메일 전송 로직에서 예외 발생 시
     @ExceptionHandler(EmailException.class)
-    public ResponseEntity<ApiResponse<String>> emailException(EmailException e) {
-        return ResponseEntity
-                .status(e.getStatus())
-                .body(ApiResponse.of(e.getMessage()));
+    public ProblemDetail handleEmailException(EmailException e) {
+        ProblemDetail problem = ProblemDetail.forStatus(e.getStatus());
+        problem.setTitle("Email Error");
+        problem.setDetail(e.getMessage());
+        problem.setProperty("timestamp", Instant.now());
+        problem.setProperty("errorCode", "EMAIL_ERROR");
+        return problem;
     }
 
-    //@Valid @RequestBody 에서 유효하지 않을 경우 예외처리
+    // @Valid 검증 실패 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<String>> inValidRequestException(MethodArgumentNotValidException e) {
-        String errorMessage = e.getBindingResult()
+    public ProblemDetail handleValidationException(MethodArgumentNotValidException e) {
+        String message = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .findFirst() // 여러 에러 메시지 중 첫 번째만 사용
+                .findFirst()
                 .map(FieldError::getDefaultMessage)
                 .orElse("잘못된 요청입니다.");
 
-        return ResponseEntity
-                .badRequest()
-                .body(ApiResponse.of(errorMessage));
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Validation Failed");
+        problem.setDetail(message);
+        problem.setProperty("timestamp", Instant.now());
+        problem.setProperty("errorCode", "VALIDATION_ERROR");
+        return problem;
+    }
+
+    // 존재하지 않는 엔티티 조회 시 예외처리
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ProblemDetail handleEntityNotFoundException(EntityNotFoundException e) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setTitle("Entity Not Found");
+        problem.setDetail(e.getMessage());
+        problem.setProperty("timestamp", Instant.now());
+        problem.setProperty("errorCode", "ENTITY_NOT_FOUND");
+        return problem;
     }
 }
