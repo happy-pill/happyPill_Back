@@ -8,6 +8,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,6 +31,9 @@ public class EmailService { //이메일 인증코드 전송을 처리하는 로�
     private final EmailRequestLimitService emailRequestLimitService;
     private final RedisTemplate<String, String> redisTemplateString;
     private final JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String senderEmail;
 
     private String getKey(String loginEmail) {
         return "NewEmailRequest:" + loginEmail;
@@ -58,7 +62,7 @@ public class EmailService { //이메일 인증코드 전송을 처리하는 로�
             message.setRecipients(Message.RecipientType.TO, newEmail);
             message.setSubject("해피필 인증코드");
             message.setText(emailContent(code), "utf-8", "html");
-            message.setFrom(new InternetAddress("cdh3946@gmail.com", "HappyPill"));
+            message.setFrom(new InternetAddress(senderEmail, "HappyPill"));
             javaMailSender.send(message);
 
             String key = getKey(newEmail);

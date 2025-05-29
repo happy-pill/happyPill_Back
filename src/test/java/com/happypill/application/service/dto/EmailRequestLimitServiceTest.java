@@ -46,8 +46,6 @@ class EmailRequestLimitServiceTest {
 
         // then
         assertThat(result).isTrue();
-        //verify(redisTemplate).opsForValue();
-        //verify(valueOperations).set(eq(key), eq(2), any(Duration.class));
     }
 
     @DisplayName("Redis 키가 있고 남은횟수 0이면 false 를 반환한다.")

@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,9 +26,7 @@ public class EmailController {
     @PostMapping("/verification-request")
     public ResponseEntity<?> requestEmailCode(@Valid @RequestBody EmailVerifyRequest request,
                                               @AuthenticationPrincipal OAuth2UserPrincipal oAuth2UserPrincipal) {
-        if (oAuth2UserPrincipal == null)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse("로그인이 필요합니다."));
-        emailService.sendEmail("cdh3946@gmail.com", request.newEmail());
+        emailService.sendEmail(oAuth2UserPrincipal.getEmail(), request.newEmail());
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("인증코드가 전송되었습니다."));
     }
 

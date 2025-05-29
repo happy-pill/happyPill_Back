@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class EmailRequestLimitService { //회원마다 인증요청 횟수를 처리하는 로직
 
-    private static final int MAX_REQUESTS = 2;
+    private static final int MAX_REQUESTS = 3;
     private static final Duration TTL = Duration.ofHours(24);
 
     private final RedisTemplate<String, Integer> redisTemplateInteger;
@@ -22,15 +22,17 @@ public class EmailRequestLimitService { //회원마다 인증요청 횟수를 �
         return "EmailRequestCnt:" + loginEmail;
     }
 
-    public boolean canRequestCode(String loginEmail) {  // 요청 가능한지 확인하는 메서드. 키가 없을 때 요청횟수를 2로 초기화
+    private void initializeKeyIfNotExists(String key){ // 키 값이 없는 경우 요청횟수를 초기화하는 메서드
+        Boolean hasKey = redisTemplateInteger.hasKey(key);
+        if(!hasKey)
+            redisTemplateInteger.opsForValue().set(key, MAX_REQUESTS, TTL);
+    }
+
+    public boolean canRequestCode(String loginEmail) {  // 요청 가능한지 확인하는 메서드
         try {
             String key = getKey(loginEmail);
-            Boolean hasKey = redisTemplateInteger.hasKey(key);
 
-            //해당 키값이 없으면 요청횟수 2로 초기화(TTL 이 만료된 경우)
-            if (!hasKey) {
-                redisTemplateInteger.opsForValue().set(key, MAX_REQUESTS, TTL);
-            }
+            initializeKeyIfNotExists(key);
 
             //남은 요청 횟수를 remainCnt 에 저장
             Integer remainCnt = redisTemplateInteger.opsForValue().get(key);
@@ -43,14 +45,11 @@ public class EmailRequestLimitService { //회원마다 인증요청 횟수를 �
     }
 
     public void decreaseRequestCnt(String loginEmail) { //인증요청 성공 시 차감하는 메서드
-        String key = getKey(loginEmail);
         try {
-            Boolean hasKey = redisTemplateInteger.hasKey(key);
+            String key = getKey(loginEmail);
 
-            //해당 키값이 없으면 요청횟수 2로 초기화(TTL 이 만료된 경우)
-            if (!hasKey) {
-                redisTemplateInteger.opsForValue().set(key, MAX_REQUESTS, TTL);
-            }
+            initializeKeyIfNotExists(key);
+
             //남은 TTL 저장
             Long expire = redisTemplateInteger.getExpire(key);
 

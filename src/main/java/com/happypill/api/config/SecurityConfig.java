@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,8 +49,12 @@ public class SecurityConfig {
                         .successHandler(oauth2SuccessHandler)
                 )
 
-                .authorizeHttpRequests(authorize ->
-                        authorize.anyRequest().permitAll()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/api/user/email/verification-request"),
+                                new AntPathRequestMatcher("/api/user/email/verification-confirm")
+                        ).authenticated()
+                        .anyRequest().permitAll()
                 );
 
         return http.build();

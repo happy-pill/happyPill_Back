@@ -102,5 +102,5 @@ spring:
     type: redis
     data:
       redis:
-        host: ${SERVER_HOST}
+        host: ${REDIS_HOST}
         port: 6379

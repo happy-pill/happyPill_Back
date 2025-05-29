@@ -109,8 +109,7 @@ class EmailServiceTest {
                 .hasMessage("인증요청 횟수를 초과하였습니다.");
     }
 
-
-    @DisplayName("인증코드가 일치하면 true 를 반환한다.")
+    @DisplayName("인증코드가 일치하면 정상적으로 처리되고 Redis 키가 삭제된다.")
     @Test
     void confirmCode_1() {
         //given
@@ -123,7 +122,7 @@ class EmailServiceTest {
         verify(redisTemplate).delete(key);
     }
 
-    @DisplayName("인증 코드가 불일치하면 false 를 반환한다.")
+    @DisplayName("인증 코드가 불일치하면 예외를 던지고 Redis 키가 삭제되지 않는다.")
     @Test
     void confirmCode_2() {
         //given
