@@ -1,13 +1,14 @@
 package com.happypill.application.exception.global;
 
+import com.happypill.application.exception.custom.ExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class BaseException extends RuntimeException{
+public class BusinessException extends RuntimeException{
 
     private final ExceptionCode exceptionCode;
 
-    public BaseException(ExceptionCode exceptionCode) {
+    public BusinessException(ExceptionCode exceptionCode) {
         super(exceptionCode.getMessage());
         this.exceptionCode = exceptionCode;
     }
