@@ -13,4 +13,12 @@ public enum Language {
     public String getDescription() {
         return description;
     }
+
+    public static Language parseLanguage(String language) {
+        try {
+            return Language.valueOf(language.toUpperCase());
+        } catch (Exception e) {
+            return Language.KO;
+        }
+    }
 }
