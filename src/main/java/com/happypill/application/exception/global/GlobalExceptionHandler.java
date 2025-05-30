@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     // @Valid 검증 실패 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse<String>> handleValidationException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse<Object>> handleValidationException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -20,15 +20,18 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .orElse("잘못된 요청입니다.");
 
-        ErrorResponse<String> response = new ErrorResponse<>(message);
+        ErrorResponse<Object> response = new ErrorResponse<>(message, null);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse<String>> handleBaseException(BusinessException e) {
+    public ResponseEntity<ErrorResponse<Object>> handleBusinessException(BusinessException e) {
         ExceptionCode code = e.getExceptionCode();
 
-        ErrorResponse<String> response = new ErrorResponse<>(code.getMessage());
+        ErrorResponse<Object> response = new ErrorResponse<>(
+                code.getMessage(),
+                e.getContext()
+        );
 
         return ResponseEntity.status(code.getStatus()).body(response);
     }

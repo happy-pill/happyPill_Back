@@ -1,4 +1,4 @@
 package com.happypill.application.exception.global;
 
-public record ErrorResponse<T>(T message) {
+public record ErrorResponse<T>(String message, T data) {
 }
