@@ -1,7 +1,6 @@
 package com.happypill.api.controller;
 
 import com.happypill.application.dto.response.CategoryResponse;
-import com.happypill.application.entity.enums.Language;
 import com.happypill.application.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +15,8 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @RequestMapping("/api/categories")
 public class CategoryController {
-    private final CategoryService categoryService;
     private static final String LANGUAGE_HEADER = "Language";
+    private final CategoryService categoryService;
 
     @GetMapping
     public List<CategoryResponse> getCategories(@RequestHeader(LANGUAGE_HEADER) String headerLanguage) {
