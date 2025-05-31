@@ -1,6 +1,6 @@
-package com.happypill.api.oauth2;
+package com.happypill.api.config.auth.oauth2;
 
-import com.happypill.application.auth.jwt.JwtService;
+import com.happypill.api.config.auth.jwt.JwtService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
