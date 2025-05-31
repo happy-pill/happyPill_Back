@@ -29,6 +29,13 @@ public class GoogleProvisionStrategy extends OAuth2UserProvisionStrategy {
     protected HappypillUser createUser(OAuth2User oAuth2User) {
         String sub = oAuth2User.getAttribute("sub");
         String email = oAuth2User.getAttribute("email");
-        return HappypillUser.ofSocial(SnowflakeUtil.nextId(), null, Provider.GOOGLE, sub, email, Role.USER);
+        return HappypillUser.ofSocial(
+                SnowflakeUtil.nextId(),
+                null,
+                Provider.GOOGLE,
+                sub,
+                email,
+                email,
+                Role.USER);
     }
 }
