@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +19,8 @@ import java.util.List;
 public class CategoryService {
     private final CategoryInfoRepository categoryInfoRepository;
 
-    public List<CategoryResponse> getAllCategories(Language language) {
+    public List<CategoryResponse> getAllCategories(Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
         List<CategoryResponse> results = new ArrayList<>();
         List<CategoryInfo> categoryInfoList = categoryInfoRepository.findByLanguage(language);
         Category category = null;
@@ -26,7 +28,7 @@ public class CategoryService {
 
         for (CategoryInfo categoryInfo : categoryInfoList) {
             category = categoryInfo.getCategory();
-            response = CategoryResponse.of(category.getCategoryId(), category.getThumbnailUrl(),
+            response = new CategoryResponse(category.getCategoryId(), category.getThumbnailUrl(),
                     categoryInfo.getName(), categoryInfo.getDescription(), category.getBannerUrl());
             results.add(response);
         }
