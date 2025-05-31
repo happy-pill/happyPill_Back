@@ -44,7 +44,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.with(securityFilterDsl, securityFilterDsl1 -> {
                 })
-//                .authenticationManager(authenticationManager())
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

@@ -46,7 +46,7 @@ jwt:
 app:
   frontend:
     base-url: https://happypill.jiheon2234.dev
-    login-path: ''
+    login-path: /oauth-redirect
 
 
 --- # dev
