@@ -22,6 +22,5 @@ public class SecurityFilterDsl extends AbstractHttpConfigurer<SecurityFilterDsl,
     private JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         return new JwtAuthenticationFilter(authenticationManager);
     }
-
-
+    
 }
