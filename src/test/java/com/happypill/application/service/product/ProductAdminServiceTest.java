@@ -9,8 +9,7 @@ import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
-import com.happypill.application.service.admin.AdminProductService;
-import com.happypill.application.service.admin.response.AdminProductInfoResponse;
+import com.happypill.application.service.product.response.AdminProductInfoResponse;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,10 +28,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class AdminProductServiceTest {
+class ProductAdminServiceTest {
 
     @Autowired
-    private AdminProductService adminProductService;
+    private ProductAdminService productAdminService;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -63,7 +62,7 @@ class AdminProductServiceTest {
         productInfoRepository.saveAll(productInfo);
 
         //when //then
-        assertThatThrownBy(() -> adminProductService.getProductDetails(product.getProductId()))
+        assertThatThrownBy(() -> productAdminService.getProductDetails(product.getProductId()))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage("해당 상품 가격을 찾을 수 없습니다.");
 
@@ -83,7 +82,7 @@ class AdminProductServiceTest {
         productPriceRepository.save(productPrice);
 
         //when //then
-        assertThatThrownBy(() -> adminProductService.getProductDetails(product.getProductId()))
+        assertThatThrownBy(() -> productAdminService.getProductDetails(product.getProductId()))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage("해당 상품 정보를 찾을 수 없습니다.");
     }
@@ -108,7 +107,7 @@ class AdminProductServiceTest {
         productPriceRepository.save(productPrice);
 
         //when
-        AdminProductInfoResponse response = adminProductService.getProductDetails(product.getProductId());
+        AdminProductInfoResponse response = productAdminService.getProductDetails(product.getProductId());
 
         //then
         assertThat(response).isNotNull();

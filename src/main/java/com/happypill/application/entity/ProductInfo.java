@@ -33,7 +33,7 @@ public class ProductInfo extends BaseEntity{
 
     private String usage;
 
-    private String contentImage;
+    private String contentImageUrl;
 
     private String description;
 
@@ -46,8 +46,8 @@ public class ProductInfo extends BaseEntity{
     private Product product;
 
     public static ProductInfo of(Long productInfoId, String language, String name, String quantityDetails,
-                                 String warningMessage, String usage, String contentImage, String description,
+                                 String warningMessage, String usage, String contentImageUrl, String description,
                                  String company, String briefDescription, Product product){
-        return new ProductInfo(productInfoId, Language.parseLanguage(language), name, quantityDetails, warningMessage, usage, contentImage, description, company, briefDescription, product);
+        return new ProductInfo(productInfoId, Language.parseLanguage(language), name, quantityDetails, warningMessage, usage, contentImageUrl, description, company, briefDescription, product);
     }
 }

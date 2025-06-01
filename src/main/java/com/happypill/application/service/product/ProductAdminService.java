@@ -1,4 +1,4 @@
-package com.happypill.application.service.admin;
+package com.happypill.application.service.product;
 
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
@@ -8,7 +8,7 @@ import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
-import com.happypill.application.service.admin.response.AdminProductInfoResponse;
+import com.happypill.application.service.product.response.AdminProductInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class AdminProductService {
+public class ProductAdminService {
 
     private final ProductRepository productRepository;
     private final ProductInfoRepository productInfoRepository;
