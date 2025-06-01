@@ -44,6 +44,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
 }
 
 tasks.withType<Test> {
