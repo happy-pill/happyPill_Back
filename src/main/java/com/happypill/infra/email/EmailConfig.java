@@ -1,4 +1,4 @@
-package com.happypill.application.config;
+package com.happypill.infra.email;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
