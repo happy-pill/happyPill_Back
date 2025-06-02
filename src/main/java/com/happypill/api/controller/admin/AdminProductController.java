@@ -17,8 +17,7 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
 
     @GetMapping("/{productId}") //특정 상품 조회
-    public ResponseEntity<?> getProductDetail(@PathVariable Long productId){
-        AdminProductInfoResponse response = adminProductService.getProductDetails(productId);
-        return ResponseEntity.ok().body(response);
+    public AdminProductInfoResponse getProductDetail(@PathVariable Long productId){
+       return adminProductService.getProductDetails(productId);
     }
 }
