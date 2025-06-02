@@ -1,6 +1,6 @@
-package com.happypill.application.service;
+package com.happypill.application.service.category;
 
-import com.happypill.application.dto.response.CategoryResponse;
+import com.happypill.application.service.category.dto.response.CategoryResponse;
 import com.happypill.application.entity.Category;
 import com.happypill.application.entity.CategoryInfo;
 import com.happypill.application.entity.enums.Language;
