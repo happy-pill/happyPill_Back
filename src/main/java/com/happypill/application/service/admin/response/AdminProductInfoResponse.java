@@ -1,8 +1,9 @@
-package com.happypill.application.service.product.response;
+package com.happypill.application.service.admin.response;
 
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.ProductPrice;
+import com.happypill.application.service.product.response.ProductInfoResponse;
 
 import java.util.List;
 

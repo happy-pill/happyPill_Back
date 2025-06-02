@@ -1,7 +1,7 @@
-package com.happypill.api.controller;
+package com.happypill.api.controller.admin;
 
-import com.happypill.application.service.product.response.AdminProductInfoResponse;
-import com.happypill.application.service.product.ProductAdminService;
+import com.happypill.application.service.admin.response.AdminProductInfoResponse;
+import com.happypill.application.service.admin.AdminProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
-public class AdminController {
+public class AdminProductController {
 
-    private final ProductAdminService productAdminService;
+    private final AdminProductService adminProductService;
 
     // 상품 관련 엔드포인트
     @GetMapping("/products/{productId}") //특정 상품 조회
     public ResponseEntity<?> getProductDetail(@PathVariable Long productId){
-        AdminProductInfoResponse response = productAdminService.getProductDetails(productId);
+        AdminProductInfoResponse response = adminProductService.getProductDetails(productId);
         return ResponseEntity.ok().body(response);
     }
 
