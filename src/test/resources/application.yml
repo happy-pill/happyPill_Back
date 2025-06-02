@@ -11,11 +11,33 @@ spring:
     properties:
       hibernate.hibernate.format_sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: xxxxx@gmail.com
+    password: xxxxx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
+    security:
+      oauth2:
+        client:
+          registration:
+            google:
+              client-id: xxxxx
+              client-secret: xxxxx
+              authorization-grant-type: authorization_code
+              redirect-uri: "xxxxx"
 
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+  #autoconfigure:
+    #exclude:
+      #- org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      #- org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
 
 app:
   frontend:
