@@ -12,10 +12,7 @@ import com.happypill.application.service.product.dto.response.CustomPageResponse
 import com.happypill.application.service.product.dto.response.ProductResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -51,8 +48,74 @@ public class ProductServiceTest {
     private Long randomCategoryId;
     private Long randomProductId;
 
-    @BeforeAll
-    void setUpDb() {
+    @AfterEach
+    void clearDB() {
+        productPriceRepository.deleteAll();
+        productInfoRepository.deleteAll();
+        productRepository.deleteAll();
+        categoryInfoRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
+
+    @Test
+    @DisplayName("잘못된 카테고리 아이디 입력")
+    public void getAllProductsWithWrongCategoryId() {
+        setUpDb();
+        Locale locale = Locale.of("KO");
+        Long categoryId = 1L;
+        int size = 4;
+
+        CustomPageResponse<ProductResponse> result = productService.getAllProducts(categoryId, null, locale, size);
+
+        assertThat(result).isNotNull();
+        assertThat(result.products()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("잘못된 카테고리와 마지막 상품 아이디 입력")
+    public void getAllProductsWithWrongCategoryIdAndLastProductId() {
+        setUpDb();
+        Locale locale = Locale.of("KO");
+        Long categoryId = 1L;
+        Long lastProductId = 1L;
+        int size = 4;
+
+        assertThatThrownBy(() -> productService.getAllProducts(categoryId, lastProductId, locale, size))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining("해당 사용자를 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("첫 알맞은 카테고리 아이디 입력")
+    public void getAllProductsWithoutLastProductId() {
+        setUpDb();
+        Locale locale = Locale.of("KO");
+        Long categoryId = randomCategoryId;
+        Long lastProductId = null;
+        int size = 4;
+
+        CustomPageResponse<ProductResponse> result = productService.getAllProducts(categoryId, lastProductId, locale, size);
+
+        assertThat(result).isNotNull();
+        assertThat(result.products()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("알맞은 카테고리 아이디 입력")
+    public void getAllProducts() {
+        setUpDb();
+        Locale locale = Locale.of("KO");
+        Long categoryId = randomCategoryId;
+        Long lastProductId = randomProductId;
+        int size = 4;
+
+        CustomPageResponse<ProductResponse> result = productService.getAllProducts(categoryId, lastProductId, locale, size);
+
+        assertThat(result).isNotNull();
+        assertThat(result.products()).hasSize(1);
+    }
+
+      void setUpDb() {
         Category categoryOne = Category.of(SnowflakeUtil.nextId(), "www.category_firstThumbnail.com", "www.category_firstBanner.com");
         Category categoryTwo = Category.of(SnowflakeUtil.nextId(), "www.category_secondThumbnail.com", "www.category_secondBanner.com");
         randomCategoryId = categoryOne.getCategoryId();
@@ -83,60 +146,6 @@ public class ProductServiceTest {
         productRepository.saveAll(productList);
         productInfoRepository.saveAll(productInfoList);
         productPriceRepository.saveAll(productPriceList);
-    }
-
-    @Test
-    @DisplayName("잘못된 카테고리 아이디 입력")
-    public void getAllProductsWithWrongCategoryId() {
-        Locale locale = Locale.of("KO");
-        Long categoryId = 1L;
-        int size = 4;
-
-        CustomPageResponse<ProductResponse> result = productService.getAllProducts(categoryId, null, locale, size);
-
-        assertThat(result).isNotNull();
-        assertThat(result.products()).isEmpty();
-    }
-
-    @Test
-    @DisplayName("잘못된 카테고리와 마지막 상품 아이디 입력")
-    public void getAllProductsWithWrongCategoryIdAndLastProductId() {
-        Locale locale = Locale.of("KO");
-        Long categoryId = 1L;
-        Long lastProductId = 1L;
-        int size = 4;
-
-        assertThatThrownBy(() -> productService.getAllProducts(categoryId, lastProductId, locale, size))
-                .isInstanceOf(BusinessException.class)
-                .hasMessageContaining("해당 사용자를 찾을 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("첫 알맞은 카테고리 아이디 입력")
-    public void getAllProductsWithoutLastProductId() {
-        Locale locale = Locale.of("KO");
-        Long categoryId = randomCategoryId;
-        Long lastProductId = null;
-        int size = 4;
-
-        CustomPageResponse<ProductResponse> result = productService.getAllProducts(categoryId, lastProductId, locale, size);
-
-        assertThat(result).isNotNull();
-        assertThat(result.products()).hasSize(2);
-    }
-
-    @Test
-    @DisplayName("알맞은 카테고리 아이디 입력")
-    public void getAllProducts() {
-        Locale locale = Locale.of("KO");
-        Long categoryId = randomCategoryId;
-        Long lastProductId = randomProductId;
-        int size = 4;
-
-        CustomPageResponse<ProductResponse> result = productService.getAllProducts(categoryId, lastProductId, locale, size);
-
-        assertThat(result).isNotNull();
-        assertThat(result.products()).hasSize(1);
     }
 
 }
