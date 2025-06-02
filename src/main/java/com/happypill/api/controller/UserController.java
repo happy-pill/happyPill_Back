@@ -17,13 +17,13 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/api/user/me")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasRole('USER')")
     public UserInfoResponse getCurrentUser(@HappypillUser UserContext userContext) {
         return userService.getCurrentUserInfo(userContext);
     }
 
     @PatchMapping("/api/user/me")
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasRole('USER')")
     public UserInfoResponse updateCurrentUser(@HappypillUser UserContext userContext, @RequestBody @Valid UserUpdateRequest userUpdateRequest) {
         return userService.updateCurrentUser(userContext, userUpdateRequest);
     }
