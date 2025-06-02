@@ -11,19 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/products")
 public class AdminProductController {
 
     private final AdminProductService adminProductService;
 
-    // 상품 관련 엔드포인트
-    @GetMapping("/products/{productId}") //특정 상품 조회
+    @GetMapping("/{productId}") //특정 상품 조회
     public ResponseEntity<?> getProductDetail(@PathVariable Long productId){
         AdminProductInfoResponse response = adminProductService.getProductDetails(productId);
         return ResponseEntity.ok().body(response);
     }
-
-    // 사용자 관련 엔드포인트
-
-    // 카테고리 관련 엔드포인트
 }

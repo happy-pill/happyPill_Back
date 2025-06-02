@@ -38,7 +38,7 @@ public class AdminProductService {
     }
 
     private List<ProductInfo> getProductInfoOrThrow(Long productId){
-        List<ProductInfo> infos = productInfoRepository.findProductInfos(productId);
+        List<ProductInfo> infos = productInfoRepository.findAllByProductId(productId);
         if(infos.isEmpty())
             throw new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND);
         return infos;

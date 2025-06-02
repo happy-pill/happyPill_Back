@@ -47,18 +47,18 @@ class AdminProductServiceTest {
     private ProductPriceRepository productPriceRepository;
 
     @Test
-    @DisplayName("ProductPrice 가 존재하지 않으면 에러 발생")
+    @DisplayName("ProductPrice 가 존재하지 않으면 에러가 발생한다.")
     void getProductDetails_1() {
         //given
-        Category category = Category.of(1L, "thumbnailURL", "bannerURL");
+        Category category = Category.of(1L, " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(1L, 3, true, "thumbnailURL", false, category);
+        Product product = Product.of(1L, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
-                ProductInfo.of(1L, "KO", "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", "contentImageURL_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
-                ProductInfo.of(2L, "EN", "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", "contentImageURL_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
+                ProductInfo.of(1L, "KO", "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", "https://xxx.com/xxx_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
+                ProductInfo.of(2L, "EN", "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", "https://xxx.com/xxx_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
         );
         productInfoRepository.saveAll(productInfo);
 
@@ -70,13 +70,13 @@ class AdminProductServiceTest {
     }
 
     @Test
-    @DisplayName("ProductInfo 가 존재하지 않으면 에러 발생")
+    @DisplayName("ProductInfo 가 존재하지 않으면 에러가 발생한다.")
     void getProductDetails_2() {
         //given
-        Category category = Category.of(1L, "thumbnailURL", "bannerURL");
+        Category category = Category.of(1L, " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(1L, 3, true, "thumbnailURL", false, category);
+        Product product = Product.of(1L, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         ProductPrice productPrice = ProductPrice.of(1L, 3500, true, product);
@@ -89,18 +89,18 @@ class AdminProductServiceTest {
     }
 
     @Test
-    @DisplayName("Product, ProductInfo, ProductPrice 가 존재하면 200 응답")
+    @DisplayName("Product, ProductInfo, ProductPrice 가 존재하면 200 상태코드로 응답한다.")
     void getProductDetails_3() {
         //given
-        Category category = Category.of(1L, "thumbnailURL", "bannerURL");
+        Category category = Category.of(1L, " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(1L, 3, true, "thumbnailURL", false, category);
+        Product product = Product.of(1L, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
-                ProductInfo.of(1L, "KO", "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", "contentImageURL_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
-                ProductInfo.of(2L, "EN", "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", "contentImageURL_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
+                ProductInfo.of(1L, "KO", "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", " https://xxx.com/xxx_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
+                ProductInfo.of(2L, "EN", "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", " https://xxx.com/xxx_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
         );
         productInfoRepository.saveAll(productInfo);
 
