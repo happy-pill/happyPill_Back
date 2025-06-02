@@ -24,29 +24,18 @@ public class AdminProductService {
     private final ProductInfoRepository productInfoRepository;
     private final ProductPriceRepository productPriceRepository;
 
-    public AdminProductInfoResponse getProductDetails(Long productId){
-        Product product = getProductOrThrow(productId);
-        List<ProductInfo> productInfo = getProductInfoOrThrow(productId);
-        ProductPrice productPrice = getProductPriceOrThrow(productId);
+    public AdminProductInfoResponse getProductDetails(Long productId) {
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
+
+        List<ProductInfo> productInfo = productInfoRepository.findAllByProductId(productId);
+        if (productInfo.isEmpty()) {
+            throw new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND);
+        }
+
+        ProductPrice productPrice = productPriceRepository.findCurrentPriceByProduct(productId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         return AdminProductInfoResponse.from(product, productInfo, productPrice);
     }
-
-    private Product getProductOrThrow(Long productId){
-        return productRepository.findByProductId(productId)
-                .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
-    }
-
-    private List<ProductInfo> getProductInfoOrThrow(Long productId){
-        List<ProductInfo> infos = productInfoRepository.findAllByProductId(productId);
-        if(infos.isEmpty())
-            throw new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND);
-        return infos;
-    }
-
-    private ProductPrice getProductPriceOrThrow(Long productId){
-        return productPriceRepository.findCurrentPriceByProduct(productId)
-                .orElseThrow(()->new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
-    }
 }
-
