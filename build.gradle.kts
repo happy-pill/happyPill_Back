@@ -45,9 +45,13 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:junit-jupiter")
+
+
     testImplementation("org.mockito:mockito-inline:5.2.0")
+    testImplementation("net.datafaker:datafaker:2.4.2")
+
 }
 
 tasks.withType<Test> {

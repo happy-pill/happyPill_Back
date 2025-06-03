@@ -72,7 +72,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
 
 --- # prod
 spring.config.activate.on-profile: prod
