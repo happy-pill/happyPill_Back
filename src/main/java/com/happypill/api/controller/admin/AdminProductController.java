@@ -23,11 +23,7 @@ public class AdminProductController {
 
     //모든 상품 조회
     @GetMapping
-<<<<<<< HEAD
-    //@PreAuthorize("hasRole('ADMIN')")
-=======
     //TODO : 적용 예정 @PreAuthorize("hasRole('ADMIN')")
->>>>>>> 158909b (fix : Page<dto> 구조 Page<entity> 로 변경)
     public CustomPage<AdminProductListResponse> getProducts(@RequestParam(value = "categories", required = false) Long categoryId,
                                                             @RequestParam(value = "page", defaultValue = "1") int page,
                                                             @RequestParam(value = "size", defaultValue = "8") int size,
@@ -39,11 +35,7 @@ public class AdminProductController {
 
     //특정 상품 조회
     @GetMapping("/{productId}")
-<<<<<<< HEAD
-    //@PreAuthorize("hasRole('ADMIN')")
-=======
     //TODO : 적용 예정 @PreAuthorize("hasRole('ADMIN')")
->>>>>>> 158909b (fix : Page<dto> 구조 Page<entity> 로 변경)
     public AdminProductInfoResponse getProductDetail(@PathVariable Long productId){
        return adminProductService.getProductDetails(productId);
     }
