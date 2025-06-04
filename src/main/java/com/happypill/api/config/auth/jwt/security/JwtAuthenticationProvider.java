@@ -34,6 +34,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             Long userId = Long.valueOf(subject);
 
             String[] roles = parsedJwt.getClaim("roles").asArray(String.class);
+            for (int i = 0; i < roles.length; i++) {
+                roles[i] = "ROLE_" + roles[i];
+            }
+
             List<GrantedAuthority> authorityList = AuthorityUtils.createAuthorityList(roles);
 
             return JwtAuthenticationToken.authenticated(SecurityUserContext.from(userId), accessToken, authorityList);

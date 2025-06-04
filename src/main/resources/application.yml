@@ -12,8 +12,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${EMAIL_ID}
-    password: ${EMAIL_PW}
+    username: ${EMAIL_ID:test}
+    password: ${EMAIL_PW:test}
     properties:
       mail:
         smtp:
@@ -72,7 +72,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
 
 --- # prod
 spring.config.activate.on-profile: prod

@@ -2,7 +2,6 @@ package com.happypill.application.entity;
 
 import com.happypill.application.entity.enums.Provider;
 import com.happypill.application.entity.enums.Role;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
@@ -41,11 +40,15 @@ public class HappypillUser extends BaseEntity {
     @Enumerated(STRING)
     private Role role;
 
-    public static HappypillUser ofSocial(@Nullable Long id, String nickName, Provider provider, String socialSub, String loginEmail, String notifyEmail, Role role) {
+    public static HappypillUser ofSocial(Long id, String nickName, Provider provider, String socialSub, String loginEmail, String notifyEmail, Role role) {
         return new HappypillUser(id, nickName, provider, socialSub, loginEmail, notifyEmail, false, role);
     }
 
     public void changeUser(String nickName) {
         this.nickName = nickName;
+    }
+
+    public void changeNotifyEmail(String notifyEmail) {
+        this.notifyEmail = notifyEmail;
     }
 }
