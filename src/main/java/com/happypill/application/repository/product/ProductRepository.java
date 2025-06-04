@@ -48,6 +48,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByProductId(Long productId);
 
+
     @Query("""
                 SELECT pi
                 FROM ProductInfo pi

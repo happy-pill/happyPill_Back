@@ -13,7 +13,7 @@ public record AdminProductListResponse(
         String thumbnailUrl,
         boolean isAvailable
 ) {
-    public static AdminProductListResponse from(Product product, ProductInfo productInfo, int price){
+    public static AdminProductListResponse from(Product product, ProductInfo productInfo, int price) {
         return new AdminProductListResponse(
                 product.getProductId(),
                 product.getCategory().getCategoryId(),

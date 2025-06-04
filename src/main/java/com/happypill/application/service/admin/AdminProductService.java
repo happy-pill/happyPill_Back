@@ -43,8 +43,8 @@ public class AdminProductService {
         }
 
         Page<ProductInfo> productInfos = (categoryId == null) ?
-                productRepository.getAllProductInfosByLanguage(language, pageable) :
-                productRepository.getAllProductInfosByCategoryAndLanguage(categoryId, language, pageable);
+                productInfoRepository.getAllProductInfosByLanguage(language, pageable) :
+                productInfoRepository.getAllProductInfosByCategoryAndLanguage(categoryId, language, pageable);
 
         Page<AdminProductListResponse> responsePage = productInfos.map(productInfo -> {
                     Product product = productInfo.getProduct();
@@ -55,6 +55,7 @@ public class AdminProductService {
         return new CustomPage<>(responsePage);
     }
 
+    //특정 상품 조회
     public AdminProductInfoResponse getProductDetails(Long productId) {
         Product product = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));

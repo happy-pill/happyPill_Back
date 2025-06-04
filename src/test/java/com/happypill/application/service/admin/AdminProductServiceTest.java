@@ -121,7 +121,7 @@ class AdminProductServiceTest {
     }
 
     @Test
-    @DisplayName("[상품 조회] categoryId, locale, pageable 값이 올바르게 주어졌을 때 커스텀 페이지의 contents 에는 1개의 값이 포함된다.")
+    @DisplayName("[모든 상품 조회] categoryId, locale, pageable 값이 올바르게 주어졌을 때 커스텀 페이지의 contents 에는 1개의 값이 포함된다.")
     void getAllProducts_1() {
         //given
         Locale locale = Locale.forLanguageTag("ko");
@@ -136,7 +136,7 @@ class AdminProductServiceTest {
     }
 
     @Test
-    @DisplayName("[상품 조회] categoryId 값이 null 값이 아닌 존재하지 않는 값인 경우 에러가 발생한다.")
+    @DisplayName("[모든 상품 조회] categoryId 값이 null 값이 아닌 존재하지 않는 값인 경우 에러가 발생한다.")
     void getAllProducts_2() {
         //given
         Locale locale = Locale.forLanguageTag("ko");
@@ -149,7 +149,7 @@ class AdminProductServiceTest {
     }
 
     @Test
-    @DisplayName("[상품 조회] locale 값이 en인 경우 커스텀 페이지의 contents 에는 영어로 작성된 내용들이 포함된다.")
+    @DisplayName("[모든 상품 조회] locale 값이 en인 경우 커스텀 페이지의 contents 에는 영어로 작성된 내용들이 포함된다.")
     void getAllProducts_3() {
         //given
         Locale locale = Locale.forLanguageTag("en");
