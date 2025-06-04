@@ -1,15 +1,18 @@
 package com.happypill.application.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor(access = PRIVATE)
 @Table(name = "products")
 public class Product extends BaseEntity{
 
@@ -27,4 +30,8 @@ public class Product extends BaseEntity{
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    public static Product of(Long productId, Integer stock, boolean isAvailable, String thumbnailUrl, boolean isDeleted, Category category){
+        return new Product(productId, stock, isAvailable, thumbnailUrl, isDeleted, category);
+    }
 }
