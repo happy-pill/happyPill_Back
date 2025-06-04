@@ -11,6 +11,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.Optional;
+
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("""
             SELECT pi
@@ -43,4 +45,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 AND p.productId = :productId
             """)
     Optional<ProductInfo> getProductInfoByProductId(@Param("productId")Long productId, @Param("language") Language language);
+    
+    Optional<Product> findByProductId(Long productId);
 }

@@ -27,7 +27,7 @@ public class ProductPrice extends BaseEntity{
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public static ProductPrice of(Long productPriceId, Integer price, boolean isUsed, Product product) {
+    public static ProductPrice of(Long productPriceId, Integer price, boolean isUsed, Product product){
         return new ProductPrice(productPriceId, price, isUsed, product);
     }
 }
