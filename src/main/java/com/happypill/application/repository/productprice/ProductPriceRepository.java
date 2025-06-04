@@ -10,7 +10,15 @@ import org.springframework.security.core.parameters.P;
 import java.util.Optional;
 
 public interface ProductPriceRepository extends JpaRepository<ProductPrice, Long> {
-
+    @Query("""
+            SELECT pp
+            FROM ProductPrice pp
+            JOIN pp.product p
+            WHERE p.id = :productId
+              AND pp.isUsed = true
+            """)
+    Optional<ProductPrice> getCurrentPriceByProductInfoId(@Param("productId")Long productId);
+    
     @Query("SELECT p FROM ProductPrice p WHERE p.product.productId = :productId AND p.isUsed = true")
     Optional<ProductPrice> findCurrentPriceByProduct(@Param("productId") Long productId);
 }
