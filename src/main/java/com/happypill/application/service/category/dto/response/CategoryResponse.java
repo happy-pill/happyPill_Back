@@ -1,4 +1,4 @@
-package com.happypill.application.dto.response;
+package com.happypill.application.service.category.dto.response;
 
 public record CategoryResponse (
      Long categoryId,

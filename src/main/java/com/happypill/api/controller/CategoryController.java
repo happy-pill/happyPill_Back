@@ -1,7 +1,7 @@
 package com.happypill.api.controller;
 
-import com.happypill.application.dto.response.CategoryResponse;
-import com.happypill.application.service.CategoryService;
+import com.happypill.application.service.category.dto.response.CategoryResponse;
+import com.happypill.application.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

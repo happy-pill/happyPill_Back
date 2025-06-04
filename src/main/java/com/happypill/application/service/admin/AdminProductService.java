@@ -32,6 +32,7 @@ public class AdminProductService {
     private final ProductPriceRepository productPriceRepository;
     private final CategoryRepository categoryRepository;
 
+    //모든 상품 조회
     public CustomPage<AdminProductListResponse> getAllProducts(Long categoryId, Pageable pageable, Locale locale) {
         Language language = Language.parseLanguage(locale.getLanguage());
 
@@ -41,11 +42,17 @@ public class AdminProductService {
                 throw new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND);
         }
 
-        Page<AdminProductListResponse> productInfos = (categoryId == null) ?
+        Page<ProductInfo> productInfos = (categoryId == null) ?
                 productRepository.getAllProductInfosByLanguage(language, pageable) :
                 productRepository.getAllProductInfosByCategoryAndLanguage(categoryId, language, pageable);
 
-        return new CustomPage<>(productInfos);
+        Page<AdminProductListResponse> responsePage = productInfos.map(productInfo -> {
+                    Product product = productInfo.getProduct();
+                    int price = getCurrentPrice(productInfo);
+                    return AdminProductListResponse.from(product, productInfo, price);
+                }
+        );
+        return new CustomPage<>(responsePage);
     }
 
     public AdminProductInfoResponse getProductDetails(Long productId) {
@@ -61,5 +68,12 @@ public class AdminProductService {
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         return AdminProductInfoResponse.from(product, productInfo, productPrice);
+    }
+
+    private int getCurrentPrice(ProductInfo productInfo) {
+        ProductPrice price = productPriceRepository.getCurrentPriceByProductInfoId(productInfo.getProduct().getProductId())
+                .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
+
+        return price.getPrice();
     }
 }

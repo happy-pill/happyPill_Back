@@ -45,6 +45,13 @@ public class ProductInfo extends BaseEntity{
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    public static ProductInfo of(Long productInfoId, Language language, String name, String quantityDetails,
+                                          String warningMessage, String usage, String contentImage, String description,
+                                          String company, String briefDescription, Product product) {
+        return new ProductInfo(productInfoId, language, name, quantityDetails, warningMessage, usage, contentImage,
+                description, company, briefDescription, product);
+    }
+    
     public static ProductInfo of(Long productInfoId, String language, String name, String quantityDetails,
                                  String warningMessage, String usage, String contentImageUrl, String description,
                                  String company, String briefDescription, Product product){
