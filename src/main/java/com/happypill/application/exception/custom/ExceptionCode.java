@@ -17,7 +17,10 @@ public enum ExceptionCode {
     PRODUCT_INFO_NOT_FOUND(NOT_FOUND, "해당 상품 정보를 찾을 수 없습니다."),
 
     // 상품 가격
-    PRODUCT_PRICE_NOT_FOUND(NOT_FOUND, "해당 상품 가격을 찾을 수 없습니다.");
+    PRODUCT_PRICE_NOT_FOUND(NOT_FOUND, "해당 상품 가격을 찾을 수 없습니다."),
+
+    //카테고리
+    CATEGORY_NOT_FOUND(NOT_FOUND, "해당 카테고리를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
