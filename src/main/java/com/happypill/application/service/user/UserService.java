@@ -6,6 +6,7 @@ import com.happypill.application.entity.HappypillUser;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
+import com.happypill.application.service.user.email.EmailVerificationRedisRepository;
 import com.happypill.application.service.user.request.EmailVerificationRequest;
 import com.happypill.application.service.user.request.UserNotifyEmailUpdateRequest;
 import com.happypill.application.service.user.request.UserUpdateRequest;

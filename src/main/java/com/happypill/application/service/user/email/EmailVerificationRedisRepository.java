@@ -1,4 +1,4 @@
-package com.happypill.application.service.user;
+package com.happypill.application.service.user.email;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
