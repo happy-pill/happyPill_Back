@@ -19,7 +19,6 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
     SELECT pi
     FROM ProductInfo pi
     JOIN pi.product p
-    JOIN ProductPrice pp ON pp.product = p AND pp.isUsed = true
     WHERE pi.language = :language
     ORDER BY p.productId DESC
 """)
@@ -29,7 +28,6 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
     SELECT pi
     FROM ProductInfo pi
     JOIN pi.product p
-    JOIN ProductPrice pp ON pp.product = p AND pp.isUsed = true
     WHERE pi.language = :language
     AND p.category.categoryId = :categoryId
     ORDER BY p.productId DESC

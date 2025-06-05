@@ -32,7 +32,6 @@ public class AdminProductService {
     private final ProductInfoRepository productInfoRepository;
     private final ProductPriceRepository productPriceRepository;
     private final CategoryRepository categoryRepository;
-    private final CategoryInfoRepository categoryInfoRepository;
 
     //모든 상품 조회
     public CustomPage<AdminProductListResponse> getAllProducts(Long categoryId, Pageable pageable, Locale locale) {
