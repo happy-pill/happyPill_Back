@@ -12,6 +12,7 @@ import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.response.AdminProductListResponse;
+import com.happypill.application.service.admin.response.AdminProductPriceResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -152,5 +153,32 @@ class AdminProductServiceTest {
         assertThat(result.contents())
                 .extracting(AdminProductListResponse::briefDescription)
                 .containsExactly("간략 설명_EN");
+    }
+
+    @Test
+    @DisplayName("[금액 기록 조회] product 와 productPrice 가 존재하는 경우 productPrice 를 반환한다.")
+    void getAllProductPrices_1(){
+        //given
+        Pageable pageable = PageRequest.of(0,5);
+
+        //when
+        CustomPage<AdminProductPriceResponse> customPage = adminProductService.getAllProductPrices(savedProduct.getProductId(), pageable);
+
+        //then
+        assertThat(customPage.contents())
+                .extracting(AdminProductPriceResponse::price)
+                .contains(3500);
+    }
+
+    @Test
+    @DisplayName("[금액 기록 조회]  productId 가 존재하지 않는 값인 경우 에러가 발생한다.")
+    void getAllProductPrices_2(){
+        //given
+        Pageable pageable = PageRequest.of(0, 5);
+
+        //when //then
+        assertThatThrownBy(() -> adminProductService.getAllProductPrices(1000L, pageable))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining("상품");
     }
 }

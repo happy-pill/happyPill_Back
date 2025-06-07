@@ -14,6 +14,7 @@ import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.response.AdminProductListResponse;
+import com.happypill.application.service.admin.response.AdminProductPriceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,6 +71,20 @@ public class AdminProductService {
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         return AdminProductInfoResponse.from(product, productInfo, productPrice);
+    }
+
+    //금액 기록 조회
+    public CustomPage<AdminProductPriceResponse> getAllProductPrices(Long productId, Pageable pageable){
+        boolean isExist = productRepository.existsById(productId);
+        if(!isExist) {
+            throw new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND);
+        }
+
+        Page<ProductPrice> productPrices = productPriceRepository.getCurrentPriceByProductId(productId, pageable);
+        Page<AdminProductPriceResponse> responses = productPrices
+                .map(AdminProductPriceResponse::from);
+
+        return new CustomPage<>(responses);
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {
