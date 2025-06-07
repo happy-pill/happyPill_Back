@@ -23,18 +23,24 @@ public class Order extends BaseEntity{
     @Id
     private Long orderId;
 
+    @Column(nullable = false)
     private Integer totalPrice;
 
     @Enumerated(STRING)
+    @Column(nullable = false)
     private OrderStatus status;
 
     @Enumerated(STRING)
+    @Column(nullable = false)
     private PaymentMethod paymentMethod;
 
+    @Column(nullable = false, length = 50)
     private String recipentName;
 
+    @Column(nullable = false)
     private String recipentMobile;
 
+    @Column(nullable = false)
     private String recipentEmail;
 
     @ManyToOne(fetch = LAZY)

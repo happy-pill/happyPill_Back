@@ -19,8 +19,10 @@ public class ProductPrice extends BaseEntity{
     @Id
     private Long productPriceId;
 
+    @Column(nullable = false)
     private Integer price;
 
+    @Column(nullable = false)
     private boolean isUsed;
 
     @ManyToOne(fetch = LAZY)

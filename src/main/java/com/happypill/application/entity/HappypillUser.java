@@ -2,10 +2,7 @@ package com.happypill.application.entity;
 
 import com.happypill.application.entity.enums.Provider;
 import com.happypill.application.entity.enums.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,20 +21,27 @@ public class HappypillUser extends BaseEntity {
     @Id
     private Long userId;
 
+    @Column(nullable = false, length = 50)
     private String nickName;
 
     @Enumerated(STRING)
+    @Column(nullable = false)
     private Provider provider;
 
+    @Column(nullable = false)
     private String socialSub;
 
+    @Column(nullable = false)
     private String loginEmail;
 
+    @Column(nullable = false)
     private String notifyEmail;
 
+    @Column(nullable = false)
     private boolean isDeleted;
 
     @Enumerated(STRING)
+    @Column(nullable = false)
     private Role role;
 
     public static HappypillUser ofSocial(Long id, String nickName, Provider provider, String socialSub, String loginEmail, String notifyEmail, Role role) {

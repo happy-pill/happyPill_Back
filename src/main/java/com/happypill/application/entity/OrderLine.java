@@ -16,8 +16,10 @@ public class OrderLine extends BaseEntity{
     @Id
     private Long orderLineId;
 
+    @Column(nullable = false)
     private Integer price;
 
+    @Column(nullable = false)
     private Integer month;
 
     @ManyToOne(fetch = LAZY)

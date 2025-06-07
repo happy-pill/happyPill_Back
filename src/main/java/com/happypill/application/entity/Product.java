@@ -19,12 +19,16 @@ public class Product extends BaseEntity{
     @Id
     private Long productId;
 
+    @Column(nullable = false)
     private Integer stock;
 
+    @Column(nullable = false)
     private boolean isAvailable;
 
+    @Column(nullable = false)
     private String thumbnailUrl;
 
+    @Column(nullable = false)
     private boolean isDeleted;
 
     @ManyToOne(fetch = LAZY)
