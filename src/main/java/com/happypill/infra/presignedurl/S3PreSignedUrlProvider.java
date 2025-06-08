@@ -2,6 +2,7 @@ package com.happypill.infra.presignedurl;
 
 
 import com.happypill.application.client.PreSignedUrlProvider;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,11 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class S3PreSignedUrlProvider implements PreSignedUrlProvider {
 
-    private final S3Presigner s3Presigner = S3Presigner.create();
+    private final S3Presigner s3Presigner = S3Presigner
+            .builder()
+//            .region(Region.AP_NORTHEAST_2)
+//            .credentialsProvider(DefaultCredentialsProvider.create())
+            .build();
 
     private final S3Properties s3Properties;
 
@@ -35,4 +40,10 @@ public class S3PreSignedUrlProvider implements PreSignedUrlProvider {
 
         return new PreSignedUrlResult(request.url().toExternalForm(), s3Properties.cdnBaseUrl() + "/" + key);
     }
+
+    @PreDestroy
+    public void closePreSigner() {
+        s3Presigner.close();
+    }
+
 }
