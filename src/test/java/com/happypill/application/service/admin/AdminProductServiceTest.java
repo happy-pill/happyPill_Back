@@ -4,6 +4,7 @@ import com.happypill.application.entity.Category;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.ProductPrice;
+import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.category.CategoryRepository;
@@ -29,6 +30,7 @@ import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -76,11 +78,13 @@ class AdminProductServiceTest {
         //given
         productPriceRepository.deleteAllInBatch();
 
-        //when //then
-        assertThatThrownBy(() -> adminProductService.getProductDetails(savedProduct.getProductId()))
-                .isInstanceOf(BusinessException.class)
-                .hasMessageContaining("가격");
+        //when
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            adminProductService.getProductDetails(savedProduct.getProductId());
+        });
 
+        //then
+        assertThat(exception.getExceptionCode()).isEqualTo(ExceptionCode.PRODUCT_PRICE_NOT_FOUND);
     }
 
     @Test
@@ -89,10 +93,13 @@ class AdminProductServiceTest {
         //given
         productInfoRepository.deleteAllInBatch();
 
-        //when //then
-        assertThatThrownBy(() -> adminProductService.getProductDetails(savedProduct.getProductId()))
-                .isInstanceOf(BusinessException.class)
-                .hasMessageContaining("상품");
+        //when
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            adminProductService.getProductDetails(savedProduct.getProductId());
+        });
+
+        // then
+        assertThat(exception.getExceptionCode()).isEqualTo(ExceptionCode.PRODUCT_INFO_NOT_FOUND);
     }
 
     @Test
@@ -133,10 +140,13 @@ class AdminProductServiceTest {
         Locale locale = Locale.forLanguageTag("ko");
         Pageable pageable = PageRequest.of(0, 10);
 
-        //when //then
-        assertThatThrownBy(() -> adminProductService.getAllProducts(1000L, pageable, locale))
-                .isInstanceOf(BusinessException.class)
-                .hasMessageContaining("카테고리");
+        //when
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            adminProductService.getAllProducts(1000L, pageable, locale);
+        });
+
+        // then
+        assertThat(exception.getExceptionCode()).isEqualTo(ExceptionCode.CATEGORY_NOT_FOUND);
     }
 
     @Test
@@ -157,9 +167,9 @@ class AdminProductServiceTest {
 
     @Test
     @DisplayName("[금액 기록 조회] product 와 productPrice 가 존재하는 경우 productPrice 를 반환한다.")
-    void getAllProductPrices_1(){
+    void getAllProductPrices_1() {
         //given
-        Pageable pageable = PageRequest.of(0,5);
+        Pageable pageable = PageRequest.of(0, 5);
 
         //when
         CustomPage<AdminProductPriceResponse> customPage = adminProductService.getAllProductPrices(savedProduct.getProductId(), pageable);
@@ -172,13 +182,16 @@ class AdminProductServiceTest {
 
     @Test
     @DisplayName("[금액 기록 조회]  productId 가 존재하지 않는 값인 경우 에러가 발생한다.")
-    void getAllProductPrices_2(){
+    void getAllProductPrices_2() {
         //given
         Pageable pageable = PageRequest.of(0, 5);
 
-        //when //then
-        assertThatThrownBy(() -> adminProductService.getAllProductPrices(1000L, pageable))
-                .isInstanceOf(BusinessException.class)
-                .hasMessageContaining("상품");
+        //when
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            adminProductService.getAllProductPrices(1000L, pageable);
+        });
+
+        //then
+        assertThat(exception.getExceptionCode()).isEqualTo(ExceptionCode.PRODUCT_NOT_FOUND);
     }
 }

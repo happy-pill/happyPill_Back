@@ -7,10 +7,10 @@ import java.time.format.DateTimeFormatter;
 public record AdminProductPriceResponse(
         String date,
         Integer price,
-        Boolean isUsed
+        boolean isUsed
 ) {
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     public static AdminProductPriceResponse from(ProductPrice price){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         String formattedDate = price.getCreatedAt().format(formatter);
         return new AdminProductPriceResponse(
                 formattedDate,
