@@ -1,0 +1,29 @@
+package com.happypill.api.controller.admin;
+
+import com.happypill.application.pagination.CustomPage;
+import com.happypill.application.service.admin.AdminUserService;
+import com.happypill.application.service.admin.response.AdminUserListResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/admin/users")
+public class AdminUserController {
+
+    private final AdminUserService adminUserService;
+
+    //모든 회원 조회
+    @GetMapping
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public CustomPage<AdminUserListResponse> getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                      @RequestParam(value = "size", defaultValue = "7") int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return adminUserService.getAllUsers(pageable);
+    }
+}
