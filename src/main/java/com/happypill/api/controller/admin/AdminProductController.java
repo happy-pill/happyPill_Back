@@ -4,6 +4,7 @@ import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.AdminProductService;
 import com.happypill.application.service.admin.response.AdminProductListResponse;
+import com.happypill.application.service.admin.response.AdminProductPriceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,5 +40,15 @@ public class AdminProductController {
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public AdminProductInfoResponse getProductDetail(@PathVariable Long productId){
        return adminProductService.getProductDetails(productId);
+    }
+
+    //금액 기록 조회
+    @GetMapping("/{productId}/price-history")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public CustomPage<AdminProductPriceResponse> getProductPriceHistory(@PathVariable(value = "productId") Long productId,
+                                                                        @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                        @RequestParam(value = "size", defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return adminProductService.getAllProductPrices(productId, pageable);
     }
 }
