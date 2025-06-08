@@ -1,7 +1,7 @@
 package com.happypill.application.service.user;
 
 import com.happypill.application.auth.UserContext;
-import com.happypill.application.email.EmailSender;
+import com.happypill.application.client.EmailSender;
 import com.happypill.application.entity.HappypillUser;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;

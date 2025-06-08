@@ -1,4 +1,4 @@
-package com.happypill.application.email;
+package com.happypill.application.client;
 
 public interface EmailSender {
 

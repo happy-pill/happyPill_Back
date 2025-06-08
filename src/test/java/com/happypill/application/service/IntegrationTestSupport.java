@@ -1,6 +1,6 @@
 package com.happypill.application.service;
 
-import com.happypill.application.email.EmailSender;
+import com.happypill.application.client.EmailSender;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
