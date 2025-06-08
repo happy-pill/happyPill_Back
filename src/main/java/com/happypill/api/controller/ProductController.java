@@ -1,11 +1,13 @@
 package com.happypill.api.controller;
 
 import com.happypill.application.service.product.ProductService;
-import com.happypill.application.service.product.dto.response.ProductResponse;
 import com.happypill.application.service.product.dto.response.CustomPageResponse;
+import com.happypill.application.service.product.dto.response.ProductInfoResponse;
+import com.happypill.application.service.product.dto.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -20,5 +22,10 @@ public class ProductController {
                                                            @RequestHeader(LANGUAGE_HEADER) String headerLanguage, @RequestParam int size) {
         Locale locale = Locale.of(headerLanguage);
         return productService.getAllProducts(categoryId, lastProductId, locale, size);
+    }
+
+    @GetMapping("/related")
+    public List<ProductInfoResponse> getRecommendation() {
+        return productService.getRecommendation();
     }
 }
