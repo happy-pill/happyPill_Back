@@ -28,7 +28,7 @@ public class CategoryService {
 
         for (CategoryInfo categoryInfo : categoryInfoList) {
             category = categoryInfo.getCategory();
-            response = new CategoryResponse(category.getCategoryId(), category.getThumbnailUrl(),
+            response = new CategoryResponse(category.getCategoryId().toString(), category.getThumbnailUrl(),
                     categoryInfo.getName(), categoryInfo.getDescription(), category.getBannerUrl());
             results.add(response);
         }
