@@ -1,5 +1,6 @@
 package com.happypill.application.service.product;
 
+import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.ProductPrice;
 import com.happypill.application.entity.enums.Language;
@@ -7,8 +8,9 @@ import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
-import com.happypill.application.service.product.dto.response.ProductResponse;
 import com.happypill.application.service.product.dto.response.CustomPageResponse;
+import com.happypill.application.service.product.dto.response.ProductInfoResponse;
+import com.happypill.application.service.product.dto.response.ProductResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,8 +31,7 @@ public class ProductService {
         Language language = Language.parseLanguage(locale.getLanguage());
         List<ProductInfo> productInfos;
         if (lastProductId != null) {
-            // TO DO Change to ExceptionCode.Product_Info_not_found
-            ZonedDateTime createdAt = productRepository.getProductInfoByProductId(lastProductId, language).orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND)).getProduct().getCreatedAt();
+            ZonedDateTime createdAt = productRepository.getProductInfoByProductId(lastProductId, language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND)).getProduct().getCreatedAt();
             productInfos = productRepository.getAllProductInfoByCategory(categoryId, createdAt, language);
         } else {
             productInfos = productRepository.getAllProductInfoByCategory(categoryId, language);
@@ -59,9 +60,17 @@ public class ProductService {
         return response;
     }
 
+    public ProductInfoResponse getProduct(Long productId, Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+        Product product = productRepository.findByProductId(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
+        ProductInfo productInfo = productRepository.getProductInfoByProductId(product.getProductId(), language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
+        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(product.getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
+
+        return ProductInfoResponse.from(product, productInfo, price.getPrice());
+    }
+
     private int getCurrentPrice(ProductInfo productInfo) {
-        // TO DO Change to ExceptionCode.Product_price_not_found
-        ProductPrice price = productPriceRepository.getCurrentPriceByProductInfoId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
+        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         return price.getPrice();
     }

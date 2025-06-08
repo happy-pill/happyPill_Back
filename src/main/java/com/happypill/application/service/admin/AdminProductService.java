@@ -8,7 +8,6 @@ import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.category.CategoryRepository;
-import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
@@ -73,7 +72,7 @@ public class AdminProductService {
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {
-        ProductPrice price = productPriceRepository.getCurrentPriceByProductInfoId(productInfo.getProduct().getProductId())
+        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId())
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         return price.getPrice();

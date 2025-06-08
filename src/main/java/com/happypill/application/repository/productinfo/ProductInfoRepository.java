@@ -21,7 +21,7 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
     JOIN pi.product p
     WHERE pi.language = :language
     ORDER BY p.productId DESC
-""")
+    """)
     Page<ProductInfo> getAllProductInfosByLanguage(@Param("language") Language language, Pageable pageable);
 
     @Query("""
@@ -31,6 +31,6 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
     WHERE pi.language = :language
     AND p.category.categoryId = :categoryId
     ORDER BY p.productId DESC
-""")
+    """)
     Page<ProductInfo> getAllProductInfosByCategoryAndLanguage(@Param("categoryId") Long categoryId, @Param("language") Language language, Pageable pageable);
 }
