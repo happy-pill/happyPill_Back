@@ -1,5 +1,6 @@
 package com.happypill.application.service.admin;
 
+import com.happypill.application.entity.Category;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.ProductPrice;
@@ -12,9 +13,12 @@ import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
+import com.happypill.application.service.admin.request.AdminProductCreateRequest;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.response.AdminProductListResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
+import com.happypill.application.service.product.request.ProductInfoRequest;
+import com.happypill.application.util.SnowflakeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -85,6 +90,50 @@ public class AdminProductService {
                 .map(AdminProductPriceResponse::from);
 
         return new CustomPage<>(responses);
+    }
+
+    //상품 등록
+    @Transactional
+    public long createProduct(AdminProductCreateRequest request) {
+        boolean isKoreanExist = request.productInfos().stream()
+                .map(ProductInfoRequest::language)
+                .map(Language::parseLanguage)
+                .anyMatch(language -> language == Language.KO);
+        if(!isKoreanExist)
+            throw new BusinessException(ExceptionCode.KO_LANGUAGE_REQUIRED);
+
+        Category category = this.categoryRepository.findByCategoryId(request.categoryId())
+                .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
+
+        Product product = Product.of(
+                SnowflakeUtil.nextId(),
+                request.stock(),
+                request.isAvailable(),
+                request.thumbnailUrl(),
+                false,
+                category);
+        this.productRepository.save(product);
+
+        ProductPrice productPrice = ProductPrice.of(SnowflakeUtil.nextId(), request.price(), true, product);
+        this.productPriceRepository.save(productPrice);
+
+        List<ProductInfo> productInfoList = request.productInfos().stream()
+                .map(dto -> ProductInfo.of(
+                        SnowflakeUtil.nextId(),
+                        dto.language(),
+                        dto.name(),
+                        dto.quantityDetails(),
+                        dto.warningMessage(),
+                        dto.usage(),
+                        dto.contentImageUrl(),
+                        dto.description(),
+                        dto.company(),
+                        dto.briefDescription(),
+                        product
+                ))
+                .collect(Collectors.toList());
+        this.productInfoRepository.saveAll(productInfoList);
+        return product.getProductId();
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {
