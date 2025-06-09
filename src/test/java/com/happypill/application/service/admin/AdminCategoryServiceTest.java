@@ -35,8 +35,10 @@ class AdminCategoryControllerTest {
     @Autowired
     private CategoryInfoRepository categoryInfoRepository;
 
-    @BeforeEach
-    void setUp() {
+    @Test
+    @DisplayName("[모든 카테고리 조회] 요청한 locale 에 따라 AdminCategoryListResponse 를 페이지네이션하여 반환한다.")
+    void getAllCategories_1() {
+        //given
         Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
         List<CategoryInfo> categoryInfoList = List.of(
                 CategoryInfo.of(SnowflakeUtil.nextId(), Language.parseLanguage("KO"), "카테고리명_KO", "설명_KO", category),
@@ -44,12 +46,7 @@ class AdminCategoryControllerTest {
         );
         categoryRepository.save(category);
         categoryInfoRepository.saveAll(categoryInfoList);
-    }
 
-    @Test
-    @DisplayName("[모든 카테고리 조회] 요청한 locale 에 따라 AdminCategoryListResponse 를 페이지네이션하여 반환한다.")
-    void getAllCategories_1() {
-        //given
         Pageable pageable = PageRequest.of(0, 5);
         Locale locale = Locale.KOREA;
 
