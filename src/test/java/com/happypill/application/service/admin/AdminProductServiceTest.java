@@ -4,6 +4,7 @@ import com.happypill.application.entity.Category;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.ProductPrice;
+import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
@@ -66,8 +67,8 @@ class AdminProductServiceTest {
         savedProduct = productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
-                ProductInfo.of(SnowflakeUtil.nextId(), "KO", "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", "https://xxx.com/xxx_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
-                ProductInfo.of(SnowflakeUtil.nextId(), "EN", "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", "https://xxx.com/xxx_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
+                ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", "https://xxx.com/xxx_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
+                ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", "https://xxx.com/xxx_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
         );
         productInfoRepository.saveAll(productInfo);
 
@@ -203,9 +204,9 @@ class AdminProductServiceTest {
     void createProduct_1() {
         //given
         List<ProductInfoRequest> productInfoList = List.of(
-                new ProductInfoRequest("EN", "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
+                new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
         );
-        AdminProductCreateRequest request = new AdminProductCreateRequest(savedCategory.getCategoryId(), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(savedCategory.getCategoryId()), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
 
         //when //then
         assertThatThrownBy(() -> adminProductService.createProduct(request))
@@ -218,10 +219,10 @@ class AdminProductServiceTest {
     void createProduct_2() {
         //given
         List<ProductInfoRequest> productInfoList = List.of(
-                new ProductInfoRequest("KO", "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
-                new ProductInfoRequest("EN", "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
+                new ProductInfoRequest(Language.KO, "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
+                new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
         );
-        AdminProductCreateRequest request = new AdminProductCreateRequest(savedCategory.getCategoryId(), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(savedCategory.getCategoryId()), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
 
         //when
         long productId = adminProductService.createProduct(request);
@@ -235,10 +236,10 @@ class AdminProductServiceTest {
     void createProduct_4() {
         //given
         List<ProductInfoRequest> productInfoList = List.of(
-                new ProductInfoRequest("KO", "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
-                new ProductInfoRequest("EN", "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
+                new ProductInfoRequest(Language.KO, "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
+                new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
         );
-        AdminProductCreateRequest request = new AdminProductCreateRequest(1000L, "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(1000L), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
 
         //when //then
         assertThatThrownBy(()-> adminProductService.createProduct(request))

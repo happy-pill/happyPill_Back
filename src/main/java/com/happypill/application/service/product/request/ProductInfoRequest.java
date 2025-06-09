@@ -1,12 +1,13 @@
 package com.happypill.application.service.product.request;
 
+import com.happypill.application.entity.enums.Language;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record ProductInfoRequest(
 
-        @NotBlank(message = "언어는 필수입니다.")
-        String language,
+        @NotNull(message = "언어는 필수입니다.")
+        Language language,
 
         @NotBlank(message = "상품이름은 필수 입력란입니다.")
         String name,
@@ -26,9 +27,7 @@ public record ProductInfoRequest(
         @NotBlank(message = "용량/수량은 필수 입력란입니다.")
         String quantityDetails,
 
-        @NotBlank(message = "섭취방법은 필수 입력란입니다.")
         String usage,
 
-        @NotBlank(message = "주의사항은 필수 입력란입니다.")
         String warningMessage
 ) { }

@@ -97,12 +97,11 @@ public class AdminProductService {
     public long createProduct(AdminProductCreateRequest request) {
         boolean isKoreanExist = request.productInfos().stream()
                 .map(ProductInfoRequest::language)
-                .map(Language::parseLanguage)
                 .anyMatch(language -> language == Language.KO);
         if(!isKoreanExist)
             throw new BusinessException(ExceptionCode.KO_LANGUAGE_REQUIRED);
 
-        Category category = this.categoryRepository.findByCategoryId(request.categoryId())
+        Category category = categoryRepository.findByCategoryId(Long.valueOf(request.categoryId()))
                 .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         Product product = Product.of(
@@ -112,10 +111,10 @@ public class AdminProductService {
                 request.thumbnailUrl(),
                 false,
                 category);
-        this.productRepository.save(product);
+        productRepository.save(product);
 
         ProductPrice productPrice = ProductPrice.of(SnowflakeUtil.nextId(), request.price(), true, product);
-        this.productPriceRepository.save(productPrice);
+        productPriceRepository.save(productPrice);
 
         List<ProductInfo> productInfoList = request.productInfos().stream()
                 .map(dto -> ProductInfo.of(
@@ -132,7 +131,7 @@ public class AdminProductService {
                         product
                 ))
                 .collect(Collectors.toList());
-        this.productInfoRepository.saveAll(productInfoList);
+        productInfoRepository.saveAll(productInfoList);
         return product.getProductId();
     }
 
