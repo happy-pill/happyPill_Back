@@ -41,8 +41,8 @@ class AdminCategoryControllerTest {
         //given
         Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
         List<CategoryInfo> categoryInfoList = List.of(
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.parseLanguage("KO"), "카테고리명_KO", "설명_KO", category),
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.parseLanguage("EN"), "카테고리명_EN", "설명_EN", category)
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "카테고리명_EN", "설명_EN", category)
         );
         categoryRepository.save(category);
         categoryInfoRepository.saveAll(categoryInfoList);
