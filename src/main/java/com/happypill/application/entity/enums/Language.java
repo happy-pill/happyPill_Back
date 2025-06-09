@@ -1,8 +1,5 @@
 package com.happypill.application.entity.enums;
 
-import com.happypill.application.exception.custom.ExceptionCode;
-import com.happypill.application.exception.global.BusinessException;
-
 public enum Language {
     KO("Korean"),
     EN("English");
@@ -21,7 +18,7 @@ public enum Language {
         try {
             return Language.valueOf(language.toUpperCase());
         } catch (Exception e) {
-            throw new BusinessException(ExceptionCode.LANGUAGE_NOT_FOUND);
+            return Language.KO;
         }
     }
 }

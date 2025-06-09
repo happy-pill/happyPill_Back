@@ -3,13 +3,13 @@ package com.happypill.application.service.product.dto.response;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 
-public record ProductInfoResponse (Long productId, String name, String company, int price, String briefDescription,
+public record ProductInfoResponse (String productId, String name, String company, int price, String briefDescription,
                                    String description, String thumbnailUrl, String contentImageUrl, String quantityDetails,
                                    String usage, String warningMessage) {
 
     public static ProductInfoResponse from (Product product, ProductInfo productInfo, int price) {
         return new ProductInfoResponse(
-                product.getProductId(),
+                product.getProductId().toString(),
                 productInfo.getName(),
                 productInfo.getCompany(),
                 price,

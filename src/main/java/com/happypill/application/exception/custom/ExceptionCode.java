@@ -24,10 +24,7 @@ public enum ExceptionCode {
     EMAIL_VERIFICATION_CODE_NOT_FOUND(BAD_REQUEST, "인증 코드가 만료되었거나 존재하지 않습니다"),
 
     // 카테고리
-    CATEGORY_NOT_FOUND(NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."),
-    
-    // 언어
-    LANGUAGE_NOT_FOUND(NOT_FOUND, "해당 언어는 지원하지 않습니다");
+    CATEGORY_NOT_FOUND(NOT_FOUND, "해당 카테고리를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
