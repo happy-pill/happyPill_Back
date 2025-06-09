@@ -1,5 +1,6 @@
 package com.happypill.application.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -20,8 +21,10 @@ public class Category extends BaseEntity{
     @Id
     private Long categoryId;
 
+    @Column(nullable = false)
     private String thumbnailUrl;
 
+    @Column(nullable = false)
     private String bannerUrl;
 
     public static Category of(Long categoryId, String thumbnailUrl, String bannerUrl) {

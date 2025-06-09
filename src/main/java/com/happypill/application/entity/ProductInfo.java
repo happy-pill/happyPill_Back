@@ -23,22 +23,29 @@ public class ProductInfo extends BaseEntity{
     private Long productInfoId;
 
     @Enumerated(STRING)
+    @Column(nullable = false)
     private Language language;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
+    @Column(nullable = false, length = 50)
     private String quantityDetails;
 
+    @Column(length = 500)
     private String warningMessage;
 
     private String usage;
 
     private String contentImageUrl;
 
+    @Column(nullable = false, length = 500)
     private String description;
 
+    @Column(nullable = false, length = 50)
     private String company;
 
+    @Column(nullable = false)
     private String briefDescription;
 
     @ManyToOne(fetch = LAZY)

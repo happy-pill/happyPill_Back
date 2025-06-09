@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMPTZ")
+     @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMPTZ", nullable = false)
     private ZonedDateTime createdAt;
 
     @Column(name = "updated_at", columnDefinition = "TIMESTAMPTZ")
