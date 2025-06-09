@@ -8,7 +8,6 @@ import com.happypill.application.repository.happypilluser.HappypillUserRepositor
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import net.datafaker.Faker;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,8 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 class AdminUserServiceTest {
-
-    private static final int size = 10;
 
     private final Faker faker = new Faker();
 
@@ -52,34 +48,26 @@ class AdminUserServiceTest {
         );
     }
 
-    @BeforeEach
-    void setUp() {
-        List<HappypillUser> userList = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            userList.add(generateTestUser());
-        }
-        userRepository.saveAll(userList);
-    }
-
     @Test
     @DisplayName("[모든 회원 조회] 모든 회원 목록을 페이지네이션하여 반환한다.")
     void getAllUsers_1() {
         //given
-        Pageable pageable = PageRequest.of(0, size);
+        List<HappypillUser> happypillUserList = List.of(generateTestUser(), generateTestUser());
+        userRepository.saveAll(happypillUserList);
+        Pageable pageable = PageRequest.of(0, 5);
 
         //when
         CustomPage<AdminUserListResponse> response = adminUserService.getAllUsers(pageable);
 
         //then
-        assertThat(response.contents()).hasSize(size);
+        assertThat(response.contents()).hasSize(happypillUserList.size());
     }
 
     @Test
-    @DisplayName("[모든 회원 조회] 회원이 0명인 경우 CustomPage 의 contents 사이즈는 0으로 반환한다.")
+    @DisplayName("[모든 회원 조회] 회원이 0명인 경우 에러는 발생하지 않으며 CustomPage 의 contents 사이즈는 0으로 반환한다.")
     void getAllUsers_2() {
         //given
-        userRepository.deleteAllInBatch();
-        Pageable pageable = PageRequest.of(0, size);
+        Pageable pageable = PageRequest.of(0, 5);
 
         //when
         CustomPage<AdminUserListResponse> response = adminUserService.getAllUsers(pageable);

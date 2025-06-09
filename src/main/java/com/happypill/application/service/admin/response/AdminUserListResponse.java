@@ -2,28 +2,27 @@ package com.happypill.application.service.admin.response;
 
 import com.happypill.application.entity.HappypillUser;
 
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public record AdminUserListResponse(
-        Long userId,
+        String userId,
         String nickname,
         String loginEmail,
         String provider,
-        String createdAt,
-        String deletedAt,
+        ZonedDateTime createdAt,
+        ZonedDateTime deletedAt,
         boolean isDeleted
 ) {
-    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
     public static AdminUserListResponse from(HappypillUser user) {
-        String createdAt = user.getCreatedAt().format(formatter);
-        String deletedAt = user.getUpdatedAt().format(formatter);
         return new AdminUserListResponse(
-                user.getUserId(),
+                user.getUserId().toString(),
                 user.getNickName(),
                 user.getLoginEmail(),
                 user.getProvider().name(),
-                createdAt,
-                deletedAt,
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
                 user.isDeleted()
         );
     }
