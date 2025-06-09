@@ -4,7 +4,7 @@ import com.happypill.application.entity.Category;
 import com.happypill.application.entity.CategoryInfo;
 
 public record AdminCategoryListResponse(
-        Long categoryId,
+        String categoryId,
         String name,
         String description,
         String thumbnailUrl,
@@ -12,7 +12,7 @@ public record AdminCategoryListResponse(
 ) {
     public static AdminCategoryListResponse from(CategoryInfo categoryInfo, Category category){
         return new AdminCategoryListResponse(
-                category.getCategoryId(),
+                category.getCategoryId().toString(),
                 categoryInfo.getName(),
                 categoryInfo.getDescription(),
                 category.getThumbnailUrl(),
