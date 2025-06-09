@@ -1,6 +1,7 @@
 package com.happypill.api.controller;
 
 import com.happypill.application.service.product.ProductService;
+import com.happypill.application.service.product.dto.response.ProductInfoResponse;
 import com.happypill.application.service.product.dto.response.ProductResponse;
 import com.happypill.application.service.product.dto.response.CustomPageResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,11 @@ public class ProductController {
                                                            @RequestHeader(LANGUAGE_HEADER) String headerLanguage, @RequestParam int size) {
         Locale locale = Locale.of(headerLanguage);
         return productService.getAllProducts(categoryId, lastProductId, locale, size);
+    }
+
+    @GetMapping("/{productId}")
+    public ProductInfoResponse getProduct(@PathVariable("productId") Long productId, @RequestHeader(LANGUAGE_HEADER) String headerLanguage) {
+        Locale locale = Locale.of(headerLanguage);
+        return productService.getProduct(productId, locale);
     }
 }
