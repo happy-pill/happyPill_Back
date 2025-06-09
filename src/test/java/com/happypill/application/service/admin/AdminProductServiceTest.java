@@ -4,6 +4,7 @@ import com.happypill.application.entity.Category;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.ProductPrice;
+import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
@@ -11,9 +12,11 @@ import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
+import com.happypill.application.service.admin.request.AdminProductCreateRequest;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.response.AdminProductListResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
+import com.happypill.application.service.product.request.ProductInfoRequest;
 import com.happypill.application.util.SnowflakeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,8 +67,8 @@ class AdminProductServiceTest {
         savedProduct = productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
-                ProductInfo.of(SnowflakeUtil.nextId(), "KO", "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", "https://xxx.com/xxx_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
-                ProductInfo.of(SnowflakeUtil.nextId(), "EN", "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", "https://xxx.com/xxx_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
+                ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", "https://xxx.com/xxx_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
+                ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", "https://xxx.com/xxx_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
         );
         productInfoRepository.saveAll(productInfo);
 
@@ -193,5 +197,53 @@ class AdminProductServiceTest {
 
         //then
         assertThat(exception.getExceptionCode()).isEqualTo(ExceptionCode.PRODUCT_NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("[상품 등록] 한국어로 된 ProductInfo 가 없으면 에러를 반환한다.")
+    void createProduct_1() {
+        //given
+        List<ProductInfoRequest> productInfoList = List.of(
+                new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
+        );
+        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(savedCategory.getCategoryId()), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+
+        //when //then
+        assertThatThrownBy(() -> adminProductService.createProduct(request))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.KO_LANGUAGE_REQUIRED.getMessage());
+    }
+
+    @Test
+    @DisplayName("[상품 등록] AdminProductCreateRequest 필드 모두 유효하면 ProductId 를 반환한다.")
+    void createProduct_2() {
+        //given
+        List<ProductInfoRequest> productInfoList = List.of(
+                new ProductInfoRequest(Language.KO, "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
+                new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
+        );
+        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(savedCategory.getCategoryId()), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+
+        //when
+        long productId = adminProductService.createProduct(request);
+
+        //then
+        assertThat(productId).isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("[상품 등록] Category 가 존재하지 않으면 에러를 반환한다.")
+    void createProduct_4() {
+        //given
+        List<ProductInfoRequest> productInfoList = List.of(
+                new ProductInfoRequest(Language.KO, "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
+                new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
+        );
+        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(1000L), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+
+        //when //then
+        assertThatThrownBy(()-> adminProductService.createProduct(request))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.CATEGORY_NOT_FOUND.getMessage());
     }
 }
