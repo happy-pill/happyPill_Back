@@ -3,8 +3,11 @@ package com.happypill.application.service.admin;
 import com.happypill.application.entity.HappypillUser;
 import com.happypill.application.entity.enums.Provider;
 import com.happypill.application.entity.enums.Role;
+import com.happypill.application.exception.custom.ExceptionCode;
+import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
+import com.happypill.application.service.admin.response.AdminUserDetailResponse;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import net.datafaker.Faker;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -74,5 +78,33 @@ class AdminUserServiceTest {
 
         //then
         assertThat(response.contents()).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("[특정 회원 조회] 경로변수의 userId 가 존재하지 않는 회원일 경우 에러를 반환한다.")
+    void getUserDetails_1(){
+        //given
+        HappypillUser user = generateTestUser();
+        userRepository.save(user);
+
+        //when //then
+        assertThatThrownBy(()->adminUserService.getUserDetails(1000L))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[특정 회원 조회] 경로변수의 userId 가 존재하는 회원일 경우 AdminUserDetailResponse 를 반환한다.")
+    void getUserDetails_2(){
+        //given
+        HappypillUser savedUser = generateTestUser();
+        userRepository.save(savedUser);
+
+        //when
+        AdminUserDetailResponse response = adminUserService.getUserDetails(savedUser.getUserId());
+
+        // then
+        assertThat(Long.valueOf(response.userId())).isEqualTo(savedUser.getUserId());
+        assertThat(response.provider()).isEqualTo(Provider.KAKAO);
     }
 }
