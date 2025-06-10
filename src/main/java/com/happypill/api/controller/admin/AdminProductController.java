@@ -67,8 +67,8 @@ public class AdminProductController {
     //상품 수정
     @PatchMapping("/{productId}")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
-    public AdminProductInfoResponse updateProduct(@PathVariable("productId") String productId,
+    public AdminProductInfoResponse updateProduct(@PathVariable("productId") Long productId,
                                                   @Valid @RequestBody AdminProductUpdateRequest request) {
-        return adminProductService.updateProduct(Long.valueOf(productId), request);
+        return adminProductService.updateProduct(productId, request);
     }
 }

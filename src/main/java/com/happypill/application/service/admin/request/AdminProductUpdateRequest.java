@@ -12,7 +12,7 @@ import java.util.List;
 public record AdminProductUpdateRequest(
 
         @NotNull(message = "카테고리를 선택해주세요.")
-        String categoryId,
+        Long categoryId,
 
         @NotBlank(message = "대표 사진은 필수입니다.")
         String thumbnailUrl,

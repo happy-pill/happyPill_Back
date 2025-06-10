@@ -79,7 +79,11 @@ public class AdminProductService {
         ProductPrice productPrice = productPriceRepository.getCurrentPriceByProductId(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
-        return AdminProductInfoResponse.fromEntity(product, productInfo, productPrice);
+        List<ProductInfoResponse> productInfoList = productInfo.stream()
+                .map(ProductInfoResponse::from)
+                .toList();
+
+        return AdminProductInfoResponse.from(product, productInfoList, productPrice);
     }
 
     //금액 기록 조회
@@ -148,7 +152,7 @@ public class AdminProductService {
         ProductPrice productPrice = this.productPriceRepository.findCurrentPriceByProduct(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
-        Category category = this.categoryRepository.findByCategoryId(Long.valueOf(request.categoryId()))
+        Category category = this.categoryRepository.findByCategoryId(request.categoryId())
                 .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         product.update(request.stock(), request.isAvailable(), request.thumbnailUrl(), category);
@@ -181,7 +185,7 @@ public class AdminProductService {
                 .map(ProductInfoResponse::from)
                 .toList();
 
-        return AdminProductInfoResponse.fromDto(product, responses, createdPrice);
+        return AdminProductInfoResponse.from(product, responses, createdPrice);
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {
