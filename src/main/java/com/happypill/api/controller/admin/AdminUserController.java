@@ -2,14 +2,12 @@ package com.happypill.api.controller.admin;
 
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.AdminUserService;
+import com.happypill.application.service.admin.response.AdminUserDetailResponse;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +23,12 @@ public class AdminUserController {
                                                       @RequestParam(value = "size", defaultValue = "7") int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminUserService.getAllUsers(pageable);
+    }
+
+    //특정 회원 조회
+    @GetMapping("/{userId}")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public AdminUserDetailResponse getUserDetail(@PathVariable String userId) {
+        return adminUserService.getUserDetails(Long.valueOf(userId));
     }
 }
