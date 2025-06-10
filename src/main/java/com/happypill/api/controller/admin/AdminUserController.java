@@ -28,7 +28,7 @@ public class AdminUserController {
     //특정 회원 조회
     @GetMapping("/{userId}")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
-    public AdminUserDetailResponse getUserDetail(@PathVariable String userId) {
-        return adminUserService.getUserDetails(Long.valueOf(userId));
+    public AdminUserDetailResponse getUserDetail(@PathVariable Long userId) {
+        return adminUserService.getUserDetails(userId);
     }
 }
