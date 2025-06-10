@@ -403,7 +403,7 @@ class AdminProductServiceTest {
                 new ProductInfoRequest(Language.KO, "비타민C 1000", "건강을 위한 비타민", "하루 한 알로 충분한 비타민C 섭취", "https://update.com/xxx", "헬스케어코리아", "100정", "하루 1회 1정 섭취", "과다 섭취 시 부작용이 있을 수 있습니다."),
                 new ProductInfoRequest(Language.EN, "Vitamin C 1000", "Vitamin for your health", "One pill a day provides sufficient vitamin C", "https://update.com/xxx", "Healthcare Korea", "100 tablets", "Take 1 tablet daily", "Overconsumption may cause side effects.")
         );
-        AdminProductUpdateRequest request = new AdminProductUpdateRequest(String.valueOf(category.getCategoryId()), "https://update.com/xxx", true, 30, 2990, productInfos);
+        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getCategoryId(), "https://update.com/xxx", true, 30, 2990, productInfos);
 
         //when //then
         assertThatThrownBy(()->adminProductService.updateProduct(1000L, request))
@@ -434,7 +434,7 @@ class AdminProductServiceTest {
                 new ProductInfoRequest(Language.KO, "비타민C 1000", "건강을 위한 비타민", "하루 한 알로 충분한 비타민C 섭취", "https://update.com/xxx", "헬스케어코리아", "100정", "하루 1회 1정 섭취", "과다 섭취 시 부작용이 있을 수 있습니다."),
                 new ProductInfoRequest(Language.EN, "Vitamin C 1000", "Vitamin for your health", "One pill a day provides sufficient vitamin C", "https://update.com/xxx", "Healthcare Korea", "100 tablets", "Take 1 tablet daily", "Overconsumption may cause side effects.")
         );
-        AdminProductUpdateRequest request = new AdminProductUpdateRequest(String.valueOf(category.getCategoryId()), "https://update.com/xxx", true, 30, 2990, productInfos);
+        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getCategoryId(), "https://update.com/xxx", true, 30, 2990, productInfos);
 
         //when
         adminProductService.updateProduct(product.getProductId(), request);
@@ -470,7 +470,7 @@ class AdminProductServiceTest {
         List<ProductInfoRequest> productInfos = List.of(
                 new ProductInfoRequest(Language.KO, "비타민C 1000", "건강을 위한 비타민", "하루 한 알로 충분한 비타민C 섭취", "https://update.com/xxx", "헬스케어코리아", "100정", "하루 1회 1정 섭취", "과다 섭취 시 부작용이 있을 수 있습니다.")
         );
-        AdminProductUpdateRequest request = new AdminProductUpdateRequest(String.valueOf(category.getCategoryId()), "https://update.com/xxx", true, 30, 2990, productInfos);
+        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getCategoryId(), "https://update.com/xxx", true, 30, 2990, productInfos);
 
         //when
         adminProductService.updateProduct(product.getProductId(), request);
