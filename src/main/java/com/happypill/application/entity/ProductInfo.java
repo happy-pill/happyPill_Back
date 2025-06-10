@@ -64,4 +64,15 @@ public class ProductInfo extends BaseEntity{
                                  String company, String briefDescription, Product product){
         return new ProductInfo(productInfoId, Language.parseLanguage(language), name, quantityDetails, warningMessage, usage, contentImageUrl, description, company, briefDescription, product);
     }
+
+    public void update(String name, String briefDescription, String description, String contentImageUrl, String company, String quantityDetails, String usage, String warningMessage){
+        this.name = name;
+        this.briefDescription = briefDescription;
+        this.description = description;
+        this.contentImageUrl = contentImageUrl;
+        this.company = company;
+        this.quantityDetails = quantityDetails;
+        this.usage = usage;
+        this.warningMessage = warningMessage;
+    }
 }

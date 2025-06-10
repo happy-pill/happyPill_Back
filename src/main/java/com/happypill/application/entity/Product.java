@@ -41,5 +41,12 @@ public class Product extends BaseEntity{
     
     public static Product of(Long productId, Integer stock, String thumbnailUrl, Category category) {
         return new Product(productId, stock, true, thumbnailUrl, false, category);
-    }    
+    }
+
+    public void update(Integer stock, boolean isAvailable, String thumbnailUrl, Category category) {
+        this.stock = stock;
+        this.thumbnailUrl = thumbnailUrl;
+        this.category = category;
+        this.isAvailable = (stock == 0) ? false : isAvailable;
+    }
 }
