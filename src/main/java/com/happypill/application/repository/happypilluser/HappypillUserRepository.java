@@ -19,4 +19,12 @@ public interface HappypillUserRepository extends JpaRepository<HappypillUser, Lo
         ORDER BY u.userId DESC
 """)
     Page<HappypillUser> getAllUsers(Pageable pageable);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END
+        FROM HappypillUser u
+        WHERE (u.loginEmail = :email OR u.notifyEmail = :email)
+        AND u.userId <> :userId
+    """)
+    boolean existEmailConflict(@Param("email") String email, @Param("userId") Long userId);
 }
