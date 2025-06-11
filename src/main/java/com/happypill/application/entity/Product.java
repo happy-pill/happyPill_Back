@@ -49,4 +49,9 @@ public class Product extends BaseEntity{
         this.category = category;
         this.isAvailable = (stock == 0) ? false : isAvailable;
     }
+
+    public void deleteProduct(){
+        this.isDeleted = true;
+        this.isAvailable = false;
+    }
 }

@@ -481,4 +481,39 @@ class AdminProductServiceTest {
                 .extracting(ProductInfo::getName)
                 .anyMatch(name -> name.contains("EN"));
     }
+
+    @Test
+    @DisplayName("[상품 삭제] 경로 변수의 productId가 존재하지 않는 Product면 에러를 반환한다.")
+    void deleteProduct_1(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        categoryRepository.save(category);
+
+        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, "https://xxx.com/xxx", false, category);
+        productRepository.save(product);
+
+        //when //then
+        assertThatThrownBy(()->adminProductService.deleteProduct(1000L))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.PRODUCT_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[상품 삭제] 상품이 삭제되면 isAvailable 은 false, isDeleted 는 true 가 된다.")
+    void deleteProduct_2(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        categoryRepository.save(category);
+
+        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, "https://xxx.com/xxx", false, category);
+        productRepository.save(product);
+
+        //when
+        adminProductService.deleteProduct(product.getProductId());
+
+        //then
+        Product updatedProduct = productRepository.findByProductId(product.getProductId()).orElseThrow();
+        assertThat(updatedProduct.isAvailable()).isFalse();
+        assertThat(updatedProduct.isDeleted()).isTrue();
+    }
 }
