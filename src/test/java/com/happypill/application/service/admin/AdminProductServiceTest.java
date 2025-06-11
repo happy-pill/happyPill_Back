@@ -309,7 +309,7 @@ class AdminProductServiceTest {
         List<ProductInfoRequest> productInfoList = List.of(
                 new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
         );
-        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(category.getCategoryId()), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+        AdminProductCreateRequest request = new AdminProductCreateRequest(category.getCategoryId(), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
 
         //when //then
         assertThatThrownBy(() -> adminProductService.createProduct(request))
@@ -340,7 +340,7 @@ class AdminProductServiceTest {
                 new ProductInfoRequest(Language.KO, "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
                 new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
         );
-        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(category.getCategoryId()), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+        AdminProductCreateRequest request = new AdminProductCreateRequest(category.getCategoryId(), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
 
         //when
         long productId = adminProductService.createProduct(request);
@@ -372,7 +372,7 @@ class AdminProductServiceTest {
                 new ProductInfoRequest(Language.KO, "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
                 new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
         );
-        AdminProductCreateRequest request = new AdminProductCreateRequest(String.valueOf(1000L), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+        AdminProductCreateRequest request = new AdminProductCreateRequest(1000L, "https://xxx.com/xxx", true, 33, 30000, productInfoList);
 
         //when //then
         assertThatThrownBy(()-> adminProductService.createProduct(request))
