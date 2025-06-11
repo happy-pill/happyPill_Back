@@ -13,10 +13,12 @@ import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.admin.request.AdminProductCreateRequest;
+import com.happypill.application.service.admin.request.AdminProductUpdateRequest;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.response.AdminProductListResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
 import com.happypill.application.service.product.request.ProductInfoRequest;
+import com.happypill.application.service.product.response.ProductInfoResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,10 +76,14 @@ public class AdminProductService {
             throw new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND);
         }
 
-        ProductPrice productPrice = productPriceRepository.findCurrentPriceByProduct(productId)
+        ProductPrice productPrice = productPriceRepository.getCurrentPriceByProductId(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
-        return AdminProductInfoResponse.from(product, productInfo, productPrice);
+        List<ProductInfoResponse> productInfoList = productInfo.stream()
+                .map(ProductInfoResponse::from)
+                .toList();
+
+        return AdminProductInfoResponse.from(product, productInfoList, productPrice);
     }
 
     //금액 기록 조회
@@ -132,6 +141,51 @@ public class AdminProductService {
                 .collect(Collectors.toList());
         productInfoRepository.saveAll(productInfoList);
         return product.getProductId();
+    }
+
+    // 상품 수정
+    @Transactional
+    public AdminProductInfoResponse updateProduct(Long productId, AdminProductUpdateRequest request) {
+        Product product = this.productRepository.findByProductId(productId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
+
+        ProductPrice productPrice = this.productPriceRepository.findCurrentPriceByProduct(productId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
+
+        Category category = this.categoryRepository.findByCategoryId(request.categoryId())
+                .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
+
+        product.update(request.stock(), request.isAvailable(), request.thumbnailUrl(), category);
+
+        ProductPrice createdPrice = productPrice.createNextPrice(request.price(), product);
+        this.productPriceRepository.save(createdPrice);
+
+        Map<Language, ProductInfo> infoMap = productInfoRepository
+                .findAllByProductId(product.getProductId())
+                .stream()
+                .collect(Collectors.toMap(ProductInfo::getLanguage, Function.identity()));
+
+        request.productInfos().forEach(dto -> {
+            ProductInfo info = Optional.ofNullable(infoMap.get(dto.language()))
+                    .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
+
+            info.update(
+                    dto.name(),
+                    dto.briefDescription(),
+                    dto.description(),
+                    dto.contentImageUrl(),
+                    dto.company(),
+                    dto.quantityDetails(),
+                    dto.usage(),
+                    dto.warningMessage()
+            );
+        });
+
+        List<ProductInfoResponse> responses = infoMap.values().stream()
+                .map(ProductInfoResponse::from)
+                .toList();
+
+        return AdminProductInfoResponse.from(product, responses, createdPrice);
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {
