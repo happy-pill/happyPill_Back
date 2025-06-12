@@ -188,6 +188,14 @@ public class AdminProductService {
         return AdminProductInfoResponse.from(product, responses, createdPrice);
     }
 
+    //상품 삭제
+    @Transactional
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
+        product.deleteProduct();
+    }
+
     private int getCurrentPrice(ProductInfo productInfo) {
         ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId())
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));

@@ -71,4 +71,12 @@ public class AdminProductController {
                                                   @Valid @RequestBody AdminProductUpdateRequest request) {
         return adminProductService.updateProduct(productId, request);
     }
+
+    //상품 삭제
+    @DeleteMapping("/{productId}")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteProduct(@PathVariable(value = "productId") Long productId) {
+        adminProductService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
+    }
 }
