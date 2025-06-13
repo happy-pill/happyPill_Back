@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.Locale;
 
-@Tag(name = "AdminProductController", description = "관리자가 상품 정보를 조회/관리하기 위한 API")
+@Tag(name = "[관리자] 상품", description = "관리자가 상품 정보를 조회/관리하기 위한 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/products")

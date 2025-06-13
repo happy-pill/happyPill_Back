@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
 
-@Tag(name = "AdminCategoryController", description = "관리자가 카테고리 정보를 조회/관리하기 위한 API")
+@Tag(name = "[관리자] 카테고리", description = "관리자가 카테고리 정보를 조회/관리하기 위한 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/categories")

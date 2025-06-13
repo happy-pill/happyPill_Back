@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
 
-@Tag(name = "ProductController", description = "상품 정보를 조회하기 위한 API")
+@Tag(name = "상품", description = "상품 정보를 조회하기 위한 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")

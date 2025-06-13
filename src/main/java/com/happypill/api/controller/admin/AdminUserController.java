@@ -17,7 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="AdminUserController", description = "관리자가 사용자 정보를 조회/관리하기 위한 API")
+@Tag(name="[관리자] 회원", description = "관리자가 사용자 정보를 조회/관리하기 위한 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/users")

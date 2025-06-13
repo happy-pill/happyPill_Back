@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "UserController", description = "사용자 정보 및 이메일 인증 관련 API")
+@Tag(name = "사용자", description = "사용자 정보 및 이메일 인증 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class UserController {

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Locale;
 
-@Tag(name = "CategoryController", description = "카테고리 정보를 조회하기 위한 API")
+@Tag(name = "카테고리", description = "카테고리 정보를 조회하기 위한 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/categories")
