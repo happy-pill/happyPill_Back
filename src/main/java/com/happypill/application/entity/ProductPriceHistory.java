@@ -13,8 +13,8 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PRIVATE)
-@Table(name = "product_prices")
-public class ProductPrice extends BaseEntity{
+@Table(name = "product_price_history")
+public class ProductPriceHistory extends BaseEntity {
 
     @Id
     private Long productPriceId;
@@ -29,7 +29,7 @@ public class ProductPrice extends BaseEntity{
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public static ProductPrice of(Long productPriceId, Integer price, boolean isUsed, Product product){
-        return new ProductPrice(productPriceId, price, isUsed, product);
+    public static ProductPriceHistory of(Long productPriceId, Integer price, boolean isUsed, Product product) {
+        return new ProductPriceHistory(productPriceId, price, isUsed, product);
     }
 }

@@ -22,6 +22,8 @@ public class Product extends BaseEntity{
     @Column(nullable = false)
     private Integer stock;
 
+    private Integer price;
+
     @Column(nullable = false)
     private boolean isAvailable;
 
@@ -35,11 +37,11 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public static Product of(Long productId, Integer stock, boolean isAvailable, String thumbnailUrl, boolean isDeleted, Category category){
-        return new Product(productId, stock, isAvailable, thumbnailUrl, isDeleted, category);
+    public static Product of(Long productId, Integer stock, Integer price, boolean isAvailable, String thumbnailUrl, Category category) {
+        return new Product(productId, stock, price, isAvailable, thumbnailUrl, false, category);
     }
-    
-    public static Product of(Long productId, Integer stock, String thumbnailUrl, Category category) {
-        return new Product(productId, stock, true, thumbnailUrl, false, category);
+
+    public static Product of(Long productId, Integer price, Integer stock, String thumbnailUrl, Category category) {
+        return new Product(productId, stock, price, true, thumbnailUrl, false, category);
     }    
 }

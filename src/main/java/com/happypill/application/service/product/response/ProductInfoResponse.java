@@ -1,8 +1,6 @@
 package com.happypill.application.service.product.response;
 
-import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
-import com.happypill.application.entity.ProductPrice;
 
 public record ProductInfoResponse(
         String language,

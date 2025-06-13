@@ -7,11 +7,11 @@ import com.happypill.application.entity.ProductInfo;
 public record ProductResponse(String productId, Long categoryId, String name, String company, int price,
                               String briefDescription, String thumbnailUrl)
 {
-    public static ProductResponse from(ProductInfo productInfo, Integer price) {
+    public static ProductResponse from(ProductInfo productInfo) {
         Product product = productInfo.getProduct();
         Category category = product.getCategory();
 
         return new ProductResponse(product.getProductId().toString(), category.getCategoryId(), productInfo.getName(),
-                productInfo.getCompany(), price, productInfo.getBriefDescription(), product.getThumbnailUrl());
+                productInfo.getCompany(), product.getPrice(), productInfo.getBriefDescription(), product.getThumbnailUrl());
     }
 }

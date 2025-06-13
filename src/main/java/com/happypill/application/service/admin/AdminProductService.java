@@ -3,7 +3,7 @@ package com.happypill.application.service.admin;
 import com.happypill.application.entity.Category;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
-import com.happypill.application.entity.ProductPrice;
+import com.happypill.application.entity.ProductPriceHistory;
 import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
@@ -71,10 +71,8 @@ public class AdminProductService {
             throw new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND);
         }
 
-        ProductPrice productPrice = productPriceRepository.findCurrentPriceByProduct(productId)
-                .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
-        return AdminProductInfoResponse.from(product, productInfo, productPrice);
+        return AdminProductInfoResponse.from(product, productInfo);
     }
 
     //금액 기록 조회
@@ -84,7 +82,7 @@ public class AdminProductService {
             throw new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND);
         }
 
-        Page<ProductPrice> productPrices = productPriceRepository.getCurrentPriceByProductId(productId, pageable);
+        Page<ProductPriceHistory> productPrices = productPriceRepository.getCurrentPriceByProductId(productId, pageable);
         Page<AdminProductPriceResponse> responses = productPrices
                 .map(AdminProductPriceResponse::from);
 
@@ -106,14 +104,14 @@ public class AdminProductService {
         Product product = Product.of(
                 SnowflakeUtil.nextId(),
                 request.stock(),
+                request.price(),
                 request.isAvailable(),
                 request.thumbnailUrl(),
-                false,
                 category);
         productRepository.save(product);
 
-        ProductPrice productPrice = ProductPrice.of(SnowflakeUtil.nextId(), request.price(), true, product);
-        productPriceRepository.save(productPrice);
+        ProductPriceHistory productPriceHistory = ProductPriceHistory.of(SnowflakeUtil.nextId(), request.price(), true, product);
+        productPriceRepository.save(productPriceHistory);
 
         List<ProductInfo> productInfoList = request.productInfos().stream()
                 .map(dto -> ProductInfo.of(
@@ -135,7 +133,7 @@ public class AdminProductService {
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {
-        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId())
+        ProductPriceHistory price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId())
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         return price.getPrice();
