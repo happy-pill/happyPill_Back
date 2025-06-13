@@ -3,9 +3,10 @@ package com.happypill.application.service.product.response;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.ProductPrice;
+import com.happypill.application.entity.enums.Language;
 
 public record ProductInfoResponse(
-        String language,
+        Language language,
         String name,
         String briefDescription,
         String description,
@@ -18,7 +19,7 @@ public record ProductInfoResponse(
 ) {
     public static ProductInfoResponse from(ProductInfo productInfo) {
         return new ProductInfoResponse(
-                productInfo.getLanguage().toString(),
+                productInfo.getLanguage(),
                 productInfo.getName(),
                 productInfo.getBriefDescription(),
                 productInfo.getDescription(),

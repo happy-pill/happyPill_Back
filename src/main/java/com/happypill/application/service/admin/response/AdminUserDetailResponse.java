@@ -6,7 +6,6 @@ import com.happypill.application.entity.enums.Provider;
 import java.time.ZonedDateTime;
 
 public record AdminUserDetailResponse(
-
         String userId,
         String loginEmail,
         String nickname,
