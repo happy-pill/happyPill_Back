@@ -2,6 +2,7 @@ package com.happypill.api.controller.admin;
 
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.request.AdminProductCreateRequest;
+import com.happypill.application.service.admin.request.AdminProductUpdateRequest;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.AdminProductService;
 import com.happypill.application.service.admin.response.AdminProductListResponse;
@@ -61,5 +62,21 @@ public class AdminProductController {
     public ResponseEntity<?> createProduct(@Valid @RequestBody AdminProductCreateRequest request) {
         long productId = adminProductService.createProduct(request);
         return ResponseEntity.created(URI.create("/api/admin/products/" + productId)).build();
+    }
+
+    //상품 수정
+    @PatchMapping("/{productId}")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public AdminProductInfoResponse updateProduct(@PathVariable("productId") Long productId,
+                                                  @Valid @RequestBody AdminProductUpdateRequest request) {
+        return adminProductService.updateProduct(productId, request);
+    }
+
+    //상품 삭제
+    @DeleteMapping("/{productId}")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteProduct(@PathVariable(value = "productId") Long productId) {
+        adminProductService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -27,5 +27,4 @@ public record ProductInfoResponse(
                 productInfo.getWarningMessage()
         );
     }
-
 }

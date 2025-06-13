@@ -7,7 +7,7 @@ import com.happypill.application.entity.enums.Role;
 import java.time.ZonedDateTime;
 
 public record UserInfoResponse(
-        Long userId,
+        String userId,
         Provider provider,
         String nickname,
         String loginEmail,
@@ -18,7 +18,7 @@ public record UserInfoResponse(
 ) {
     public static UserInfoResponse from(HappypillUser happypillUser) {
         return new UserInfoResponse(
-                happypillUser.getUserId(),
+                String.valueOf(happypillUser.getUserId()),
                 happypillUser.getProvider(),
                 happypillUser.getNickName(),
                 happypillUser.getLoginEmail(),

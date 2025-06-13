@@ -1,8 +1,11 @@
 package com.happypill.application.service.admin;
 
 import com.happypill.application.entity.HappypillUser;
+import com.happypill.application.exception.custom.ExceptionCode;
+import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
+import com.happypill.application.service.admin.response.AdminUserDetailResponse;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,5 +28,12 @@ public class AdminUserService {
                 .map(AdminUserListResponse::from);
 
         return new CustomPage<>(responses);
+    }
+
+    //특정 회원 조회
+    public AdminUserDetailResponse getUserDetails(Long userId) {
+        HappypillUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
+        return AdminUserDetailResponse.from(user);
     }
 }
