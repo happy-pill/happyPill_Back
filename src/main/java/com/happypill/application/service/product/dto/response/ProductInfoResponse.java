@@ -7,12 +7,12 @@ public record ProductInfoResponse (String productId, String name, String company
                                    String description, String thumbnailUrl, String contentImageUrl, String quantityDetails,
                                    String usage, String warningMessage) {
 
-    public static ProductInfoResponse from (Product product, ProductInfo productInfo, int price) {
+    public static ProductInfoResponse from(Product product, ProductInfo productInfo) {
         return new ProductInfoResponse(
                 product.getProductId().toString(),
                 productInfo.getName(),
                 productInfo.getCompany(),
-                price,
+                product.getPrice(),
                 productInfo.getBriefDescription(),
                 productInfo.getDescription(),
                 product.getThumbnailUrl(),

@@ -19,7 +19,6 @@ import com.happypill.application.service.admin.response.AdminProductListResponse
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
 import com.happypill.application.service.product.request.ProductInfoRequest;
 import com.happypill.application.util.SnowflakeUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,7 +61,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -88,7 +86,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         ProductPrice productPrice = ProductPrice.of(SnowflakeUtil.nextId(), 3500, true, product);
@@ -110,7 +108,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -142,7 +140,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -172,7 +170,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -203,7 +201,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -234,7 +232,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -264,7 +262,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -294,7 +292,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -324,7 +322,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, " https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -356,7 +354,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, "https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -387,7 +385,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, "https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -418,7 +416,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, "https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -455,7 +453,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, "https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         List<ProductInfo> productInfo = Arrays.asList(
@@ -489,7 +487,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, "https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         //when //then
@@ -505,7 +503,7 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
         categoryRepository.save(category);
 
-        Product product = Product.of(SnowflakeUtil.nextId(), 3, true, "https://xxx.com/xxx", false, category);
+        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
         //when
