@@ -61,6 +61,11 @@ app:
     base-url: https://happypill.jiheon2234.dev
     login-path: /oauth-redirect
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 --- # dev
 spring.config.activate.on-profile: dev
