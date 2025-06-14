@@ -61,6 +61,11 @@ app:
     base-url: https://happypill.jiheon2234.dev
     login-path: /oauth-redirect
 
+portone:
+  api-secret: ${PORTONE_API_SECRET:secret}
+  store-id: store-48428764-61cf-4595-9a05-ddd25812b67b
+
+
 
 --- # dev
 spring.config.activate.on-profile: dev
@@ -73,6 +78,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
   data:
     redis:
       host: localhost
@@ -87,7 +97,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create  # validate
+      ddl-auto: validate  # 프로덕션에서는 validate 사용
 
   data:
     redis:

@@ -36,6 +36,8 @@ dependencies {
     implementation(platform("software.amazon.awssdk:bom:2.31.59"))
     implementation("software.amazon.awssdk:s3")
 
+    implementation("io.portone:server-sdk:0.19.0")
+
 
     runtimeOnly("org.postgresql:postgresql")
 

@@ -37,12 +37,23 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+
     public static Product of(Long productId, Integer price, Integer stock, boolean isAvailable, String thumbnailUrl, boolean isDeleted, Category category) {
         return new Product(productId, price, stock, isAvailable, thumbnailUrl, isDeleted, category);
     }
 
     public static Product of(Long productId, Integer price, Integer stock, String thumbnailUrl, Category category) {
         return new Product(productId, price, stock, true, thumbnailUrl, false, category);
+    }
+
+    public void decreaseStock(int count) {
+        if (count <= 0) {
+            throw new IllegalArgumentException("감소할 재고 수량은 0보다 커야 합니다.");
+        }
+        if (stock < count) {
+            throw new RuntimeException("재고가 부족합니다. 현재 재고: " + stock + ", 요청 수량: " + count);
+        }
+        this.stock -= count;
     }
 
     public void update(Integer stock, boolean isAvailable, String thumbnailUrl, Category category) {
