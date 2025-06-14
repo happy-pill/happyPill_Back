@@ -4,6 +4,7 @@ import com.happypill.application.exception.global.AuthResponse;
 import com.happypill.application.exception.global.ErrorResponse;
 import com.happypill.application.service.category.dto.response.CategoryResponse;
 import com.happypill.application.service.category.CategoryService;
+import com.happypill.application.swagger.OKAndServerErrorResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,10 +29,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Operation(summary = "모든 카테고리 조회", description = "카테고리 리스트를 조회합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청이 정상적으로 처리되었을 때"),
-            @ApiResponse(responseCode = "500", description = "서버 내부에서 오류 발생 했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
+    @OKAndServerErrorResponses
     @GetMapping
     public List<CategoryResponse> getCategories(@RequestHeader(LANGUAGE_HEADER) String headerLanguage) {
         Locale locale = Locale.of(headerLanguage);

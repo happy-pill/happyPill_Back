@@ -1,6 +1,5 @@
 package com.happypill.api.controller.admin;
 
-import com.happypill.application.exception.global.AuthResponse;
 import com.happypill.application.exception.global.ErrorResponse;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.AdminProductService;
@@ -9,6 +8,9 @@ import com.happypill.application.service.admin.request.AdminProductUpdateRequest
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.response.AdminProductListResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
+import com.happypill.application.swagger.AuthFailureResponses;
+import com.happypill.application.swagger.CreatedAndServerErrorResponse;
+import com.happypill.application.swagger.OKAndServerErrorResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,13 +38,9 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
 
     @Operation(summary = "모든 상품 조회", description = "모든 상품들을 출력하기 위한 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청이 정상적으로 처리되었을 때"),
-            @ApiResponse(responseCode = "401", description = "인증 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "403", description = "인가 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "404", description = "카테고리 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 내부에서 오류 발생 했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
+    @AuthFailureResponses
+    @OKAndServerErrorResponses
+    @ApiResponse(responseCode = "404", description = "카테고리 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public CustomPage<AdminProductListResponse> getProducts(@RequestParam(value = "categories", required = false) Long categoryId,
@@ -55,13 +53,9 @@ public class AdminProductController {
     }
 
     @Operation(summary = "특정 상품 조회", description = "상품 정보 수정 시 상품 정보를 출력하기 위한 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청이 정상적으로 처리되었을 때"),
-            @ApiResponse(responseCode = "401", description = "인증 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "403", description = "인가 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "404", description = "상픔 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 내부에서 오류 발생 했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
+    @AuthFailureResponses
+    @OKAndServerErrorResponses
+    @ApiResponse(responseCode = "404", description = "상픔 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping("/{productId}")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public AdminProductInfoResponse getProductDetail(@PathVariable Long productId) {
@@ -69,13 +63,9 @@ public class AdminProductController {
     }
 
     @Operation(summary = "금액 기록 조회", description = "관리자가 상품의 가격을 히스토리별로 조회할 수 있기 위한 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청이 정상적으로 처리되었을 때"),
-            @ApiResponse(responseCode = "401", description = "인증 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "403", description = "인가 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "404", description = "상픔 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 내부에서 오류 발생 했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
+    @AuthFailureResponses
+    @OKAndServerErrorResponses
+    @ApiResponse(responseCode = "404", description = "상픔 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping("/{productId}/price-history")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public CustomPage<AdminProductPriceResponse> getProductPriceHistory(@PathVariable(value = "productId") Long productId,
@@ -86,14 +76,9 @@ public class AdminProductController {
     }
 
     @Operation(summary = "상품 등록", description = "관리자가 새로운 상품을 등록하기 위한 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "요청이 정상적으로 처리되었을 때"),
-            @ApiResponse(responseCode = "401", description = "인증 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "403", description = "인가 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "400", description = "요청 DTO의 유효성 검증에 실패했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 내부에서 오류 발생 했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-
-    })
+    @AuthFailureResponses
+    @CreatedAndServerErrorResponse
+    @ApiResponse(responseCode = "400", description = "요청 DTO의 유효성 검증에 실패했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @PostMapping
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createProduct(@Valid @RequestBody AdminProductCreateRequest request) {
@@ -102,13 +87,11 @@ public class AdminProductController {
     }
 
     @Operation(summary = "상품 수정", description = "관리자가 상품 정보를 수정하기 위한 API")
+    @AuthFailureResponses
+    @OKAndServerErrorResponses
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청이 정상적으로 처리되었을 때"),
-            @ApiResponse(responseCode = "401", description = "인증 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "403", description = "인가 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
             @ApiResponse(responseCode = "400", description = "요청 DTO의 유효성 검증에 실패했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "상픔 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 내부에서 오류 발생 했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "404", description = "상픔 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PatchMapping("/{productId}")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
@@ -118,17 +101,12 @@ public class AdminProductController {
     }
 
     @Operation(summary = "상품 삭제", description = "관리자가 상품을 삭제하기 위한 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "요청이 정상적으로 처리되었을 때"),
-            @ApiResponse(responseCode = "401", description = "인증 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "403", description = "인가 실패 했을 때", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-            @ApiResponse(responseCode = "404", description = "상픔 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 내부에서 오류 발생 했을 때", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
+    @AuthFailureResponses
+    @OKAndServerErrorResponses
+    @ApiResponse(responseCode = "404", description = "상픔 정보가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @DeleteMapping("/{productId}")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteProduct(@PathVariable(value = "productId") Long productId) {
+    public void deleteProduct(@PathVariable(value = "productId") Long productId) {
         adminProductService.deleteProduct(productId);
-        return ResponseEntity.noContent().build();
     }
 }
