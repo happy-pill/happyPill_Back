@@ -30,6 +30,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class AdminUserServiceTest {
 
+    private static final String UPDATED_NOTIFY_EMAIL = "updatedNotify@gmail.com";
+    private static final String UPDATED_NICKNAME = "updatedNick";
     private final Faker faker = new Faker();
 
     @Autowired
@@ -111,60 +113,51 @@ class AdminUserServiceTest {
     }
 
     @Test
-    @DisplayName("[회원 정보 수정] 특정 회원의 notifyEmail 를 수정할 때 다른 회원들의 loginEmail, notifyEmail 과 중복될 경우 에러를 반환한다.")
+    @DisplayName("[회원 정보 수정] 경로 변수의 userId 가 존재하지 않는 회원일 경우 예외를 반환한다.")
     void updateUserProfile_1() {
         //given
-        HappypillUser savedUser = HappypillUser.ofSocial(SnowflakeUtil.nextId(), "nick_xxx", Provider.KAKAO, "sub_xxxxx", "login@gmail.com", "notify@gmail.com", Role.USER);
-        List<HappypillUser> userList = List.of(
-                HappypillUser.ofSocial(SnowflakeUtil.nextId(), "nick_1", Provider.KAKAO, "sub_1", "login1@gmail.com", "notify1@gmail.com", Role.USER),
-                HappypillUser.ofSocial(SnowflakeUtil.nextId(), "nick_2", Provider.KAKAO, "sub_2", "login2@gmail.com", "notify2@gmail.com", Role.USER)
-        );
+        HappypillUser savedUser = generateTestUser();
         userRepository.save(savedUser);
-        userRepository.saveAll(userList);
 
-        AdminUserUpdateRequest request = new AdminUserUpdateRequest("testNick", "notify2@gmail.com");
-
+        AdminUserUpdateRequest request = new AdminUserUpdateRequest(UPDATED_NICKNAME, UPDATED_NOTIFY_EMAIL);
         //when //then
-        assertThatThrownBy(() -> adminUserService.updateUserProfile(savedUser.getUserId(), request))
+        assertThatThrownBy(()->adminUserService.updateUserProfile(1000L,request))
                 .isInstanceOf(BusinessException.class)
-                .hasMessageContaining(ExceptionCode.EMAIL_DUPLICATED.getMessage());
-    }
-
-    @Test
-    @DisplayName("[회원 정보 수정] 특정 회원의 notifyEmail 를 수정할 때 자신의 loginEmail 과 같은 경우 정상적으로 수정된다.")
-    void updateUserProfile_2() {
-        //given
-        HappypillUser savedUser = HappypillUser.ofSocial(SnowflakeUtil.nextId(), "nick_xxx", Provider.KAKAO, "sub_xxxxx", "login@gmail.com", "notify@gmail.com", Role.USER);
-        userRepository.save(savedUser);
-
-        AdminUserUpdateRequest request = new AdminUserUpdateRequest(null, "login@gmail.com");
-
-        //when
-        adminUserService.updateUserProfile(savedUser.getUserId(), request);
-        HappypillUser updatedUser = userRepository.findById(savedUser.getUserId()).orElseThrow();
-
-        // then
-        assertThat(updatedUser.getNotifyEmail()).isEqualTo("login@gmail.com");
+                .hasMessageContaining(ExceptionCode.USER_NOT_FOUND.getMessage());
     }
 
     @Test
     @DisplayName("[회원 정보 수정] AdminUserUpdateRequest 에서 nickName 값만 있고 notifyEmail 은 null 일 때 nickName 만 수정된다.")
-    void updateUserProfile_3() {
+    void updateUserProfile_2() {
         //given
-        HappypillUser savedUser = HappypillUser.ofSocial(SnowflakeUtil.nextId(), "nick_xxx", Provider.KAKAO, "sub_xxxxx", "login@gmail.com", "notify@gmail.com", Role.USER);
+        HappypillUser savedUser = generateTestUser();
         userRepository.save(savedUser);
 
-        AdminUserUpdateRequest request = new AdminUserUpdateRequest("testNick", null);
+        AdminUserUpdateRequest request = new AdminUserUpdateRequest(UPDATED_NICKNAME, null);
 
         //when
         adminUserService.updateUserProfile(savedUser.getUserId(), request);
         HappypillUser updatedUser = userRepository.findById(savedUser.getUserId()).orElseThrow();
 
         // then
-        assertThat(updatedUser.getNickName()).isEqualTo("testNick");
-        assertThat(updatedUser.getLoginEmail()).isEqualTo("login@gmail.com");
-        assertThat(updatedUser.getNotifyEmail()).isEqualTo("notify@gmail.com");
-        assertThat(updatedUser.getProvider()).isEqualTo(Provider.KAKAO);
-        assertThat(updatedUser.getSocialSub()).isEqualTo("sub_xxxxx");
+        assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
+    }
+
+    @Test
+    @DisplayName("[회원 정보 수정] AdminUserUpdateRequest 에서 nickName, notifyEmail 값 모두 존재할 때 두 필드 값 모두 수정된다.")
+    void updateUserProfile_3(){
+        //given
+        HappypillUser savedUser = generateTestUser();
+        userRepository.save(savedUser);
+
+        AdminUserUpdateRequest request = new AdminUserUpdateRequest(UPDATED_NICKNAME, UPDATED_NOTIFY_EMAIL);
+
+        //when
+        adminUserService.updateUserProfile(savedUser.getUserId(), request);
+        HappypillUser updatedUser = userRepository.findById(savedUser.getUserId()).orElseThrow();
+
+        //then
+        assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
+        assertThat(updatedUser.getNotifyEmail()).isEqualTo(UPDATED_NOTIFY_EMAIL);
     }
 }

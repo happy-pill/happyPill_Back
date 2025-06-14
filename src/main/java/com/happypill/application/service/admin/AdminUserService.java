@@ -44,18 +44,23 @@ public class AdminUserService {
         HappypillUser user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
 
-        if(request.nickName() != null)
-            user.changeUser(request.nickName());
-        if(request.notifyEmail() != null){
-            String newEmail = request.notifyEmail();
-            if(!newEmail.equals(user.getLoginEmail())){
-                boolean isDuplicated = userRepository.existEmailConflict(newEmail, userId); //자신을 제외한 다른 사람들의 loginEmail, notifyEmail 과 겹치는 경우 예외 발생
-                if(isDuplicated)
-                    throw new BusinessException(ExceptionCode.EMAIL_DUPLICATED);
-            }
-            user.changeNotifyEmail(newEmail);
-        }
+        updateNickname(user, request);
+        updateNotifyEmail(user, request);
 
         return AdminUserDetailResponse.from(user);
+    }
+
+    private void updateNickname(HappypillUser user, AdminUserUpdateRequest request){
+        String newNickname = request.nickName();
+        if(newNickname != null && !newNickname.isBlank()){
+            user.changeUser(newNickname);
+        }
+    }
+
+    private void updateNotifyEmail(HappypillUser user, AdminUserUpdateRequest request){
+        String newNotifyEmail = request.notifyEmail();
+        if(newNotifyEmail != null && !newNotifyEmail.isBlank()){
+            user.changeNotifyEmail(newNotifyEmail);
+        }
     }
 }
