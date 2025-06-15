@@ -55,4 +55,8 @@ public class HappypillUser extends BaseEntity {
     public void changeNotifyEmail(String notifyEmail) {
         this.notifyEmail = notifyEmail;
     }
+
+    public void deleteUser(){
+        this.isDeleted = true;
+    }
 }

@@ -50,6 +50,13 @@ public class AdminUserService {
         return AdminUserDetailResponse.from(user);
     }
 
+    @Transactional
+    public void deleteUser(Long userId) {
+        HappypillUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
+        user.deleteUser();
+    }
+
     private void updateNickname(HappypillUser user, AdminUserUpdateRequest request){
         String newNickname = request.nickName();
         if(newNickname != null && !newNickname.isBlank()){

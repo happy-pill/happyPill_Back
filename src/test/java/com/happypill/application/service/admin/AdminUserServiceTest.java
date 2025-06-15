@@ -160,4 +160,32 @@ class AdminUserServiceTest {
         assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
         assertThat(updatedUser.getNotifyEmail()).isEqualTo(UPDATED_NOTIFY_EMAIL);
     }
+
+    @Test
+    @DisplayName("[회원 정보 삭제] 경로변수의 userId 가 존재하지 않는 회원일 경우 예외를 반환한다.")
+    void deleteUser_1() {
+        //given
+        HappypillUser savedUser = generateTestUser();
+        userRepository.save(savedUser);
+
+        //when //then
+        assertThatThrownBy(() -> adminUserService.deleteUser(1000L))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[회원 정보 삭제] 경로변수의 userId 가 존재하는 회원일 경우 isDeleted 필드는 true 로 변환된다.")
+    void deleteUser_2() {
+        //given
+        HappypillUser savedUser = generateTestUser();
+        userRepository.save(savedUser);
+
+        //when
+        adminUserService.deleteUser(savedUser.getUserId());
+        HappypillUser updatedUser = userRepository.findById(savedUser.getUserId()).orElseThrow();
+
+        //then
+        assertThat(updatedUser.isDeleted()).isTrue();
+    }
 }

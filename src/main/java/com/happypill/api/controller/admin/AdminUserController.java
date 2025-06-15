@@ -40,4 +40,9 @@ public class AdminUserController {
                                               @Valid @RequestBody AdminUserUpdateRequest request){
         return adminUserService.updateUserProfile(userId, request);
     }
+
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable Long userId) {
+        adminUserService.deleteUser(userId);
+    }
 }
