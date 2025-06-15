@@ -2,6 +2,7 @@ package com.happypill.api.controller.admin;
 
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.AdminCategoryService;
+import com.happypill.application.service.admin.request.AdminCategoryRequest;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -28,5 +29,11 @@ public class AdminCategoryController {
         Locale locale = Locale.forLanguageTag(headerLanguage);
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminCategoryService.getAllCategories(pageable, locale);
+    }
+
+    @PostMapping
+//   ToDo @PreAuthorize("hasRole('ADMIN')")
+    public void saveCategories(@RequestBody AdminCategoryRequest adminCategoryCreateRequestList) {
+        adminCategoryService.saveCategories(adminCategoryCreateRequestList);
     }
 }
