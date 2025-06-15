@@ -2,7 +2,6 @@ package com.happypill.application.service.product;
 
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
-import com.happypill.application.entity.ProductPrice;
 import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
@@ -35,8 +34,7 @@ public class ProductService {
         Language language = Language.parseLanguage(locale.getLanguage());
         List<ProductInfo> productInfos;
         if (lastProductId != null) {
-            // TO DO Change to ExceptionCode.Product_Info_not_found
-            ZonedDateTime createdAt = productRepository.getProductInfoByProductId(lastProductId, language).orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND)).getProduct().getCreatedAt();
+            ZonedDateTime createdAt = productRepository.getProductInfoByProductId(lastProductId, language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND)).getProduct().getCreatedAt();
             productInfos = productRepository.getAllProductInfoByCategory(categoryId, createdAt, language);
         } else {
             productInfos = productRepository.getAllProductInfoByCategory(categoryId, language);
@@ -65,6 +63,14 @@ public class ProductService {
         return response;
     }
 
+    public ProductInfoResponse getProduct(Long productId, Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+        Product product = productRepository.findByProductId(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
+        ProductInfo productInfo = productRepository.getProductInfoByProductId(product.getProductId(), language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
+
+        return ProductInfoResponse.from(product, productInfo);
+    }
+    
     public List<ProductInfoResponse> getRecommendation() {
         List<Long> topSellingProductIds = orderRepository.findTopSellingProductIds();
         List<Product> topProducts = new ArrayList<>();
@@ -94,9 +100,6 @@ public class ProductService {
         return response;
     }
 
-    private int getCurrentPrice(ProductInfo productInfo) {
-        // TO DO Change to ExceptionCode.Product_price_not_found
-        ProductPrice price = productPriceRepository.getCurrentPriceByProductInfoId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
 
         return price.getPrice();
     }
@@ -105,6 +108,13 @@ public class ProductService {
         // TO DO Change to ExceptionCode.Product_price_not_found
         ProductPrice price = productPriceRepository.getCurrentPriceByProductInfoId(product.getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
 
-        return price.getPrice();
+        return ProductInfoResponse.from(product, productInfo);
+    }
+
+    private int getCurrentPrice(ProductInfo productInfo) {
+//        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
+//        return price.getPrice();
+        return productRepository.findByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND))
+                .getPrice();
     }
 }

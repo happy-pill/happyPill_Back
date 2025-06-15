@@ -72,7 +72,10 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
+  data:
+    redis:
+      host: localhost
 
 --- # prod
 spring.config.activate.on-profile: prod
@@ -84,4 +87,15 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create-drop  # validate
+      ddl-auto: create  # validate
+
+  data:
+    redis:
+      cluster:
+        nodes:
+          - ${REDIS_HOST}
+
+aws:
+  s3:
+    bucket-name: happypill-s3
+    cdn-base-url: https://happypill-cdn.jiheon2234.dev

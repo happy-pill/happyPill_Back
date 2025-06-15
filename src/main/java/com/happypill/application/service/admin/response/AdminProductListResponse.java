@@ -4,8 +4,8 @@ import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 
 public record AdminProductListResponse(
-        Long productId,
-        Long categoryId,
+        String productId,
+        String categoryId,
         String name,
         String company,
         Integer price,
@@ -15,8 +15,8 @@ public record AdminProductListResponse(
 ) {
     public static AdminProductListResponse from(Product product, ProductInfo productInfo, int price){
         return new AdminProductListResponse(
-                product.getProductId(),
-                product.getCategory().getCategoryId(),
+                product.getProductId().toString(),
+                product.getCategory().getCategoryId().toString(),
                 productInfo.getName(),
                 productInfo.getCompany(),
                 price,

@@ -1,20 +1,18 @@
 package com.happypill.application.service.product.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public record ProductInfoResponse (Long productId, String name, String company, int price, String briefDescription,
+public record ProductInfoResponse (String productId, String name, String company, int price, String briefDescription,
                                    String description, String thumbnailUrl, String contentImageUrl, String quantityDetails,
                                    String usage, String warningMessage) {
 
-    public static ProductInfoResponse from (Product product, ProductInfo productInfo, int price) {
+    public static ProductInfoResponse from(Product product, ProductInfo productInfo) {
         return new ProductInfoResponse(
-                product.getProductId(),
+                product.getProductId().toString(),
                 productInfo.getName(),
                 productInfo.getCompany(),
-                price,
+                product.getPrice(),
                 productInfo.getBriefDescription(),
                 productInfo.getDescription(),
                 product.getThumbnailUrl(),
@@ -23,6 +21,8 @@ public record ProductInfoResponse (Long productId, String name, String company, 
                 productInfo.getUsage(),
                 productInfo.getWarningMessage()
         );
+    }
+}
     }
 
     public static ProductInfoResponse from (Product product, int price) {

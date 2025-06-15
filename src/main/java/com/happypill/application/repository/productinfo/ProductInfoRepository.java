@@ -1,5 +1,6 @@
 package com.happypill.application.repository.productinfo;
 
+import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.enums.Language;
 import org.springframework.data.domain.Page;
@@ -9,11 +10,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> {
 
     @Query("SELECT p FROM ProductInfo p WHERE p.product.productId = :productId")
     List<ProductInfo> findAllByProductId(@Param("productId") Long productId);
+
+    @Query("SELECT p FROM ProductInfo p WHERE p.product= :product AND p.language = :language")
+    Optional<ProductInfo> findByProductAndLanguage(@Param("product") Product product, @Param("language") Language language);
 
     @Query("""
     SELECT pi
@@ -21,7 +26,7 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
     JOIN pi.product p
     WHERE pi.language = :language
     ORDER BY p.productId DESC
-""")
+    """)
     Page<ProductInfo> getAllProductInfosByLanguage(@Param("language") Language language, Pageable pageable);
 
     @Query("""
@@ -31,6 +36,6 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
     WHERE pi.language = :language
     AND p.category.categoryId = :categoryId
     ORDER BY p.productId DESC
-""")
+    """)
     Page<ProductInfo> getAllProductInfosByCategoryAndLanguage(@Param("categoryId") Long categoryId, @Param("language") Language language, Pageable pageable);
 }

@@ -1,6 +1,6 @@
 package com.happypill.infra.email;
 
-import com.happypill.application.email.EmailSender;
+import com.happypill.application.client.EmailSender;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;

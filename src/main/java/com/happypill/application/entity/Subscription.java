@@ -18,9 +18,10 @@ public class Subscription extends BaseEntity{
     @Id
     private Long subscriptionId;
 
-    @Column(name = "expired_date", columnDefinition = "TIMESTAMPTZ")
+    @Column(name = "expired_date", columnDefinition = "TIMESTAMPTZ", nullable = false)
     private ZonedDateTime expiredDate;
 
+    @Column(nullable = false)
     private boolean isCompleted;
 
     @ManyToOne(fetch = LAZY)

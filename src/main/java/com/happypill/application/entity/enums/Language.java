@@ -18,7 +18,6 @@ public enum Language {
         try {
             return Language.valueOf(language.toUpperCase());
         } catch (Exception e) {
-            // To do : KO를 business Exception 으로 변경할 것
             return Language.KO;
         }
     }

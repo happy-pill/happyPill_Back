@@ -23,22 +23,29 @@ public class ProductInfo extends BaseEntity{
     private Long productInfoId;
 
     @Enumerated(STRING)
+    @Column(nullable = false)
     private Language language;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
+    @Column(nullable = false, length = 50)
     private String quantityDetails;
 
+    @Column(length = 500)
     private String warningMessage;
 
     private String usage;
 
     private String contentImageUrl;
 
+    @Column(nullable = false, length = 500)
     private String description;
 
+    @Column(nullable = false, length = 50)
     private String company;
 
+    @Column(nullable = false)
     private String briefDescription;
 
     @ManyToOne(fetch = LAZY)
@@ -56,5 +63,16 @@ public class ProductInfo extends BaseEntity{
                                  String warningMessage, String usage, String contentImageUrl, String description,
                                  String company, String briefDescription, Product product){
         return new ProductInfo(productInfoId, Language.parseLanguage(language), name, quantityDetails, warningMessage, usage, contentImageUrl, description, company, briefDescription, product);
+    }
+
+    public void update(String name, String briefDescription, String description, String contentImageUrl, String company, String quantityDetails, String usage, String warningMessage){
+        this.name = name;
+        this.briefDescription = briefDescription;
+        this.description = description;
+        this.contentImageUrl = contentImageUrl;
+        this.company = company;
+        this.quantityDetails = quantityDetails;
+        this.usage = usage;
+        this.warningMessage = warningMessage;
     }
 }
