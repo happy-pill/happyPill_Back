@@ -56,31 +56,31 @@ public class DataInitialiser implements ApplicationRunner {
         // 10 비타민, 6 미네랄, 4 허브, 유산균 2
 
         List<Product> productList = Arrays.asList(
-                Product.of(SnowflakeUtil.nextId(), 101, "www.first_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 102, "www.second_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 103, "www.third_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 104, "www.fourth_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 105, "www.fifth_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 106, "www.sixth_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 107, "www.seventh_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 108, "www.eighth_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 109, "www.ninth_vitamin_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 110, "www.tenth_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 101, 101, "www.first_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 102, 102, "www.second_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 103, 103, "www.third_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 104, 104, "www.fourth_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 105, 105, "www.fifth_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 106, 106, "www.sixth_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 107, 107, "www.seventh_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 108, 108, "www.eighth_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 109, 109, "www.ninth_vitamin_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 110, 110, "www.tenth_vitamin_Thumbnail.com", categoryList.get(0)),
 
-                Product.of(SnowflakeUtil.nextId(), 201, "www.first_mineral_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 202, "www.second_mineral_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 203, "www.third_mineral_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 204, "www.fourth_mineral_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 205, "www.fifth_mineral_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 206, "www.sixth_mineral_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 201, 201, "www.first_mineral_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 202, 202, "www.second_mineral_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 203, 203, "www.third_mineral_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 204, 204, "www.fourth_mineral_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 205, 205, "www.fifth_mineral_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 206, 206, "www.sixth_mineral_Thumbnail.com", categoryList.get(0)),
 
-                Product.of(SnowflakeUtil.nextId(), 1, "www.first_herb_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 2, "www.second_herb_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 3, "www.third_herb_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 4, "www.fourth_herb_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 1, 1, "www.first_herb_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 2, 2, "www.second_herb_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 3, 3, "www.third_herb_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 4, 4, "www.fourth_herb_Thumbnail.com", categoryList.get(0)),
 
-                Product.of(SnowflakeUtil.nextId(), 0, "www.first_probiotics_Thumbnail.com", categoryList.get(0)),
-                Product.of(SnowflakeUtil.nextId(), 0, "www.second_probiotics_Thumbnail.com", categoryList.get(0))
+                Product.of(SnowflakeUtil.nextId(), 1, 0, "www.first_probiotics_Thumbnail.com", categoryList.get(0)),
+                Product.of(SnowflakeUtil.nextId(), 2, 0, "www.second_probiotics_Thumbnail.com", categoryList.get(0))
         );
 
         List<ProductInfo> productInfoList = Arrays.asList(

@@ -2,7 +2,6 @@ package com.happypill.application.service.product;
 
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
-import com.happypill.application.entity.ProductPrice;
 import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
@@ -11,6 +10,7 @@ import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.product.dto.response.CustomPageResponse;
 import com.happypill.application.service.product.dto.response.ProductInfoResponse;
 import com.happypill.application.service.product.dto.response.ProductResponse;
+import com.happypill.application.service.product.response.ProductRelatedResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,14 +64,21 @@ public class ProductService {
         Language language = Language.parseLanguage(locale.getLanguage());
         Product product = productRepository.findByProductId(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
         ProductInfo productInfo = productRepository.getProductInfoByProductId(product.getProductId(), language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
-        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(product.getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
-        return ProductInfoResponse.from(product, productInfo, price.getPrice());
+        return ProductInfoResponse.from(product, productInfo);
+    }
+
+    public List<ProductRelatedResponse> getRecommendation() {
+        return productRepository.findTop8ByOrderByCreatedAt()
+                .stream()
+                .map(ProductRelatedResponse::from)
+                .toList();
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {
-        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
-
-        return price.getPrice();
+//        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
+//        return price.getPrice();
+        return productRepository.findByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND))
+                .getPrice();
     }
 }

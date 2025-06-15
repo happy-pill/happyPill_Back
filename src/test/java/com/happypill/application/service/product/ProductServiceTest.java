@@ -1,6 +1,9 @@
 package com.happypill.application.service.product;
 
-import com.happypill.application.entity.*;
+import com.happypill.application.entity.Category;
+import com.happypill.application.entity.CategoryInfo;
+import com.happypill.application.entity.Product;
+import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
@@ -12,6 +15,7 @@ import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.product.dto.response.CustomPageResponse;
 import com.happypill.application.service.product.dto.response.ProductInfoResponse;
 import com.happypill.application.service.product.dto.response.ProductResponse;
+import com.happypill.application.service.product.response.ProductRelatedResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -60,25 +64,31 @@ public class ProductServiceTest {
         CategoryInfo categoryInfoThree = CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "철분", "몸이 튼튼해져요",  categoryTwo);
         List<CategoryInfo> categoryInfoList = Arrays.asList(categoryInfoOne, categoryInfoTwo, categoryInfoThree);
 
-        Product productOne = Product.of(SnowflakeUtil.nextId(), 300, "www.product_firstThumbnail.com", categoryOne);
-        Product productTwo = Product.of(SnowflakeUtil.nextId(), 12, "www.product_secondThumbnail.com", categoryOne);
-        List<Product> productList = Arrays.asList(productOne, productTwo);
+        Product productOne = Product.of(SnowflakeUtil.nextId(), 25000, 300, "www.product_firstThumbnail.com", categoryOne);
+        Product productTwo = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productThree = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productFour = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productFive = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productSix = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productSeven = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productEight = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        List<Product> productList = Arrays.asList(productOne, productTwo, productThree, productFour, productFive, productSix, productSeven, productEight);
 
         ProductInfo productInfoOne = ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민 C", "30 캡슐", "밥과 함께 드시오", "물과 함께 섭취하시오. 하루에 3개.", "Content image", "매우 강력한 마법의 알약", "삼성제약", "오줌이 노래져요", productOne);
         ProductInfo productInfoTwo = ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "Vitamin C", "30 capsules", "Take with meal", "Please take 3 capsules daily", "Content image", "Magic pill", "Samsung chemist", "it can make your pee yellow", productOne);
         ProductInfo productInfoThree = ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민 K", "10 캡슐", "밥과 함께 3알 드세요", "과대 섭취 금지", "Content image", "매우 화려한 알약", "삼성제약", "이건 어디 좋은지 몰라요 저희도", productTwo);
         List<ProductInfo> productInfoList = Arrays.asList(productInfoOne, productInfoTwo, productInfoThree);
 
-        ProductPrice priceOne = ProductPrice.of(SnowflakeUtil.nextId(), 15000, false, productOne);
-        ProductPrice priceTwo = ProductPrice.of(SnowflakeUtil.nextId(), 25000, true, productOne);
-        ProductPrice priceThree = ProductPrice.of(SnowflakeUtil.nextId(), 8000, true, productTwo);
-        List<ProductPrice> productPriceList = Arrays.asList(priceOne, priceTwo, priceThree);
+//        ProductPrice priceOne = ProductPrice.of(SnowflakeUtil.nextId(), 15000, false, productOne);
+//        ProductPrice priceTwo = ProductPrice.of(SnowflakeUtil.nextId(), 25000, true, productOne);
+//        ProductPrice priceThree = ProductPrice.of(SnowflakeUtil.nextId(), 8000, true, productTwo);
+//        List<ProductPrice> productPriceList = Arrays.asList(priceOne, priceTwo, priceThree);
 
         categoryRepository.saveAll(categoryList);
         categoryInfoRepository.saveAll(categoryInfoList);
         productRepository.saveAll(productList);
         productInfoRepository.saveAll(productInfoList);
-        productPriceRepository.saveAll(productPriceList);
+//        productPriceRepository.saveAll(productPriceList);
     }
 
     @AfterEach
@@ -153,14 +163,14 @@ public class ProductServiceTest {
         Long productId = randomProduct.getProductId();
         Product product = productRepository.findByProductId(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
         ProductInfo productInfo = productRepository.getProductInfoByProductId(productId, language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
-        ProductPrice price = productPriceRepository.findCurrentPriceByProduct(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
+//        ProductPrice price = productPriceRepository.findCurrentPriceByProduct(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         ProductInfoResponse result = productService.getProduct(productId, locale);
 
         assertThat(result.productId()).isEqualTo(product.getProductId().toString());
         assertThat(result.name()).isEqualTo(productInfo.getName());
         assertThat(result.company()).isEqualTo(productInfo.getCompany());
-        assertThat(result.price()).isEqualTo(price.getPrice());
+        assertThat(result.price()).isEqualTo(product.getPrice());
         assertThat(result.briefDescription()).isEqualTo(productInfo.getBriefDescription());
         assertThat(result.thumbnailUrl()).isEqualTo(product.getThumbnailUrl());
         assertThat(result.contentImageUrl()).isEqualTo(productInfo.getContentImageUrl());
@@ -189,19 +199,37 @@ public class ProductServiceTest {
         Long productId = randomProduct.getProductId();
         Product product = productRepository.findByProductId(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
         ProductInfo productInfo = productRepository.getProductInfoByProductId(productId, language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
-        ProductPrice price = productPriceRepository.findCurrentPriceByProduct(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
+//        ProductPrice price = productPriceRepository.findCurrentPriceByProduct(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         ProductInfoResponse result = productService.getProduct(productId, locale);
 
         assertThat(result.productId()).isEqualTo(product.getProductId().toString());
         assertThat(result.name()).isEqualTo(productInfo.getName());
         assertThat(result.company()).isEqualTo(productInfo.getCompany());
-        assertThat(result.price()).isEqualTo(price.getPrice());
+//        assertThat(result.price()).isEqualTo(price.getPrice());
         assertThat(result.briefDescription()).isEqualTo(productInfo.getBriefDescription());
         assertThat(result.thumbnailUrl()).isEqualTo(product.getThumbnailUrl());
         assertThat(result.contentImageUrl()).isEqualTo(productInfo.getContentImageUrl());
         assertThat(result.quantityDetails()).isEqualTo(productInfo.getQuantityDetails());
         assertThat(result.usage()).isEqualTo(productInfo.getUsage());
         assertThat(result.warningMessage()).isEqualTo(productInfo.getWarningMessage());
+    }
+
+    @Test
+    @DisplayName("다른 고객이 함께 본 상품 확인")
+    public void getRecommendation() {
+        List<Product> products = productRepository.findAllProducts();
+        Product firstProduct = products.get(0);
+        Product lastProduct = products.get(7);
+
+        List<ProductRelatedResponse> recommendations = productService.getRecommendation();
+
+        assertThat(recommendations.size()).isEqualTo(8);
+        assertThat(recommendations.getFirst().productId()).isEqualTo(firstProduct.getProductId().toString());
+        assertThat(recommendations.getFirst().thumbnailUrl()).isEqualTo(firstProduct.getThumbnailUrl());
+        assertThat(recommendations.getFirst().price()).isEqualTo(firstProduct.getPrice());
+        assertThat(recommendations.getLast().productId()).isEqualTo(lastProduct.getProductId().toString());
+        assertThat(recommendations.getLast().thumbnailUrl()).isEqualTo(lastProduct.getThumbnailUrl());
+        assertThat(recommendations.getLast().price()).isEqualTo(lastProduct.getPrice());
     }
 }

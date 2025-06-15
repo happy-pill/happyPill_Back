@@ -114,6 +114,7 @@ public class AdminProductService {
 
         Product product = Product.of(
                 SnowflakeUtil.nextId(),
+                request.price(),
                 request.stock(),
                 request.isAvailable(),
                 request.thumbnailUrl(),

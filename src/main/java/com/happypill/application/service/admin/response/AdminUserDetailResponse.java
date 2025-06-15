@@ -6,10 +6,10 @@ import com.happypill.application.entity.enums.Provider;
 import java.time.ZonedDateTime;
 
 public record AdminUserDetailResponse(
-
         String userId,
         String loginEmail,
         String nickname,
+        String notifyEmail,
         Provider provider,
         ZonedDateTime createdAt,
         ZonedDateTime deletedAt,
@@ -21,6 +21,7 @@ public record AdminUserDetailResponse(
                 user.getUserId().toString(),
                 user.getLoginEmail(),
                 user.getNickName(),
+                user.getNotifyEmail(),
                 user.getProvider(),
                 user.getCreatedAt(),
                 user.getUpdatedAt(),
