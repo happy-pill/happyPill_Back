@@ -15,6 +15,7 @@ import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.product.dto.response.CustomPageResponse;
 import com.happypill.application.service.product.dto.response.ProductInfoResponse;
 import com.happypill.application.service.product.dto.response.ProductResponse;
+import com.happypill.application.service.product.response.ProductRelatedResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -65,7 +66,13 @@ public class ProductServiceTest {
 
         Product productOne = Product.of(SnowflakeUtil.nextId(), 25000, 300, "www.product_firstThumbnail.com", categoryOne);
         Product productTwo = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
-        List<Product> productList = Arrays.asList(productOne, productTwo);
+        Product productThree = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productFour = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productFive = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productSix = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productSeven = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        Product productEight = Product.of(SnowflakeUtil.nextId(), 8000, 12, "www.product_secondThumbnail.com", categoryOne);
+        List<Product> productList = Arrays.asList(productOne, productTwo, productThree, productFour, productFive, productSix, productSeven, productEight);
 
         ProductInfo productInfoOne = ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민 C", "30 캡슐", "밥과 함께 드시오", "물과 함께 섭취하시오. 하루에 3개.", "Content image", "매우 강력한 마법의 알약", "삼성제약", "오줌이 노래져요", productOne);
         ProductInfo productInfoTwo = ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "Vitamin C", "30 capsules", "Take with meal", "Please take 3 capsules daily", "Content image", "Magic pill", "Samsung chemist", "it can make your pee yellow", productOne);
@@ -206,5 +213,23 @@ public class ProductServiceTest {
         assertThat(result.quantityDetails()).isEqualTo(productInfo.getQuantityDetails());
         assertThat(result.usage()).isEqualTo(productInfo.getUsage());
         assertThat(result.warningMessage()).isEqualTo(productInfo.getWarningMessage());
+    }
+
+    @Test
+    @DisplayName("다른 고객이 함께 본 상품 확인")
+    public void getRecommendation() {
+        List<Product> products = productRepository.findAllProducts();
+        Product firstProduct = products.get(0);
+        Product lastProduct = products.get(7);
+
+        List<ProductRelatedResponse> recommendations = productService.getRecommendation();
+
+        assertThat(recommendations.size()).isEqualTo(8);
+        assertThat(recommendations.getFirst().productId()).isEqualTo(firstProduct.getProductId().toString());
+        assertThat(recommendations.getFirst().thumbnailUrl()).isEqualTo(firstProduct.getThumbnailUrl());
+        assertThat(recommendations.getFirst().price()).isEqualTo(firstProduct.getPrice());
+        assertThat(recommendations.getLast().productId()).isEqualTo(lastProduct.getProductId().toString());
+        assertThat(recommendations.getLast().thumbnailUrl()).isEqualTo(lastProduct.getThumbnailUrl());
+        assertThat(recommendations.getLast().price()).isEqualTo(lastProduct.getPrice());
     }
 }

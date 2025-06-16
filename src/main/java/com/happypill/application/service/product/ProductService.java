@@ -10,6 +10,7 @@ import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.product.dto.response.CustomPageResponse;
 import com.happypill.application.service.product.dto.response.ProductInfoResponse;
 import com.happypill.application.service.product.dto.response.ProductResponse;
+import com.happypill.application.service.product.response.ProductRelatedResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,13 @@ public class ProductService {
         ProductInfo productInfo = productRepository.getProductInfoByProductId(product.getProductId(), language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
 
         return ProductInfoResponse.from(product, productInfo);
+    }
+
+    public List<ProductRelatedResponse> getRecommendation() {
+        return productRepository.findTop8ByOrderByCreatedAt()
+                .stream()
+                .map(ProductRelatedResponse::from)
+                .toList();
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {

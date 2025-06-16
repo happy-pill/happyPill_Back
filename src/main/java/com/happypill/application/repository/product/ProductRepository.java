@@ -45,4 +45,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<ProductInfo> getProductInfoByProductId(@Param("productId") Long productId, @Param("language") Language language);
 
     Optional<Product> findByProductId(Long productId);
+
+    List<Product> findTop8ByOrderByCreatedAt();
+
+    @Query(""" 
+            SELECT p
+            FROM Product p
+            """)
+    List<Product> findAllProducts();
 }
