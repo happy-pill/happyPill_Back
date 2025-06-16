@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "order_line")
+@Table(name = "order_lines")
 public class OrderLine extends BaseEntity{
 
     @Id

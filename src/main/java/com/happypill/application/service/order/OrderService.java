@@ -42,8 +42,8 @@ public class OrderService {
 
     @Transactional
     public OrderResponse createOrder(UserContext userContext, OrderCreateRequest request) {
-        Map<Long, Product> ProductMap = getProductMapWithLock(request);
-        List<OrderLine> orderLines = decreaseStockAndGetOrderLines(request, ProductMap);
+        Map<Long, Product> productMap = getProductMapWithLock(request);
+        List<OrderLine> orderLines = decreaseStockAndGetOrderLines(request, productMap);
 
         HappypillUser orderedUser = userRepository.findById(userContext.getId())
                 .orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
