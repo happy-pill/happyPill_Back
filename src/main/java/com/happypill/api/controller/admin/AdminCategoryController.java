@@ -3,15 +3,11 @@ package com.happypill.api.controller.admin;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.AdminCategoryService;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
-import com.happypill.application.swagger.AuthFailureResponses;
-import com.happypill.application.swagger.OKAndServerErrorResponses;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
@@ -27,8 +23,6 @@ public class AdminCategoryController {
     private final AdminCategoryService adminCategoryService;
 
     @Operation(summary = "모든 카테고리 조회", description = "카테고리 리스트를 조회합니다.")
-    @AuthFailureResponses
-    @OKAndServerErrorResponses
     @GetMapping
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public CustomPage<AdminCategoryListResponse> getCategories(@RequestParam(value = "page", defaultValue = "1") int page,

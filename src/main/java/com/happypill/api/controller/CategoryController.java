@@ -1,15 +1,8 @@
 package com.happypill.api.controller;
 
-import com.happypill.application.exception.global.AuthResponse;
-import com.happypill.application.exception.global.ErrorResponse;
-import com.happypill.application.service.category.dto.response.CategoryResponse;
 import com.happypill.application.service.category.CategoryService;
-import com.happypill.application.swagger.OKAndServerErrorResponses;
+import com.happypill.application.service.category.dto.response.CategoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +22,6 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Operation(summary = "모든 카테고리 조회", description = "카테고리 리스트를 조회합니다.")
-    @OKAndServerErrorResponses
     @GetMapping
     public List<CategoryResponse> getCategories(@RequestHeader(LANGUAGE_HEADER) String headerLanguage) {
         Locale locale = Locale.of(headerLanguage);
