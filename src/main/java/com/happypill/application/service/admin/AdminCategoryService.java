@@ -3,6 +3,8 @@ package com.happypill.application.service.admin;
 import com.happypill.application.entity.Category;
 import com.happypill.application.entity.CategoryInfo;
 import com.happypill.application.entity.enums.Language;
+import com.happypill.application.exception.custom.ExceptionCode;
+import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
@@ -44,17 +46,23 @@ public class AdminCategoryService {
     }
 
     public void saveCategories(AdminCategoryRequest adminCategoryCreateRequest) {
+        boolean hasKoInfo = adminCategoryCreateRequest.categoryInfoRequests()
+                .stream()
+                .anyMatch(request -> Language.parseLanguage(request.language()) == Language.KO);
+
+        if (!hasKoInfo) {
+            throw new BusinessException(ExceptionCode.KO_LANGUAGE_REQUIRED);
+        }
+
         List<Category> categories = new ArrayList<>();
         List<CategoryInfo> categoryInfos = new ArrayList<>();
         CategoryInfo categoryInfo;
-        Locale locale;
         Language language;
         Category category = Category.of(SnowflakeUtil.nextId(), adminCategoryCreateRequest.thumbnailUrl(), adminCategoryCreateRequest.bannerImgUrl());
         categories.add(category);
 
         for (AdminCategoryInfoRequest request : adminCategoryCreateRequest.categoryInfoRequests()) {
-            locale = Locale.forLanguageTag(request.language());
-            language = Language.parseLanguage(locale.getLanguage());
+            language = Language.parseLanguage(request.language());
             categoryInfo = CategoryInfo.of(SnowflakeUtil.nextId(), language, request.name(), request.description(), category);
 
             categoryInfos.add(categoryInfo);
