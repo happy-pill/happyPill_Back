@@ -48,6 +48,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByProductId(Long productId);
 
+    List<Product> findTop8ByOrderByCreatedAt();
+
+    @Query(""" 
+            SELECT p
+            FROM Product p
+            """)
+    List<Product> findAllProducts();
+
     /**
      * for no key update
      * GPT는 ORDER BY 사용을 권장하나, 제외해도 실제로 데드락 발생 X

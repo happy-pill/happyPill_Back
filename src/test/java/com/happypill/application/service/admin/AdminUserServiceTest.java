@@ -7,6 +7,7 @@ import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
+import com.happypill.application.service.admin.request.AdminUserUpdateRequest;
 import com.happypill.application.service.admin.response.AdminUserDetailResponse;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import com.happypill.application.util.SnowflakeUtil;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -28,6 +30,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class AdminUserServiceTest {
 
+    private static final String UPDATED_NOTIFY_EMAIL = "updatedNotify@gmail.com";
+    private static final String UPDATED_NICKNAME = "updatedNick";
     private final Faker faker = new Faker();
 
     @Autowired
@@ -82,20 +86,20 @@ class AdminUserServiceTest {
 
     @Test
     @DisplayName("[특정 회원 조회] 경로변수의 userId 가 존재하지 않는 회원일 경우 에러를 반환한다.")
-    void getUserDetails_1(){
+    void getUserDetails_1() {
         //given
         HappypillUser user = generateTestUser();
         userRepository.save(user);
 
         //when //then
-        assertThatThrownBy(()->adminUserService.getUserDetails(1000L))
+        assertThatThrownBy(() -> adminUserService.getUserDetails(1000L))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(ExceptionCode.USER_NOT_FOUND.getMessage());
     }
 
     @Test
     @DisplayName("[특정 회원 조회] 경로변수의 userId 가 존재하는 회원일 경우 AdminUserDetailResponse 를 반환한다.")
-    void getUserDetails_2(){
+    void getUserDetails_2() {
         //given
         HappypillUser savedUser = generateTestUser();
         userRepository.save(savedUser);
@@ -106,5 +110,54 @@ class AdminUserServiceTest {
         // then
         assertThat(Long.valueOf(response.userId())).isEqualTo(savedUser.getUserId());
         assertThat(response.provider()).isEqualTo(Provider.KAKAO);
+    }
+
+    @Test
+    @DisplayName("[회원 정보 수정] 경로 변수의 userId 가 존재하지 않는 회원일 경우 예외를 반환한다.")
+    void updateUserProfile_1() {
+        //given
+        HappypillUser savedUser = generateTestUser();
+        userRepository.save(savedUser);
+
+        AdminUserUpdateRequest request = new AdminUserUpdateRequest(UPDATED_NICKNAME, UPDATED_NOTIFY_EMAIL);
+        //when //then
+        assertThatThrownBy(()->adminUserService.updateUserProfile(1000L,request))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[회원 정보 수정] AdminUserUpdateRequest 에서 nickName 값만 있고 notifyEmail 은 null 일 때 nickName 만 수정된다.")
+    void updateUserProfile_2() {
+        //given
+        HappypillUser savedUser = generateTestUser();
+        userRepository.save(savedUser);
+
+        AdminUserUpdateRequest request = new AdminUserUpdateRequest(UPDATED_NICKNAME, null);
+
+        //when
+        adminUserService.updateUserProfile(savedUser.getUserId(), request);
+        HappypillUser updatedUser = userRepository.findById(savedUser.getUserId()).orElseThrow();
+
+        // then
+        assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
+    }
+
+    @Test
+    @DisplayName("[회원 정보 수정] AdminUserUpdateRequest 에서 nickName, notifyEmail 값 모두 존재할 때 두 필드 값 모두 수정된다.")
+    void updateUserProfile_3(){
+        //given
+        HappypillUser savedUser = generateTestUser();
+        userRepository.save(savedUser);
+
+        AdminUserUpdateRequest request = new AdminUserUpdateRequest(UPDATED_NICKNAME, UPDATED_NOTIFY_EMAIL);
+
+        //when
+        adminUserService.updateUserProfile(savedUser.getUserId(), request);
+        HappypillUser updatedUser = userRepository.findById(savedUser.getUserId()).orElseThrow();
+
+        //then
+        assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
+        assertThat(updatedUser.getNotifyEmail()).isEqualTo(UPDATED_NOTIFY_EMAIL);
     }
 }
