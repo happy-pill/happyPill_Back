@@ -29,13 +29,14 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation ("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     implementation("com.auth0:java-jwt:4.5.0")
     implementation(platform("software.amazon.awssdk:bom:2.31.59"))
     implementation("software.amazon.awssdk:s3")
 
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
     runtimeOnly("org.postgresql:postgresql")
 
