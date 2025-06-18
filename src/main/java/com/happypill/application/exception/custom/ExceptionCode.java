@@ -15,7 +15,7 @@ public enum ExceptionCode {
 
     // 상품 정보
     PRODUCT_INFO_NOT_FOUND(NOT_FOUND, "해당 상품 정보를 찾을 수 없습니다."),
-    KO_LANGUAGE_REQUIRED(BAD_REQUEST, "한국어로 된 상품 정보는 필수 입니다."),
+    KO_LANGUAGE_REQUIRED(BAD_REQUEST, "한국어로 된 정보는 필수 입니다."),
 
     // 상품 가격
     PRODUCT_PRICE_NOT_FOUND(NOT_FOUND, "해당 상품 가격을 찾을 수 없습니다."),

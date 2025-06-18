@@ -14,9 +14,15 @@ public interface CategoryInfoRepository extends JpaRepository<CategoryInfo, Long
     List<CategoryInfo> findByLanguage(Language language);
 
     @Query("""
-        SELECT ci
-        FROM CategoryInfo ci
-        WHERE ci.language = :language
-""")
+            SELECT ci
+            FROM CategoryInfo ci
+            WHERE ci.language = :language
+            """)
     Page<CategoryInfo> getAllCategoryInfo(Pageable pageable, @Param("language") Language language);
+
+    @Query("""
+            SELECT ci
+            FROM CategoryInfo ci
+            """)
+    List<CategoryInfo> findAllCategoryInfo();
 }

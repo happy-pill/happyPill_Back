@@ -66,6 +66,13 @@ portone:
   store-id: store-48428764-61cf-4595-9a05-ddd25812b67b
 
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
 
 --- # dev
 spring.config.activate.on-profile: dev
@@ -97,7 +104,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: validate  # 프로덕션에서는 validate 사용
+      ddl-auto: create  # validate
 
   data:
     redis:

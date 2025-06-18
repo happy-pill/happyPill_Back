@@ -38,6 +38,7 @@ dependencies {
 
     implementation("io.portone:server-sdk:0.19.0")
 
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
     runtimeOnly("org.postgresql:postgresql")
 
