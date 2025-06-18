@@ -25,4 +25,12 @@ public interface CategoryInfoRepository extends JpaRepository<CategoryInfo, Long
             FROM CategoryInfo ci
             """)
     List<CategoryInfo> findAllCategoryInfo();
+
+    @Query("""
+            SELECT ci
+            FROM CategoryInfo ci
+            JOIN FETCH ci.category c
+            ORDER BY c.categoryId
+            """)
+    List<CategoryInfo> findAllCategoryInfoOrderById();
 }

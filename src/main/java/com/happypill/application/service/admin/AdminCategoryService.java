@@ -11,6 +11,7 @@ import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
+import com.happypill.application.service.category.dto.response.CategoryNamesResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,9 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 @Transactional
@@ -70,5 +69,29 @@ public class AdminCategoryService {
 
         categoryRepository.saveAll(categories);
         categoryInfoRepository.saveAll(categoryInfos);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryNamesResponse> getCategoryList(){
+        List<CategoryInfo> infos = categoryInfoRepository.findAllCategoryInfoOrderById();
+
+        Map<Long, Map<Language, String>> grouped = new LinkedHashMap<>();
+
+        for (CategoryInfo ci : infos) {
+            Long categoryId = ci.getCategory().getCategoryId();
+            Language language = ci.getLanguage();
+            String name = ci.getName();
+
+            grouped
+                    .computeIfAbsent(categoryId, id -> new EnumMap<>(Language.class))
+                    .put(language, name);
+        }
+
+        return grouped.entrySet().stream()
+                .map(entry -> new CategoryNamesResponse(
+                        String.valueOf(entry.getKey()),
+                        entry.getValue()
+                ))
+                .toList();
     }
 }

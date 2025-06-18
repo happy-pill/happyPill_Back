@@ -4,6 +4,7 @@ import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.AdminCategoryService;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
+import com.happypill.application.service.category.dto.response.CategoryNamesResponse;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Locale;
 
 @Tag(name = "[관리자] 카테고리", description = "관리자가 카테고리 정보를 조회/관리하기 위한 API")
@@ -43,5 +45,11 @@ public class AdminCategoryController {
         adminCategoryService.saveCategories(adminCategoryCreateRequestList);
 
         return ResponseEntity.created(URI.create("/api/admin/categories")).build();
+    }
+
+    @GetMapping("/list")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public List<CategoryNamesResponse> getCategoryList(){
+        return adminCategoryService.getCategoryList();
     }
 }
