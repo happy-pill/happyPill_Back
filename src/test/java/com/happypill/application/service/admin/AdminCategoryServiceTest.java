@@ -116,7 +116,7 @@ class AdminCategoryServiceTest {
         categoryInfoRepository.saveAll(categoryInfoList);
 
         //when
-        List<CategoryNamesResponse> responses = adminCategoryService.getCategoryList();
+        List<CategoryNamesResponse> responses = adminCategoryService.getCategoryNames();
 
         //then
         assertThat(responses).hasSize(1);

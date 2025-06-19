@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -72,26 +73,18 @@ public class AdminCategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryNamesResponse> getCategoryList(){
+    public List<CategoryNamesResponse> getCategoryNames(){
         List<CategoryInfo> infos = categoryInfoRepository.findAllCategoryInfoOrderById();
 
-        Map<Long, Map<Language, String>> grouped = new LinkedHashMap<>();
-
-        for (CategoryInfo ci : infos) {
-            Long categoryId = ci.getCategory().getCategoryId();
-            Language language = ci.getLanguage();
-            String name = ci.getName();
-
-            grouped
-                    .computeIfAbsent(categoryId, id -> new EnumMap<>(Language.class))
-                    .put(language, name);
-        }
+        Map<Long, List<CategoryInfo>> grouped = infos.stream()
+                .collect(Collectors.groupingBy(
+                        ci -> ci.getCategory().getCategoryId(),  //categoryId 를 기준으로 그룹화한다.
+                        LinkedHashMap::new,  //categoryId 를 기준으로 순서를 보장하기 위해 사용한다.
+                        Collectors.toList()  //같은 categoryId 를 가진 CategoryInfo 들을 리스트에 담는다.
+                ));
 
         return grouped.entrySet().stream()
-                .map(entry -> new CategoryNamesResponse(
-                        String.valueOf(entry.getKey()),
-                        entry.getValue()
-                ))
+                .map(entry -> CategoryNamesResponse.fromCategoryIdAndInfos(entry.getKey(), entry.getValue()))
                 .toList();
     }
 }

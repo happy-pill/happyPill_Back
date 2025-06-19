@@ -47,9 +47,9 @@ public class AdminCategoryController {
         return ResponseEntity.created(URI.create("/api/admin/categories")).build();
     }
 
-    @GetMapping("/list")
+    @GetMapping("/names")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
-    public List<CategoryNamesResponse> getCategoryList(){
-        return adminCategoryService.getCategoryList();
+    public List<CategoryNamesResponse> getCategoryNames(){
+        return adminCategoryService.getCategoryNames();
     }
 }
