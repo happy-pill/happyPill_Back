@@ -12,6 +12,7 @@ import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
 import com.happypill.application.service.admin.response.AdminCategoryInfoResponse;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
+import com.happypill.application.service.category.dto.response.CategoryNamesResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -141,5 +142,25 @@ class AdminCategoryServiceTest {
 
         //then
         assertThat(response.categoryId()).isEqualTo(String.valueOf(category.getCategoryId()));
+    }
+
+    @Test
+    @DisplayName("[카테고리 목록 조회] 정상적으로 카테고리 리스트를 반환한다.")
+    void getCategoryList_1(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        List<CategoryInfo> categoryInfoList = List.of(
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "카테고리명_EN", "설명_EN", category)
+        );
+        categoryRepository.save(category);
+        categoryInfoRepository.saveAll(categoryInfoList);
+
+        //when
+        List<CategoryNamesResponse> responses = adminCategoryService.getCategoryNames();
+
+        //then
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0).categoryId()).isEqualTo(String.valueOf(category.getCategoryId()));
     }
 }

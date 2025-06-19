@@ -12,6 +12,7 @@ import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
 import com.happypill.application.service.admin.response.AdminCategoryInfoResponse;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
+import com.happypill.application.service.category.dto.response.CategoryNamesResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,9 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -81,5 +81,21 @@ public class AdminCategoryService {
         List<CategoryInfo> categoryInfoList = categoryInfoRepository.getAllCategoryInfosById(category.getCategoryId());
 
         return AdminCategoryInfoResponse.fromCategoryAndInfos(category, categoryInfoList);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryNamesResponse> getCategoryNames(){
+        List<CategoryInfo> infos = categoryInfoRepository.findAllCategoryInfoOrderById();
+
+        Map<Long, List<CategoryInfo>> grouped = infos.stream()
+                .collect(Collectors.groupingBy(
+                        ci -> ci.getCategory().getCategoryId(),  //categoryId 를 기준으로 그룹화한다.
+                        LinkedHashMap::new,  //categoryId 를 기준으로 순서를 보장하기 위해 사용한다.
+                        Collectors.toList()  //같은 categoryId 를 가진 CategoryInfo 들을 리스트에 담는다.
+                ));
+
+        return grouped.entrySet().stream()
+                .map(entry -> CategoryNamesResponse.fromCategoryIdAndInfos(entry.getKey(), entry.getValue()))
+                .toList();
     }
 }
