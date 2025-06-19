@@ -10,6 +10,7 @@ import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
+import com.happypill.application.service.admin.response.AdminCategoryInfoResponse;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
 import com.happypill.application.service.category.dto.response.CategoryNamesResponse;
 import com.happypill.application.util.SnowflakeUtil;
@@ -70,6 +71,16 @@ public class AdminCategoryService {
 
         categoryRepository.saveAll(categories);
         categoryInfoRepository.saveAll(categoryInfos);
+    }
+
+    @Transactional(readOnly = true)
+    public AdminCategoryInfoResponse getCategoryDetails(Long categoryId){
+        Category category = categoryRepository.findByCategoryId(categoryId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
+
+        List<CategoryInfo> categoryInfoList = categoryInfoRepository.getAllCategoryInfosById(category.getCategoryId());
+
+        return AdminCategoryInfoResponse.fromCategoryAndInfos(category, categoryInfoList);
     }
 
     @Transactional(readOnly = true)

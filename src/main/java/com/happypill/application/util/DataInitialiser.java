@@ -2,8 +2,13 @@ package com.happypill.application.util;
 
 import com.happypill.application.entity.*;
 import com.happypill.application.entity.enums.Language;
+import com.happypill.application.entity.enums.PaymentMethod;
+import com.happypill.application.entity.enums.Provider;
+import com.happypill.application.entity.enums.Role;
 import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
+import com.happypill.application.repository.happypilluser.HappypillUserRepository;
+import com.happypill.application.repository.order.OrderRepository;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
@@ -13,6 +18,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +32,9 @@ public class DataInitialiser implements ApplicationRunner {
     private final ProductRepository productRepository;
     private final ProductInfoRepository productInfoRepository;
     private final ProductPriceRepository productPriceRepository;
+
+    private final HappypillUserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -302,5 +311,64 @@ public class DataInitialiser implements ApplicationRunner {
         productRepository.saveAll(productList);
         productInfoRepository.saveAll(productInfoList);
         productPriceRepository.saveAll(productPriceList);
+
+        generateDevData();
+    }
+
+    private void generateDevData() {
+        HappypillUser savedTestUser = userRepository.save(HappypillUser.ofSocial(
+                1L,
+                "test-user",
+                Provider.GOOGLE,
+                "social-sub",
+                "test@test.google.com",
+                "test@test.google.com",
+                Role.USER
+        ));
+
+        Category category1 = categoryRepository.save(Category.of(1L, "www.vitamin_thumbnail.com", "www.vitamin_banner.com"));
+        Category category2 = categoryRepository.save(Category.of(1L, "www.mineral_thumbnail.com", "www.mineral_banner.com"));
+
+        categoryInfoRepository.saveAll(List.of(
+                        CategoryInfo.of(1L, Language.KO, "비타민", "비타민은 신진대사와 면역 기능을 유지하는 데 꼭 필요한 필수 영양소입니다.부족할 경우 피로, 면역력 저하, 피부 트러블 등 다양한 건강 문제가 발생할 수 있습니다.", category1),
+                        CategoryInfo.of(2L, Language.EN, "vitamin", "Vitamins are chemical compounds that are needed in small amounts for the human body to work correctly.", category1),
+                        CategoryInfo.of(3L, Language.KO, "미네랄", "미네랄은 뼈 건강, 신경 전달, 체내 수분 균형 등 다양한 생리 기능에 필수적인 영양소입니다 불균형하거나 부족하면 피로, 근육 경련, 면역력 저하 등이 나타날 수 있습니다.", category2),
+                        CategoryInfo.of(4L, Language.EN, "mineral", "Minerals are chemical elements required as an essential nutrient by our body to perform essential functions. ", category2)
+                )
+        );
+
+        Product product1 = Product.of(1L, 1000, 101, "www.first_vitamin_Thumbnail.com", category1);
+        Product product2 = Product.of(2L, 2000, 102, "www.second_vitamin_Thumbnail.com", category2);
+        productRepository.saveAll(List.of(product1, product2));
+
+        productInfoRepository.saveAll(List.of(ProductInfo.of(1L, Language.KO, "비타민 k2", "30 캡슐", "밥과 함께 드시오", "물과 함께 섭취하시오. 하루에 3개.", "Content image",
+                                "비타민 K2는 심장과 뼈 건강에 필수적입니다. 비타민 K2는 칼슘이 동맥에 쌓이는 것을 방지해 심혈관 건강을 촉진하는 동시에, 칼슘이 뼈로 제대로 전달되도록 도와 뼈의 밀도와 강도를 높여줍니다. " +
+                                        "올바른 칼슘 이용을 통해 비타민 K2는 심장과 뼈 건강을 동시에 지원하며 전반적인 웰빙에 기여합니다.",
+                                "삼성제약", "K2VITAL™ 형태의 프리미엄 비타민 K2(메나퀴논-7)로 구성되어 뼈 건강과 심장 건강을 지원합니다.", product1),
+                        ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "Vitamin K2", "30 capsules", "Take with meal", "Please take 3 capsules daily", "Content image",
+                                "Vitamin K2 is essential for heart and bone health. It helps prevent calcium from accumulating in the arteries, promoting cardiovascular health, while also directing calcium to the bones, " +
+                                        "enhancing bone density and strength. By ensuring proper calcium utilization, vitamin K2 supports both heart and bone health, contributing to overall well-being.",
+                                "Samsung chemist", "Formulated with premium Vitamin K2 (menaquinone 7) as K2VITAL™ to support bone strength and heart Health", product2),
+
+                        ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민 D3", "10 캡슐", "밥과 함께 3알 드세요", "과대 섭취 금지", "Content image",
+                                "저희 비건 비타민 D는 체내 흡수율이 뛰어난 콜레칼시페롤 형태로 제공됩니다. 비타민 D는 튼튼하고 건강한 뼈를 지원하며, 건강한 면역 체계 유지에 도움을 줍니다.",
+                                "삼성제약", "칼슘 흡수를 도와주며 뼈 건강과 면역 건강을 함께 지원합니다", product2),
+                        ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "Vitamin D3", "30 capsules", "Take with meal", "Please take 3 capsules daily", "Content image",
+                                "Our Vegan Vitamin D is in the form of cholecalciferol for optimal absorption in the body. Vitamin D supports strong and healthy bones and helps our bodies maintain a healthy immune system.",
+                                "Samsung chemist", "Helps calcium absorption and also supports bone health and immune health.", product2)
+                )
+        );
+
+        Order order = orderRepository.save(Order.create(
+                1L,
+                "1749982206913022zlm2tx",
+                PaymentMethod.CARD,
+                OrderRecipientInfo.create("name", "010-0000-0000", "test@gmail.com"),
+                savedTestUser,
+                List.of(
+                        OrderLine.create(1L, 1000, LocalDate.of(2026, 6, 6), 1, product1)
+                )
+        ));
+
     }
 }

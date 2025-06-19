@@ -24,7 +24,9 @@ public class Order extends BaseEntity{
     private Long orderId;
 
     @Column(nullable = false)
-    private Integer totalPrice;
+    private Integer totalPrice = 0;
+
+    private String paymentUid;
 
     @Enumerated(STRING)
     @Column(nullable = false)
@@ -34,14 +36,8 @@ public class Order extends BaseEntity{
     @Column(nullable = false)
     private PaymentMethod paymentMethod;
 
-    @Column(nullable = false, length = 50)
-    private String recipentName;
-
-    @Column(nullable = false)
-    private String recipentMobile;
-
-    @Column(nullable = false)
-    private String recipentEmail;
+    @Embedded
+    private OrderRecipientInfo orderRecipientInfo;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -49,4 +45,42 @@ public class Order extends BaseEntity{
 
     @OneToMany(mappedBy = "order", fetch = LAZY, cascade = ALL, orphanRemoval = true)
     private List<OrderLine> orderLines = new ArrayList<>();
+
+    public void complete() {
+        if (this.status == OrderStatus.PENDING) {
+            this.status = OrderStatus.COMPLETED;
+        } else {
+            throw new RuntimeException(String.format("Cannot confirm  payment, OrderStatus = %s", this.status));
+        }
+    }
+
+    public static Order create(
+            Long orderId,
+            String paymentUid,
+            PaymentMethod paymentMethod,
+            OrderRecipientInfo orderRecipientInfo,
+            HappypillUser user,
+            List<OrderLine> orderLines
+    ) {
+        Order o = new Order();
+        o.orderId = orderId;
+        o.paymentUid = paymentUid;
+        o.status = OrderStatus.PENDING;
+        o.paymentMethod = paymentMethod;
+        o.orderRecipientInfo = orderRecipientInfo;
+        o.user = user;
+
+        for (OrderLine ol : orderLines) {
+            o.addOrderLine(ol);
+        }
+        return o;
+    }
+
+    public void addOrderLine(OrderLine orderLine) {
+        this.orderLines.add(orderLine);
+        this.totalPrice += orderLine.getPrice();
+        orderLine.belongToOrder(this);
+    }
+
+
 }
