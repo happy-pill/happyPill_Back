@@ -3,6 +3,7 @@ package com.happypill.api.controller.admin;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.AdminCategoryService;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
+import com.happypill.application.service.admin.response.AdminCategoryInfoResponse;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,5 +44,11 @@ public class AdminCategoryController {
         adminCategoryService.saveCategories(adminCategoryCreateRequestList);
 
         return ResponseEntity.created(URI.create("/api/admin/categories")).build();
+    }
+
+    @GetMapping("{categoryId}")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public AdminCategoryInfoResponse getCategoryDetail(@PathVariable Long categoryId){
+        return adminCategoryService.getCategoryDetails(categoryId);
     }
 }

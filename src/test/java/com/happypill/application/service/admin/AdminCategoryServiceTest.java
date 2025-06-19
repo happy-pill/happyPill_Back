@@ -3,11 +3,14 @@ package com.happypill.application.service.admin;
 import com.happypill.application.entity.Category;
 import com.happypill.application.entity.CategoryInfo;
 import com.happypill.application.entity.enums.Language;
+import com.happypill.application.exception.custom.ExceptionCode;
+import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
+import com.happypill.application.service.admin.response.AdminCategoryInfoResponse;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -100,5 +104,42 @@ class AdminCategoryServiceTest {
         assertThat(categoryInfos.get(0).getDescription()).isEqualTo(categoryInfoRequests.get(0).description());
         assertThat(categoryInfos.get(1).getName()).isEqualTo(categoryInfoRequests.get(1).name());
         assertThat(categoryInfos.get(1).getDescription()).isEqualTo(categoryInfoRequests.get(1).description());
+    }
+
+    @Test
+    @DisplayName("[특정 카테고리 조회] 경로변수의 CategoryId 가 존재하지 않으면 에러가 발생한다.")
+    void getCategoryDetails_1(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        List<CategoryInfo> categoryInfoList = List.of(
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "카테고리명_EN", "설명_EN", category)
+        );
+        categoryRepository.save(category);
+        categoryInfoRepository.saveAll(categoryInfoList);
+
+        //when //then
+        assertThatThrownBy(()->adminCategoryService.getCategoryDetails(1000L))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.CATEGORY_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[특정 카테고리 조회] 경로변수의 CategoryId 가 존재하면 200 상태코드와 함께 AdminCategoryInfoResponse 를 반환한다.")
+    void getCategoryDetails_2(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        List<CategoryInfo> categoryInfoList = List.of(
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "카테고리명_EN", "설명_EN", category)
+        );
+        categoryRepository.save(category);
+        categoryInfoRepository.saveAll(categoryInfoList);
+
+        //when
+        AdminCategoryInfoResponse response = adminCategoryService.getCategoryDetails(category.getCategoryId());
+
+        //then
+        assertThat(response.categoryId()).isEqualTo(String.valueOf(category.getCategoryId()));
     }
 }

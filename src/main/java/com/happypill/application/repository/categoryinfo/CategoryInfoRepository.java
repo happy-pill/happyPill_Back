@@ -25,4 +25,7 @@ public interface CategoryInfoRepository extends JpaRepository<CategoryInfo, Long
             FROM CategoryInfo ci
             """)
     List<CategoryInfo> findAllCategoryInfo();
+
+    @Query("SELECT ci FROM CategoryInfo ci WHERE ci.category.categoryId = :categoryId")
+    List<CategoryInfo> getAllCategoryInfosById(@Param("categoryId") Long categoryId);
 }
