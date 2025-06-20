@@ -4,7 +4,6 @@ import com.happypill.application.entity.HappypillUser;
 import com.happypill.application.entity.enums.Provider;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public record AdminUserListResponse(
         String userId,
@@ -18,7 +17,7 @@ public record AdminUserListResponse(
 
     public static AdminUserListResponse from(HappypillUser user) {
         return new AdminUserListResponse(
-                user.getUserId().toString(),
+                user.getId().toString(),
                 user.getNickName(),
                 user.getLoginEmail(),
                 user.getProvider(),

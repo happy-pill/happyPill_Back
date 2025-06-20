@@ -61,12 +61,12 @@ class OrderServiceTest {
     @DisplayName("success")
     void test1() {
         HappypillUser savedTestUser = getSavedTestUser();
-        SecurityUserContext userContext = SecurityUserContext.from(savedTestUser.getUserId());
+        SecurityUserContext userContext = SecurityUserContext.from(savedTestUser.getId());
         Category category = categoryRepository.save(Category.of(SnowflakeUtil.nextId(), "www.happypill.com/image", "www.happypill.com/banner"));
         Product product1 = productRepository.save(Product.of(SnowflakeUtil.nextId(), 1000, 100, "www.happypill.com/product1-thumbnail", category));
         Product product2 = productRepository.save(Product.of(SnowflakeUtil.nextId(), 2000, 200, "www.happypill.com/product2-thumbnail", category));
-        var orderLineCreateRequest1 = new OrderCreateRequest.OrderLineCreateRequest(product1.getProductId(), 3, LocalDate.of(2026, 1, 1));
-        var orderLineCreateRequest2 = new OrderCreateRequest.OrderLineCreateRequest(product2.getProductId(), 1, LocalDate.of(2026, 2, 2));
+        var orderLineCreateRequest1 = new OrderCreateRequest.OrderLineCreateRequest(product1.getId(), 3, LocalDate.of(2026, 1, 1));
+        var orderLineCreateRequest2 = new OrderCreateRequest.OrderLineCreateRequest(product2.getId(), 1, LocalDate.of(2026, 2, 2));
         OrderCreateRequest orderCreateRequest = new OrderCreateRequest("recipentName", "recipentMobile",
                 List.of(
                         orderLineCreateRequest1,
@@ -86,7 +86,7 @@ class OrderServiceTest {
         assertThat(order.getTotalPrice()).isEqualTo(order.getOrderLines().stream().mapToInt(OrderLine::getPrice).sum());
         assertThat(order.getOrderLines())
                 .extracting(
-                        OrderLine::getMonth, ol -> ol.getProduct().getProductId(), OrderLine::getPrice
+                        OrderLine::getMonth, ol -> ol.getProduct().getId(), OrderLine::getPrice
                 ).containsExactly(
                         tuple(orderLineCreateRequest1.month(), orderLineCreateRequest1.productId(), orderLineCreateRequest1.month() * product1.getPrice()),
                         tuple(orderLineCreateRequest2.month(), orderLineCreateRequest2.productId(), orderLineCreateRequest2.month() * product2.getPrice())
@@ -97,12 +97,12 @@ class OrderServiceTest {
 //                .ignoringFields("createdAt", "updatedAt")
                 .isEqualTo(
                         new OrderResponse(
-                                String.valueOf(order.getOrderId()),
+                                String.valueOf(order.getId()),
                                 order.getTotalPrice(),
                                 order.getPaymentUid(),
                                 order.getStatus(),
                                 order.getPaymentMethod(),
-                                String.valueOf(order.getUser().getUserId()),
+                                String.valueOf(order.getUser().getId()),
                                 order.getCreatedAt(),
                                 order.getUpdatedAt(),
                                 OrderRecipientInfoResponse.from(order.getOrderRecipientInfo()),

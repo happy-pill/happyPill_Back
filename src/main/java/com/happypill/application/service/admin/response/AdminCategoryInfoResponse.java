@@ -18,7 +18,7 @@ public record AdminCategoryInfoResponse(
                 .toList();
 
         return new AdminCategoryInfoResponse(
-                category.getCategoryId().toString(),
+                category.getId().toString(),
                 category.getThumbnailUrl(),
                 category.getBannerUrl(),
                 categoryInfoList

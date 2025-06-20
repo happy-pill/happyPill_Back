@@ -16,10 +16,10 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "category_info")
-public class CategoryInfo extends BaseEntity{
+public class CategoryInfo extends BaseEntity<Long> {
 
     @Id
-    private Long categoryInfoId;
+    private Long id;
 
     @Enumerated(STRING)
     @Column(nullable = false)

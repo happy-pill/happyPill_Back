@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             FROM ProductInfo pi
             JOIN pi.product p
             JOIN p.category c
-            WHERE c.categoryId = :categoryId
+            WHERE c.id = :categoryId
               AND pi.language = :language
               AND p.createdAt > :createdAt
             """)
@@ -31,7 +31,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             FROM ProductInfo pi
             JOIN pi.product p
             JOIN p.category c
-            WHERE c.categoryId = :categoryId
+            WHERE c.id = :categoryId
               AND pi.language = :language
             """)
     List<ProductInfo> getAllProductInfoByCategory(@Param("categoryId") Long categoryId,
@@ -42,11 +42,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             FROM ProductInfo pi
             JOIN pi.product p
             WHERE pi.language = :language
-                AND p.productId = :productId
+                AND p.id = :productId
             """)
     Optional<ProductInfo> getProductInfoByProductId(@Param("productId") Long productId, @Param("language") Language language);
 
-    Optional<Product> findByProductId(Long productId);
+    Optional<Product> findById(Long productId);
 
     List<Product> findTop8ByOrderByCreatedAt();
 
@@ -64,8 +64,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("""
             SELECT p
             FROM Product p
-            WHERE p.productId IN :productIds
-            ORDER BY p.productId
+            WHERE p.id IN :productIds
+            ORDER BY p.id
             """)
     List<Product> findAllByProductIdsWithPessimisticLock(@Param("productIds") List<Long> productIds);
 }

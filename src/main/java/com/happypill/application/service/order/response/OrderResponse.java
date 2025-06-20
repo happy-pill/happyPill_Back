@@ -27,12 +27,12 @@ public record OrderResponse(
                 .map(OrderLineResponse::from)
                 .toList();
         return new OrderResponse(
-                String.valueOf(order.getOrderId()),
+                String.valueOf(order.getId()),
                 order.getTotalPrice(),
                 order.getPaymentUid(),
                 order.getStatus(),
                 order.getPaymentMethod(),
-                String.valueOf(order.getUser().getUserId()),
+                String.valueOf(order.getUser().getId()),
                 order.getCreatedAt(),
                 order.getUpdatedAt(),
                 com.happypill.application.service.order.response.OrderRecipientInfoResponse.from(order.getOrderRecipientInfo()),

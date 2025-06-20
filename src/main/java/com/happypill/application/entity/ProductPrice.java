@@ -15,10 +15,10 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PRIVATE)
 @Table(name = "product_prices")
-public class ProductPrice extends BaseEntity{
+public class ProductPrice extends BaseEntity<Long> {
 
     @Id
-    private Long productPriceId;
+    private Long id;
 
     @Column(nullable = false)
     private Integer price;

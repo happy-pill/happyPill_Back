@@ -72,7 +72,7 @@ class AdminProductServiceTest {
 
         //when
         BusinessException exception = assertThrows(BusinessException.class, () -> {
-            adminProductService.getProductDetails(product.getProductId());
+            adminProductService.getProductDetails(product.getId());
         });
 
         //then
@@ -94,7 +94,7 @@ class AdminProductServiceTest {
 
         //when
         BusinessException exception = assertThrows(BusinessException.class, () -> {
-            adminProductService.getProductDetails(product.getProductId());
+            adminProductService.getProductDetails(product.getId());
         });
 
         // then
@@ -121,11 +121,11 @@ class AdminProductServiceTest {
         productPriceRepository.save(productPrice);
 
         //when
-        AdminProductInfoResponse response = adminProductService.getProductDetails(product.getProductId());
+        AdminProductInfoResponse response = adminProductService.getProductDetails(product.getId());
 
         //then
         assertThat(response).isNotNull();
-        assertThat(response.productId()).isEqualTo(String.valueOf(product.getProductId()));
+        assertThat(response.productId()).isEqualTo(String.valueOf(product.getId()));
         assertThat(response.productInfo())
                 .anySatisfy(info -> {
                     assertThat(info.name()).isEqualTo("제품명_KO");
@@ -156,7 +156,7 @@ class AdminProductServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         //when
-        CustomPage<AdminProductListResponse> result = adminProductService.getAllProducts(category.getCategoryId(), pageable, locale);
+        CustomPage<AdminProductListResponse> result = adminProductService.getAllProducts(category.getId(), pageable, locale);
 
         //then
         assertThat(result.contents()).isNotNull();
@@ -217,7 +217,7 @@ class AdminProductServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         //when
-        CustomPage<AdminProductListResponse> result = adminProductService.getAllProducts(category.getCategoryId(), pageable, locale);
+        CustomPage<AdminProductListResponse> result = adminProductService.getAllProducts(category.getId(), pageable, locale);
 
         //then
         assertThat(result.contents())
@@ -247,7 +247,7 @@ class AdminProductServiceTest {
         Pageable pageable = PageRequest.of(0, 5);
 
         //when
-        CustomPage<AdminProductPriceResponse> customPage = adminProductService.getAllProductPrices(product.getProductId(), pageable);
+        CustomPage<AdminProductPriceResponse> customPage = adminProductService.getAllProductPrices(product.getId(), pageable);
 
         //then
         assertThat(customPage.contents())
@@ -307,7 +307,7 @@ class AdminProductServiceTest {
         List<ProductInfoRequest> productInfoList = List.of(
                 new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
         );
-        AdminProductCreateRequest request = new AdminProductCreateRequest(category.getCategoryId(), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+        AdminProductCreateRequest request = new AdminProductCreateRequest(category.getId(), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
 
         //when //then
         assertThatThrownBy(() -> adminProductService.createProduct(request))
@@ -338,7 +338,7 @@ class AdminProductServiceTest {
                 new ProductInfoRequest(Language.KO, "상품명_KO", "간단설명_KO", "상세설명_KO", "https://xxx.com/xxx", "회사명_KO", "용량_KO", "섭취방법_KO", "주의사항_KO"),
                 new ProductInfoRequest(Language.EN, "상품명_EN", "간단설명_EN", "상세설명_EN", "https://xxx.com/xxx", "회사명_EN", "용량_EN", "섭취방법_EN", "주의사항_EN")
         );
-        AdminProductCreateRequest request = new AdminProductCreateRequest(category.getCategoryId(), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
+        AdminProductCreateRequest request = new AdminProductCreateRequest(category.getId(), "https://xxx.com/xxx", true, 33, 30000, productInfoList);
 
         //when
         long productId = adminProductService.createProduct(request);
@@ -401,7 +401,7 @@ class AdminProductServiceTest {
                 new ProductInfoRequest(Language.KO, "비타민C 1000", "건강을 위한 비타민", "하루 한 알로 충분한 비타민C 섭취", "https://update.com/xxx", "헬스케어코리아", "100정", "하루 1회 1정 섭취", "과다 섭취 시 부작용이 있을 수 있습니다."),
                 new ProductInfoRequest(Language.EN, "Vitamin C 1000", "Vitamin for your health", "One pill a day provides sufficient vitamin C", "https://update.com/xxx", "Healthcare Korea", "100 tablets", "Take 1 tablet daily", "Overconsumption may cause side effects.")
         );
-        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getCategoryId(), "https://update.com/xxx", true, 30, 2990, productInfos);
+        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getId(), "https://update.com/xxx", true, 30, 2990, productInfos);
 
         //when //then
         assertThatThrownBy(()->adminProductService.updateProduct(1000L, request))
@@ -432,16 +432,16 @@ class AdminProductServiceTest {
                 new ProductInfoRequest(Language.KO, "비타민C 1000", "건강을 위한 비타민", "하루 한 알로 충분한 비타민C 섭취", "https://update.com/xxx", "헬스케어코리아", "100정", "하루 1회 1정 섭취", "과다 섭취 시 부작용이 있을 수 있습니다."),
                 new ProductInfoRequest(Language.EN, "Vitamin C 1000", "Vitamin for your health", "One pill a day provides sufficient vitamin C", "https://update.com/xxx", "Healthcare Korea", "100 tablets", "Take 1 tablet daily", "Overconsumption may cause side effects.")
         );
-        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getCategoryId(), "https://update.com/xxx", true, 30, 2990, productInfos);
+        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getId(), "https://update.com/xxx", true, 30, 2990, productInfos);
 
         //when
-        adminProductService.updateProduct(product.getProductId(), request);
+        adminProductService.updateProduct(product.getId(), request);
 
         // then
-        ProductPrice originalPrice = productPriceRepository.findById(productPrice.getProductPriceId()).orElseThrow();
+        ProductPrice originalPrice = productPriceRepository.findById(productPrice.getId()).orElseThrow();
         assertThat(originalPrice.isUsed()).isFalse();
 
-        ProductPrice updatedPrice = productPriceRepository.findCurrentPriceByProduct(product.getProductId()).orElseThrow();
+        ProductPrice updatedPrice = productPriceRepository.findCurrentPriceByProduct(product.getId()).orElseThrow();
         assertThat(updatedPrice.isUsed()).isTrue();
         assertThat(updatedPrice.getPrice()).isEqualTo(2990);
     }
@@ -468,13 +468,13 @@ class AdminProductServiceTest {
         List<ProductInfoRequest> productInfos = List.of(
                 new ProductInfoRequest(Language.KO, "비타민C 1000", "건강을 위한 비타민", "하루 한 알로 충분한 비타민C 섭취", "https://update.com/xxx", "헬스케어코리아", "100정", "하루 1회 1정 섭취", "과다 섭취 시 부작용이 있을 수 있습니다.")
         );
-        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getCategoryId(), "https://update.com/xxx", true, 30, 2990, productInfos);
+        AdminProductUpdateRequest request = new AdminProductUpdateRequest(category.getId(), "https://update.com/xxx", true, 30, 2990, productInfos);
 
         //when
-        adminProductService.updateProduct(product.getProductId(), request);
+        adminProductService.updateProduct(product.getId(), request);
 
         //then
-        List<ProductInfo> productInfoList = productInfoRepository.findAllByProductId(product.getProductId());
+        List<ProductInfo> productInfoList = productInfoRepository.findAllByProductId(product.getId());
         assertThat(productInfoList)
                 .extracting(ProductInfo::getName)
                 .anyMatch(name -> name.contains("EN"));
@@ -507,10 +507,10 @@ class AdminProductServiceTest {
         productRepository.save(product);
 
         //when
-        adminProductService.deleteProduct(product.getProductId());
+        adminProductService.deleteProduct(product.getId());
 
         //then
-        Product updatedProduct = productRepository.findByProductId(product.getProductId()).orElseThrow();
+        Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
         assertThat(updatedProduct.isAvailable()).isFalse();
         assertThat(updatedProduct.isDeleted()).isTrue();
     }

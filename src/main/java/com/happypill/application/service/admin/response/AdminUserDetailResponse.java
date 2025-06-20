@@ -18,7 +18,7 @@ public record AdminUserDetailResponse(
 
     public static AdminUserDetailResponse from(HappypillUser user) {
         return new AdminUserDetailResponse(
-                user.getUserId().toString(),
+                user.getId().toString(),
                 user.getLoginEmail(),
                 user.getNickName(),
                 user.getNotifyEmail(),

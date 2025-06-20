@@ -327,7 +327,7 @@ public class DataInitialiser implements ApplicationRunner {
         ));
 
         Category category1 = categoryRepository.save(Category.of(1L, "www.vitamin_thumbnail.com", "www.vitamin_banner.com"));
-        Category category2 = categoryRepository.save(Category.of(1L, "www.mineral_thumbnail.com", "www.mineral_banner.com"));
+        Category category2 = categoryRepository.save(Category.of(2L, "www.mineral_thumbnail.com", "www.mineral_banner.com"));
 
         categoryInfoRepository.saveAll(List.of(
                         CategoryInfo.of(1L, Language.KO, "비타민", "비타민은 신진대사와 면역 기능을 유지하는 데 꼭 필요한 필수 영양소입니다.부족할 경우 피로, 면역력 저하, 피부 트러블 등 다양한 건강 문제가 발생할 수 있습니다.", category1),

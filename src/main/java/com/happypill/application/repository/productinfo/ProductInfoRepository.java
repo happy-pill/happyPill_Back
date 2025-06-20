@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> {
 
-    @Query("SELECT p FROM ProductInfo p WHERE p.product.productId = :productId")
+    @Query("SELECT p FROM ProductInfo p WHERE p.product.id = :productId")
     List<ProductInfo> findAllByProductId(@Param("productId") Long productId);
 
     @Query("SELECT p FROM ProductInfo p WHERE p.product= :product AND p.language = :language")
@@ -25,7 +25,7 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
     FROM ProductInfo pi
     JOIN pi.product p
     WHERE pi.language = :language
-    ORDER BY p.productId DESC
+                            ORDER BY p.id DESC
     """)
     Page<ProductInfo> getAllProductInfosByLanguage(@Param("language") Language language, Pageable pageable);
 
@@ -34,8 +34,8 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
     FROM ProductInfo pi
     JOIN pi.product p
     WHERE pi.language = :language
-    AND p.category.categoryId = :categoryId
-    ORDER BY p.productId DESC
+                            AND p.category.id = :categoryId
+                            ORDER BY p.id DESC
     """)
     Page<ProductInfo> getAllProductInfosByCategoryAndLanguage(@Param("categoryId") Long categoryId, @Param("language") Language language, Pageable pageable);
 }

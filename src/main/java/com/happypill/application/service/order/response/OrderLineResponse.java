@@ -13,11 +13,11 @@ public record OrderLineResponse(
 
     public static OrderLineResponse from(OrderLine orderLine) {
         return new OrderLineResponse(
-                String.valueOf(orderLine.getOrderLineId()),
+                String.valueOf(orderLine.getId()),
                 orderLine.getPrice(),
                 orderLine.getMonth(),
-                String.valueOf(orderLine.getOrder().getOrderId()),
-                String.valueOf(orderLine.getProduct().getProductId()),
+                String.valueOf(orderLine.getOrder().getId()),
+                String.valueOf(orderLine.getProduct().getId()),
                 orderLine.isCancelled()
         );
     }

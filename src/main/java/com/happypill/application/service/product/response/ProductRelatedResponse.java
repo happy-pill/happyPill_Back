@@ -6,7 +6,7 @@ public record ProductRelatedResponse (String productId, String thumbnailUrl, int
 {
     public static ProductRelatedResponse from (Product product) {
         return new ProductRelatedResponse(
-                product.getProductId().toString(),
+                product.getId().toString(),
                 product.getThumbnailUrl(),
                 product.getPrice()
         );

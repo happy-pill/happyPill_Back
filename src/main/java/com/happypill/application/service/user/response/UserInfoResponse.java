@@ -18,7 +18,7 @@ public record UserInfoResponse(
 ) {
     public static UserInfoResponse from(HappypillUser happypillUser) {
         return new UserInfoResponse(
-                String.valueOf(happypillUser.getUserId()),
+                String.valueOf(happypillUser.getId()),
                 happypillUser.getProvider(),
                 happypillUser.getNickName(),
                 happypillUser.getLoginEmail(),

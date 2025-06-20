@@ -16,7 +16,7 @@ public interface HappypillUserRepository extends JpaRepository<HappypillUser, Lo
     @Query("""
         SELECT u
         FROM HappypillUser u
-        ORDER BY u.userId DESC
+                                            ORDER BY u.id DESC
 """)
     Page<HappypillUser> getAllUsers(Pageable pageable);
 }

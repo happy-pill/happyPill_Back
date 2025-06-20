@@ -26,14 +26,14 @@ public interface CategoryInfoRepository extends JpaRepository<CategoryInfo, Long
             """)
     List<CategoryInfo> findAllCategoryInfo();
 
-    @Query("SELECT ci FROM CategoryInfo ci WHERE ci.category.categoryId = :categoryId")
+    @Query("SELECT ci FROM CategoryInfo ci WHERE ci.category.id = :categoryId")
     List<CategoryInfo> getAllCategoryInfosById(@Param("categoryId") Long categoryId);
 
     @Query("""
             SELECT ci
             FROM CategoryInfo ci
             JOIN FETCH ci.category c
-            ORDER BY c.categoryId
+            ORDER BY c.id
             """)
     List<CategoryInfo> findAllCategoryInfoOrderById();
 }

@@ -68,7 +68,7 @@ public class AdminProductService {
 
     //특정 상품 조회
     public AdminProductInfoResponse getProductDetails(Long productId) {
-        Product product = productRepository.findByProductId(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
 
         List<ProductInfo> productInfo = productInfoRepository.findAllByProductId(productId);
@@ -109,7 +109,7 @@ public class AdminProductService {
         if(!isKoreanExist)
             throw new BusinessException(ExceptionCode.KO_LANGUAGE_REQUIRED);
 
-        Category category = categoryRepository.findByCategoryId(Long.valueOf(request.categoryId()))
+        Category category = categoryRepository.findById(Long.valueOf(request.categoryId()))
                 .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         Product product = Product.of(
@@ -141,19 +141,19 @@ public class AdminProductService {
                 ))
                 .collect(Collectors.toList());
         productInfoRepository.saveAll(productInfoList);
-        return product.getProductId();
+        return product.getId();
     }
 
     // 상품 수정
     @Transactional
     public AdminProductInfoResponse updateProduct(Long productId, AdminProductUpdateRequest request) {
-        Product product = this.productRepository.findByProductId(productId)
+        Product product = this.productRepository.findById(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
 
         ProductPrice productPrice = this.productPriceRepository.findCurrentPriceByProduct(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
-        Category category = this.categoryRepository.findByCategoryId(request.categoryId())
+        Category category = this.categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         product.update(request.stock(), request.isAvailable(), request.thumbnailUrl(), category);
@@ -162,7 +162,7 @@ public class AdminProductService {
         this.productPriceRepository.save(createdPrice);
 
         Map<Language, ProductInfo> infoMap = productInfoRepository
-                .findAllByProductId(product.getProductId())
+                .findAllByProductId(product.getId())
                 .stream()
                 .collect(Collectors.toMap(ProductInfo::getLanguage, Function.identity()));
 
@@ -192,13 +192,13 @@ public class AdminProductService {
     //상품 삭제
     @Transactional
     public void deleteProduct(Long productId) {
-        Product product = productRepository.findByProductId(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
         product.deleteProduct();
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {
-        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId())
+        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getId())
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         return price.getPrice();

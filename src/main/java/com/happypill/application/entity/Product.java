@@ -14,10 +14,10 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PRIVATE)
 @Table(name = "products")
-public class Product extends BaseEntity{
+public class Product extends BaseEntity<Long> {
 
     @Id
-    private Long productId;
+    private Long id;
 
     private Integer price;
 

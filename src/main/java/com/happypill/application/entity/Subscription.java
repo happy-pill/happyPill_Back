@@ -13,10 +13,10 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "subscriptions")
-public class Subscription extends BaseEntity{
+public class Subscription extends BaseEntity<Long> {
 
     @Id
-    private Long subscriptionId;
+    private Long id;
 
     @Column(name = "expired_date", columnDefinition = "TIMESTAMPTZ", nullable = false)
     private ZonedDateTime expiredDate;

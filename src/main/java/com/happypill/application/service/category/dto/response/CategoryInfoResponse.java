@@ -11,7 +11,7 @@ public record CategoryInfoResponse(
 ) {
     public static CategoryInfoResponse fromEntity(CategoryInfo categoryInfo){
         return new CategoryInfoResponse(
-                categoryInfo.getCategoryInfoId().toString(),
+                categoryInfo.getId().toString(),
                 categoryInfo.getLanguage(),
                 categoryInfo.getName(),
                 categoryInfo.getDescription()

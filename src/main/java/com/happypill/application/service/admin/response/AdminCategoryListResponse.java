@@ -12,7 +12,7 @@ public record AdminCategoryListResponse(
 ) {
     public static AdminCategoryListResponse from(CategoryInfo categoryInfo, Category category){
         return new AdminCategoryListResponse(
-                category.getCategoryId().toString(),
+                category.getId().toString(),
                 categoryInfo.getName(),
                 categoryInfo.getDescription(),
                 category.getThumbnailUrl(),
