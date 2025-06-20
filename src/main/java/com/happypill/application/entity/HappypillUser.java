@@ -21,7 +21,6 @@ public class HappypillUser extends BaseEntity<Long> {
     @Id
     private Long id;
 
-    @Column(nullable = false, length = 50)
     private String nickName;
 
     @Enumerated(STRING)
