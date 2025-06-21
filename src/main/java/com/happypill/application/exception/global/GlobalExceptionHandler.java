@@ -43,6 +43,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse<?>> handleUnexpectedException(RuntimeException e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ErrorResponse<>("예상치 못한 오류가 발생했습니다.", null));
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ErrorResponse<>("예상치 못한 오류가 발생했습니다.", e));  //개발단계에서만
+//        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ErrorResponse<>("예상치 못한 오류가 발생했습니다.", null)); //TODO
     }
 }

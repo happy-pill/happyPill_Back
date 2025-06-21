@@ -8,15 +8,18 @@ import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
 import com.happypill.application.repository.order.OrderRepository;
 import com.happypill.application.repository.product.ProductRepository;
-import com.happypill.application.service.order.payment.PortonePaymentClient;
+import com.happypill.application.service.order.payment.PPaymentClient;
+import com.happypill.application.service.order.payment.VerifiedPayment;
 import com.happypill.application.service.order.request.OrderCreateRequest;
 import com.happypill.application.service.order.request.OrderPaymentCompleteRequest;
 import com.happypill.application.service.order.response.OrderResponse;
+import com.happypill.application.service.order.response.PaymentConfirmResponse;
 import com.happypill.application.util.SnowflakeUtil;
-import io.portone.sdk.server.payment.PaidPayment;
-import io.portone.sdk.server.payment.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,11 +41,16 @@ public class OrderService {
 
     private final HappypillUserRepository userRepository;
 
-    private final PortonePaymentClient portonePaymentClient;
+    private final PPaymentClient pPaymentClient;
 
     @Transactional
+    @Retryable(
+            retryFor = ObjectOptimisticLockingFailureException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 500)
+    )
     public OrderResponse createOrder(UserContext userContext, OrderCreateRequest request) {
-        Map<Long, Product> productMap = getProductMapWithLock(request);
+        Map<Long, Product> productMap = getOrderProductMap(request);
         List<OrderLine> orderLines = decreaseStockAndGetOrderLines(request, productMap);
 
         HappypillUser orderedUser = userRepository.findById(userContext.getId())
@@ -59,7 +67,6 @@ public class OrderService {
                 orderLines
         ));
 
-
         return OrderResponse.from(order);
     }
 
@@ -67,9 +74,7 @@ public class OrderService {
         List<OrderLine> orderLines = new ArrayList<>();
         for (var o : request.orderLineCreateRequests()) {
             Product orderProduct = ProductMap.get(o.productId());
-            if (o.month() > orderProduct.getStock()) {
-                throw new RuntimeException("재고불가");
-            }
+
             orderProduct.decreaseStock(o.month());
 
             OrderLine orderLine = OrderLine.create(
@@ -84,16 +89,16 @@ public class OrderService {
         return orderLines;
     }
 
-    private Map<Long, Product> getProductMapWithLock(OrderCreateRequest request) {
+    private Map<Long, Product> getOrderProductMap(OrderCreateRequest request) {
         List<Long> productIds = request.orderLineCreateRequests().stream()
                 .map(OrderCreateRequest.OrderLineCreateRequest::productId)
                 .toList();
-        Map<Long, Product> ProductMap = productRepository.findAllByProductIdsWithPessimisticLock(productIds).stream()
+        Map<Long, Product> productMap = productRepository.findAllByIdIn(productIds).stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
-        if (productIds.size() != ProductMap.size()) {
-            throw new RuntimeException("유효하지 않은 요청");
+        if (productIds.size() != productMap.size()) {
+            throw new RuntimeException("주문목록 정보가 잘못되었습니다");
         }
-        return ProductMap;
+        return productMap;
     }
 
     private String generatePaymentUId() {
@@ -105,29 +110,29 @@ public class OrderService {
     }
 
     @Transactional
-    public void confirmPayment(OrderPaymentCompleteRequest request) {
+    public PaymentConfirmResponse confirmPayment(OrderPaymentCompleteRequest request) {
         String paymentUid = request.paymentUid();
-        PaidPayment paidPayment = getPayment(paymentUid);
+        VerifiedPayment verifiedPayment = pPaymentClient.getVerifiedPayment(paymentUid);
 
         Order order = orderRepository.findByPaymentUid(paymentUid)
                 .orElseThrow(() -> new RuntimeException("해당 주문이 없습니다"));
 
-        if (order.getTotalPrice() != paidPayment.getAmount().getTotal()) { //long
-            throw new RuntimeException("결제 금액이 다름 orderId = %s, totalPrice=%s, paymentPrice=%s"
-                    .formatted(order.getId(), order.getTotalPrice(), paidPayment.getAmount().getTotal())
+        if (order.getTotalPrice() != verifiedPayment.totalAmount()) { //long
+            throw new RuntimeException("결제 금액이 다름 orderId = %s, totalPrice=%s, verifiedPayment=%s"
+                    .formatted(order.getId(), order.getTotalPrice(), verifiedPayment)
             );
         }
 
         order.complete();
 
+        return new PaymentConfirmResponse(
+                String.valueOf(order.getId()),
+                order.getPaymentUid(),
+                verifiedPayment.currency(),
+                order.getTotalPrice(),
+                verifiedPayment.paidAt(),
+                verifiedPayment.paymentProvider()
+        );
     }
 
-    PaidPayment getPayment(String paymentUid) {
-        Payment rawpayment = portonePaymentClient.getPaymentInfo(paymentUid);
-        if (rawpayment instanceof PaidPayment paidPayment) {
-            return paidPayment;
-        } else {
-            throw new RuntimeException("paidPayment Error %s".formatted(rawpayment));
-        }
-    }
 }
