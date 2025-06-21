@@ -8,16 +8,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PortonePaymentClient {
+public class PortonePPaymentClient implements PPaymentClient {
 
     private final PaymentClient portone;
 
     @Autowired
-    public PortonePaymentClient(PortOneProperties properties) {
+    public PortonePPaymentClient(PortOneProperties properties) {
         this.portone = new PaymentClient(properties.apiSecret(), "https://api.portone.io", properties.storeId());
     }
 
-    public Payment getPaymentInfo(String paymentUid) {
+    public Payment getPayment(String paymentUid) {
         try {
             return portone.getPayment(paymentUid)
                     .get();

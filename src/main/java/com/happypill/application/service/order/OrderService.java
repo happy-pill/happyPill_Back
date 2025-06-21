@@ -8,10 +8,11 @@ import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
 import com.happypill.application.repository.order.OrderRepository;
 import com.happypill.application.repository.product.ProductRepository;
-import com.happypill.application.service.order.payment.PortonePaymentClient;
+import com.happypill.application.service.order.payment.PPaymentClient;
 import com.happypill.application.service.order.request.OrderCreateRequest;
 import com.happypill.application.service.order.request.OrderPaymentCompleteRequest;
 import com.happypill.application.service.order.response.OrderResponse;
+import com.happypill.application.service.order.response.PaymentConfirmResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import io.portone.sdk.server.payment.PaidPayment;
 import io.portone.sdk.server.payment.Payment;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class OrderService {
 
     private final HappypillUserRepository userRepository;
 
-    private final PortonePaymentClient portonePaymentClient;
+    private final PPaymentClient pPaymentClient;
 
     @Transactional
     public OrderResponse createOrder(UserContext userContext, OrderCreateRequest request) {
@@ -105,7 +107,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void confirmPayment(OrderPaymentCompleteRequest request) {
+    public PaymentConfirmResponse confirmPayment(OrderPaymentCompleteRequest request) {
         String paymentUid = request.paymentUid();
         PaidPayment paidPayment = getPayment(paymentUid);
 
@@ -120,10 +122,18 @@ public class OrderService {
 
         order.complete();
 
+        return new PaymentConfirmResponse(
+                String.valueOf(order.getId()),
+                order.getPaymentUid(),
+                paidPayment.getCurrency().getValue(),
+                order.getTotalPrice(),
+                ZonedDateTime.from(paidPayment.getPaidAt()),
+                paidPayment.getMethod()
+        );
     }
 
     PaidPayment getPayment(String paymentUid) {
-        Payment rawpayment = portonePaymentClient.getPaymentInfo(paymentUid);
+        Payment rawpayment = pPaymentClient.getPayment(paymentUid);
         if (rawpayment instanceof PaidPayment paidPayment) {
             return paidPayment;
         } else {

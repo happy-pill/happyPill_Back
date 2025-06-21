@@ -6,6 +6,7 @@ import com.happypill.application.service.order.OrderService;
 import com.happypill.application.service.order.request.OrderCreateRequest;
 import com.happypill.application.service.order.request.OrderPaymentCompleteRequest;
 import com.happypill.application.service.order.response.OrderResponse;
+import com.happypill.application.service.order.response.PaymentConfirmResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,8 @@ public class OrderController {
     }
 
     @PostMapping("/api/order/payment-confirm")
-    public void confirmPayment(@HappypillUser UserContext userContext, @RequestBody @Valid OrderPaymentCompleteRequest request) {
-        orderService.confirmPayment(request);
+    public PaymentConfirmResponse confirmPayment(@HappypillUser UserContext userContext, @RequestBody @Valid OrderPaymentCompleteRequest request) {
+        return orderService.confirmPayment(request);
     }
 
 }
