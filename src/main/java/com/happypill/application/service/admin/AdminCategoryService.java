@@ -75,10 +75,10 @@ public class AdminCategoryService {
 
     @Transactional(readOnly = true)
     public AdminCategoryInfoResponse getCategoryDetails(Long categoryId){
-        Category category = categoryRepository.findByCategoryId(categoryId)
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
 
-        List<CategoryInfo> categoryInfoList = categoryInfoRepository.getAllCategoryInfosById(category.getCategoryId());
+        List<CategoryInfo> categoryInfoList = categoryInfoRepository.getAllCategoryInfosById(category.getId());
 
         return AdminCategoryInfoResponse.fromCategoryAndInfos(category, categoryInfoList);
     }
@@ -89,7 +89,7 @@ public class AdminCategoryService {
 
         Map<Long, List<CategoryInfo>> grouped = infos.stream()
                 .collect(Collectors.groupingBy(
-                        ci -> ci.getCategory().getCategoryId(),  //categoryId 를 기준으로 그룹화한다.
+                        ci -> ci.getCategory().getId(),  //categoryId 를 기준으로 그룹화한다.
                         LinkedHashMap::new,  //categoryId 를 기준으로 순서를 보장하기 위해 사용한다.
                         Collectors.toList()  //같은 categoryId 를 가진 CategoryInfo 들을 리스트에 담는다.
                 ));

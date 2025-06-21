@@ -57,7 +57,7 @@ class UserServiceTest extends IntegrationTestSupport {
     @Test
     void test1() throws Exception {
         HappypillUser user = generateTestUser();
-        UserContext userContext = SecurityUserContext.from(user.getUserId());
+        UserContext userContext = SecurityUserContext.from(user.getId());
         EmailVerificationRequest request = new EmailVerificationRequest(faker.internet().emailAddress());
 
         service.sendEmailVerificationCode(userContext, request);
@@ -75,7 +75,7 @@ class UserServiceTest extends IntegrationTestSupport {
     @Test
     void test2() throws Exception {
         HappypillUser user = generateTestUser();
-        UserContext userContext = SecurityUserContext.from(user.getUserId());
+        UserContext userContext = SecurityUserContext.from(user.getId());
         String verifyCode = faker.number().digits(6);
         UserNotifyEmailUpdateRequest request = new UserNotifyEmailUpdateRequest(verifyCode, faker.internet().emailAddress());
         emailVerificationRedisRepository.saveVerificationCode(userContext.getId(), request.notifyEmail(), verifyCode, Duration.ofMinutes(1L));
@@ -90,7 +90,7 @@ class UserServiceTest extends IntegrationTestSupport {
     void test3() throws Exception {
 
         HappypillUser user = generateTestUser();
-        UserContext userContext = SecurityUserContext.from(user.getUserId());
+        UserContext userContext = SecurityUserContext.from(user.getId());
         UserNotifyEmailUpdateRequest request = new UserNotifyEmailUpdateRequest("00000", "hello@google.com");
 
         assertThatThrownBy(() -> service.verifyAndUpdateUserNotifyEmail(userContext, request))

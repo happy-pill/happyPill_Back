@@ -89,7 +89,7 @@ public class OrderService {
                 .map(OrderCreateRequest.OrderLineCreateRequest::productId)
                 .toList();
         Map<Long, Product> ProductMap = productRepository.findAllByProductIdsWithPessimisticLock(productIds).stream()
-                .collect(Collectors.toMap(Product::getProductId, Function.identity()));
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
         if (productIds.size() != ProductMap.size()) {
             throw new RuntimeException("유효하지 않은 요청");
         }
@@ -114,7 +114,7 @@ public class OrderService {
 
         if (order.getTotalPrice() != paidPayment.getAmount().getTotal()) { //long
             throw new RuntimeException("결제 금액이 다름 orderId = %s, totalPrice=%s, paymentPrice=%s"
-                    .formatted(order.getOrderId(), order.getTotalPrice(), paidPayment.getAmount().getTotal())
+                    .formatted(order.getId(), order.getTotalPrice(), paidPayment.getAmount().getTotal())
             );
         }
 

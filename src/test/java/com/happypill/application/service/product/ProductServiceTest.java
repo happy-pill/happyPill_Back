@@ -130,7 +130,7 @@ public class ProductServiceTest {
     public void getAllProductsWithoutLastProductId() {
         Locale locale = Locale.of("KO");
         Category category = categoryRepository.findAll().getFirst();
-        Long categoryId = category.getCategoryId();
+        Long categoryId = category.getId();
         Long lastProductId = null;
         int size = 4;
 
@@ -145,8 +145,8 @@ public class ProductServiceTest {
         Locale locale = Locale.of("KO");
         Category category = categoryRepository.findAll().getFirst();
         Product product = productRepository.findAll().getFirst();
-        Long categoryId = category.getCategoryId();
-        Long lastProductId = product.getProductId();
+        Long categoryId = category.getId();
+        Long lastProductId = product.getId();
         int size = 4;
 
         CustomPageResponse<ProductResponse> result = productService.getAllProducts(categoryId, lastProductId, locale, size);
@@ -160,14 +160,14 @@ public class ProductServiceTest {
         Locale locale = Locale.of("KO");
         Language language = Language.parseLanguage(locale.getLanguage());
         Product randomProduct = productRepository.findAll().getFirst();
-        Long productId = randomProduct.getProductId();
-        Product product = productRepository.findByProductId(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
+        Long productId = randomProduct.getId();
+        Product product = productRepository.findById(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
         ProductInfo productInfo = productRepository.getProductInfoByProductId(productId, language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
 //        ProductPrice price = productPriceRepository.findCurrentPriceByProduct(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         ProductInfoResponse result = productService.getProduct(productId, locale);
 
-        assertThat(result.productId()).isEqualTo(product.getProductId().toString());
+        assertThat(result.productId()).isEqualTo(product.getId().toString());
         assertThat(result.name()).isEqualTo(productInfo.getName());
         assertThat(result.company()).isEqualTo(productInfo.getCompany());
         assertThat(result.price()).isEqualTo(product.getPrice());
@@ -196,14 +196,14 @@ public class ProductServiceTest {
         Locale locale = Locale.of("Invalid");
         Language language = Language.parseLanguage(locale.getLanguage());
         Product randomProduct = productRepository.findAll().getFirst();
-        Long productId = randomProduct.getProductId();
-        Product product = productRepository.findByProductId(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
+        Long productId = randomProduct.getId();
+        Product product = productRepository.findById(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
         ProductInfo productInfo = productRepository.getProductInfoByProductId(productId, language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
 //        ProductPrice price = productPriceRepository.findCurrentPriceByProduct(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
         ProductInfoResponse result = productService.getProduct(productId, locale);
 
-        assertThat(result.productId()).isEqualTo(product.getProductId().toString());
+        assertThat(result.productId()).isEqualTo(product.getId().toString());
         assertThat(result.name()).isEqualTo(productInfo.getName());
         assertThat(result.company()).isEqualTo(productInfo.getCompany());
 //        assertThat(result.price()).isEqualTo(price.getPrice());
@@ -225,10 +225,10 @@ public class ProductServiceTest {
         List<ProductRelatedResponse> recommendations = productService.getRecommendation();
 
         assertThat(recommendations.size()).isEqualTo(8);
-        assertThat(recommendations.getFirst().productId()).isEqualTo(firstProduct.getProductId().toString());
+        assertThat(recommendations.getFirst().productId()).isEqualTo(firstProduct.getId().toString());
         assertThat(recommendations.getFirst().thumbnailUrl()).isEqualTo(firstProduct.getThumbnailUrl());
         assertThat(recommendations.getFirst().price()).isEqualTo(firstProduct.getPrice());
-        assertThat(recommendations.getLast().productId()).isEqualTo(lastProduct.getProductId().toString());
+        assertThat(recommendations.getLast().productId()).isEqualTo(lastProduct.getId().toString());
         assertThat(recommendations.getLast().thumbnailUrl()).isEqualTo(lastProduct.getThumbnailUrl());
         assertThat(recommendations.getLast().price()).isEqualTo(lastProduct.getPrice());
     }

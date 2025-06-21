@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -105,10 +104,10 @@ class AdminUserServiceTest {
         userRepository.save(savedUser);
 
         //when
-        AdminUserDetailResponse response = adminUserService.getUserDetails(savedUser.getUserId());
+        AdminUserDetailResponse response = adminUserService.getUserDetails(savedUser.getId());
 
         // then
-        assertThat(Long.valueOf(response.userId())).isEqualTo(savedUser.getUserId());
+        assertThat(Long.valueOf(response.userId())).isEqualTo(savedUser.getId());
         assertThat(response.provider()).isEqualTo(Provider.KAKAO);
     }
 
@@ -136,8 +135,8 @@ class AdminUserServiceTest {
         AdminUserUpdateRequest request = new AdminUserUpdateRequest(UPDATED_NICKNAME, null);
 
         //when
-        adminUserService.updateUserProfile(savedUser.getUserId(), request);
-        HappypillUser updatedUser = userRepository.findById(savedUser.getUserId()).orElseThrow();
+        adminUserService.updateUserProfile(savedUser.getId(), request);
+        HappypillUser updatedUser = userRepository.findById(savedUser.getId()).orElseThrow();
 
         // then
         assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
@@ -153,8 +152,8 @@ class AdminUserServiceTest {
         AdminUserUpdateRequest request = new AdminUserUpdateRequest(UPDATED_NICKNAME, UPDATED_NOTIFY_EMAIL);
 
         //when
-        adminUserService.updateUserProfile(savedUser.getUserId(), request);
-        HappypillUser updatedUser = userRepository.findById(savedUser.getUserId()).orElseThrow();
+        adminUserService.updateUserProfile(savedUser.getId(), request);
+        HappypillUser updatedUser = userRepository.findById(savedUser.getId()).orElseThrow();
 
         //then
         assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);

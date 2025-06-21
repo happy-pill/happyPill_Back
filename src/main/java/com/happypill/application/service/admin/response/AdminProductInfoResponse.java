@@ -18,8 +18,8 @@ public record AdminProductInfoResponse(
 
     public static AdminProductInfoResponse from(Product product, List<ProductInfoResponse> productInfos, ProductPrice productPrice) {
         return new AdminProductInfoResponse(
-                product.getProductId().toString(),
-                product.getCategory().getCategoryId().toString(),
+                product.getId().toString(),
+                product.getCategory().getId().toString(),
                 product.getThumbnailUrl(),
                 product.isAvailable(),
                 product.getStock(),

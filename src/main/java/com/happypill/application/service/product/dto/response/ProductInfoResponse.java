@@ -9,7 +9,7 @@ public record ProductInfoResponse (String productId, String name, String company
 
     public static ProductInfoResponse from(Product product, ProductInfo productInfo) {
         return new ProductInfoResponse(
-                product.getProductId().toString(),
+                product.getId().toString(),
                 productInfo.getName(),
                 productInfo.getCompany(),
                 product.getPrice(),

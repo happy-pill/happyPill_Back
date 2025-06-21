@@ -11,7 +11,7 @@ public record ProductResponse(String productId, Long categoryId, String name, St
         Product product = productInfo.getProduct();
         Category category = product.getCategory();
 
-        return new ProductResponse(product.getProductId().toString(), category.getCategoryId(), productInfo.getName(),
+        return new ProductResponse(product.getId().toString(), category.getId(), productInfo.getName(),
                 productInfo.getCompany(), price, productInfo.getBriefDescription(), product.getThumbnailUrl());
     }
 }

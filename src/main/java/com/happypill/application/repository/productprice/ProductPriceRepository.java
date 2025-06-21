@@ -14,19 +14,19 @@ public interface ProductPriceRepository extends JpaRepository<ProductPrice, Long
             SELECT pp
             FROM ProductPrice pp
             JOIN pp.product p
-            WHERE p.productId = :productId
+            WHERE p.id = :productId
               AND pp.isUsed = true
             """)
      Optional<ProductPrice> getCurrentPriceByProductId(@Param("productId") Long productId);
 
-    @Query("SELECT p FROM ProductPrice p WHERE p.product.productId = :productId AND p.isUsed = true")
+    @Query("SELECT p FROM ProductPrice p WHERE p.product.id = :productId AND p.isUsed = true")
     Optional<ProductPrice> findCurrentPriceByProduct(@Param("productId") Long productId);
 
     @Query("""
             SELECT pp
             FROM ProductPrice pp
-            JOIN pp.product p ON pp.product.productId = p.productId
-            WHERE p.productId = :productId
+            JOIN pp.product p ON pp.product.id = p.id
+            WHERE p.id = :productId
             ORDER BY pp.createdAt DESC
             """)
     Page<ProductPrice> getCurrentPriceByProductId(@Param("productId")Long productId, Pageable pageable);

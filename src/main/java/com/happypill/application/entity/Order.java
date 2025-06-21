@@ -18,10 +18,10 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "orders")
-public class Order extends BaseEntity{
+public class Order extends BaseEntity<Long> {
 
     @Id
-    private Long orderId;
+    private Long id;
 
     @Column(nullable = false)
     private Integer totalPrice = 0;
@@ -63,7 +63,7 @@ public class Order extends BaseEntity{
             List<OrderLine> orderLines
     ) {
         Order o = new Order();
-        o.orderId = orderId;
+        o.id = orderId;
         o.paymentUid = paymentUid;
         o.status = OrderStatus.PENDING;
         o.paymentMethod = paymentMethod;

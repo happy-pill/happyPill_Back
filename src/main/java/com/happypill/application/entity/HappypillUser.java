@@ -16,12 +16,11 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PRIVATE)
 @Table(name = "happypill_users")
-public class HappypillUser extends BaseEntity {
+public class HappypillUser extends BaseEntity<Long> {
 
     @Id
-    private Long userId;
+    private Long id;
 
-    @Column(nullable = false, length = 50)
     private String nickName;
 
     @Enumerated(STRING)

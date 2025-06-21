@@ -15,8 +15,8 @@ public record AdminProductListResponse(
 ) {
     public static AdminProductListResponse from(Product product, ProductInfo productInfo, int price){
         return new AdminProductListResponse(
-                product.getProductId().toString(),
-                product.getCategory().getCategoryId().toString(),
+                product.getId().toString(),
+                product.getCategory().getId().toString(),
                 productInfo.getName(),
                 productInfo.getCompany(),
                 price,

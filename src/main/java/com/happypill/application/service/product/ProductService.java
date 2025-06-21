@@ -54,7 +54,7 @@ public class ProductService {
                         .map(pi -> ProductResponse.from(pi, getCurrentPrice(pi)))
                         .toList(),
                 hasNext,
-                productInfoList.getLast().getProduct().getProductId()
+                productInfoList.getLast().getProduct().getId()
         );
 
         return response;
@@ -62,8 +62,8 @@ public class ProductService {
 
     public ProductInfoResponse getProduct(Long productId, Locale locale) {
         Language language = Language.parseLanguage(locale.getLanguage());
-        Product product = productRepository.findByProductId(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
-        ProductInfo productInfo = productRepository.getProductInfoByProductId(product.getProductId(), language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_NOT_FOUND));
+        ProductInfo productInfo = productRepository.getProductInfoByProductId(product.getId(), language).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND));
 
         return ProductInfoResponse.from(product, productInfo);
     }
@@ -78,7 +78,7 @@ public class ProductService {
     private int getCurrentPrice(ProductInfo productInfo) {
 //        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 //        return price.getPrice();
-        return productRepository.findByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND))
+        return productRepository.findById(productInfo.getProduct().getId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_INFO_NOT_FOUND))
                 .getPrice();
     }
 }

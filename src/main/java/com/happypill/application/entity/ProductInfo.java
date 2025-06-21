@@ -17,10 +17,10 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PRIVATE)
 @Table(name = "product_info")
-public class ProductInfo extends BaseEntity{
+public class ProductInfo extends BaseEntity<Long> {
 
     @Id
-    private Long productInfoId;
+    private Long id;
 
     @Enumerated(STRING)
     @Column(nullable = false)

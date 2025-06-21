@@ -138,10 +138,10 @@ class AdminCategoryServiceTest {
         categoryInfoRepository.saveAll(categoryInfoList);
 
         //when
-        AdminCategoryInfoResponse response = adminCategoryService.getCategoryDetails(category.getCategoryId());
+        AdminCategoryInfoResponse response = adminCategoryService.getCategoryDetails(category.getId());
 
         //then
-        assertThat(response.categoryId()).isEqualTo(String.valueOf(category.getCategoryId()));
+        assertThat(response.categoryId()).isEqualTo(String.valueOf(category.getId()));
     }
 
     @Test
@@ -161,6 +161,6 @@ class AdminCategoryServiceTest {
 
         //then
         assertThat(responses).hasSize(1);
-        assertThat(responses.get(0).categoryId()).isEqualTo(String.valueOf(category.getCategoryId()));
+        assertThat(responses.get(0).categoryId()).isEqualTo(String.valueOf(category.getId()));
     }
 }

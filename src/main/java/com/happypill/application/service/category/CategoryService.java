@@ -1,10 +1,10 @@
 package com.happypill.application.service.category;
 
-import com.happypill.application.service.category.dto.response.CategoryResponse;
 import com.happypill.application.entity.Category;
 import com.happypill.application.entity.CategoryInfo;
 import com.happypill.application.entity.enums.Language;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
+import com.happypill.application.service.category.dto.response.CategoryResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class CategoryService {
 
         for (CategoryInfo categoryInfo : categoryInfoList) {
             category = categoryInfo.getCategory();
-            response = new CategoryResponse(category.getCategoryId().toString(), category.getThumbnailUrl(),
+            response = new CategoryResponse(category.getId().toString(), category.getThumbnailUrl(),
                     categoryInfo.getName(), categoryInfo.getDescription(), category.getBannerUrl());
             results.add(response);
         }
