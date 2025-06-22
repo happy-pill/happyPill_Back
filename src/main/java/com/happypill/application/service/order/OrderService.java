@@ -18,6 +18,9 @@ import io.portone.sdk.server.payment.PaidPayment;
 import io.portone.sdk.server.payment.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +46,13 @@ public class OrderService {
     private final PPaymentClient pPaymentClient;
 
     @Transactional
+    @Retryable(
+            retryFor = ObjectOptimisticLockingFailureException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 500)
+    )
     public OrderResponse createOrder(UserContext userContext, OrderCreateRequest request) {
-        Map<Long, Product> productMap = getProductMapWithLock(request);
+        Map<Long, Product> productMap = getOrderProductMap(request);
         List<OrderLine> orderLines = decreaseStockAndGetOrderLines(request, productMap);
 
         HappypillUser orderedUser = userRepository.findById(userContext.getId())
@@ -61,7 +69,6 @@ public class OrderService {
                 orderLines
         ));
 
-
         return OrderResponse.from(order);
     }
 
@@ -69,9 +76,7 @@ public class OrderService {
         List<OrderLine> orderLines = new ArrayList<>();
         for (var o : request.orderLineCreateRequests()) {
             Product orderProduct = ProductMap.get(o.productId());
-            if (o.month() > orderProduct.getStock()) {
-                throw new RuntimeException("재고불가");
-            }
+
             orderProduct.decreaseStock(o.month());
 
             OrderLine orderLine = OrderLine.create(
@@ -86,11 +91,11 @@ public class OrderService {
         return orderLines;
     }
 
-    private Map<Long, Product> getProductMapWithLock(OrderCreateRequest request) {
+    private Map<Long, Product> getOrderProductMap(OrderCreateRequest request) {
         List<Long> productIds = request.orderLineCreateRequests().stream()
                 .map(OrderCreateRequest.OrderLineCreateRequest::productId)
                 .toList();
-        Map<Long, Product> ProductMap = productRepository.findAllByProductIdsWithPessimisticLock(productIds).stream()
+        Map<Long, Product> ProductMap = productRepository.findAllByIdIn(productIds).stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
         if (productIds.size() != ProductMap.size()) {
             throw new RuntimeException("유효하지 않은 요청");
