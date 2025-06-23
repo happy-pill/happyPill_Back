@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Slf4j
 @RestControllerAdvice
@@ -40,9 +39,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(response);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse<?>> handleUnexpectedException(RuntimeException e) {
-        log.error(e.getMessage(), e);
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ErrorResponse<>("예상치 못한 오류가 발생했습니다.", null));
-    }
+    //RuntimeException이 스프링 시큐리티 오류도 잡는 것으로 확인해서 주석처리
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<ErrorResponse<?>> handleUnexpectedException(RuntimeException e) {
+//        log.error(e.getMessage(), e);
+//        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ErrorResponse<>("예상치 못한 오류가 발생했습니다.", e));  //개발단계에서만
+////        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ErrorResponse<>("예상치 못한 오류가 발생했습니다.", null)); //TODO
+//    }
 }

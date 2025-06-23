@@ -37,13 +37,16 @@ public class Product extends BaseEntity<Long> {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @Version
+    private Long version;
+
 
     public static Product of(Long productId, Integer price, Integer stock, boolean isAvailable, String thumbnailUrl, boolean isDeleted, Category category) {
-        return new Product(productId, price, stock, isAvailable, thumbnailUrl, isDeleted, category);
+        return new Product(productId, price, stock, isAvailable, thumbnailUrl, isDeleted, category, null);
     }
 
     public static Product of(Long productId, Integer price, Integer stock, String thumbnailUrl, Category category) {
-        return new Product(productId, price, stock, true, thumbnailUrl, false, category);
+        return new Product(productId, price, stock, true, thumbnailUrl, false, category, null);
     }
 
     public void decreaseStock(int count) {

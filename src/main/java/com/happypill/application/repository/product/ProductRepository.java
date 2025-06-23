@@ -56,9 +56,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             """)
     List<Product> findAllProducts();
 
+    @Deprecated
     /**
      * for no key update
      * GPT는 ORDER BY 사용을 권장하나, 제외해도 실제로 데드락 발생 X
+     * 낙관적 락으로 변경
      **/
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
@@ -68,4 +70,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             ORDER BY p.id
             """)
     List<Product> findAllByProductIdsWithPessimisticLock(@Param("productIds") List<Long> productIds);
+
+    @Query("""
+            SELECT p
+            FROM Product p
+            WHERE p.id IN :productIds
+            """)
+    List<Product> findAllByIdIn(@Param("productIds") List<Long> productIds);
 }
