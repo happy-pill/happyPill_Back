@@ -38,11 +38,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     .stream()
                     .filter(st -> st.supports(registrationId))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("cannot find paymentProvider"))
+                    .orElseThrow(() -> new RuntimeException("cannot find provider"))
                     .provision(oAuth2User);
             return OAuth2UserPrincipal.of(user.getId(), user.getLoginEmail(), List.of(user.getRole()));
         } catch (RuntimeException e) {
-            log.error("OAuth2 user provision failed for paymentProvider: {}", registrationId, e);
+            log.error("OAuth2 user provision failed for provider: {}", registrationId, e);
             throw new OAuth2AuthenticationException(e.getMessage());
         }
 
