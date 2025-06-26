@@ -18,7 +18,7 @@ import com.happypill.application.service.admin.response.AdminProductInfoResponse
 import com.happypill.application.service.admin.response.AdminProductListResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
 import com.happypill.application.service.product.request.ProductInfoRequest;
-import com.happypill.application.service.product.response.ProductInfoResponse;
+import com.happypill.application.service.product.response.ProductInfoDetailsResponse;
 import com.happypill.application.util.SnowflakeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -79,8 +79,8 @@ public class AdminProductService {
         ProductPrice productPrice = productPriceRepository.getCurrentPriceByProductId(productId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 
-        List<ProductInfoResponse> productInfoList = productInfo.stream()
-                .map(ProductInfoResponse::from)
+        List<ProductInfoDetailsResponse> productInfoList = productInfo.stream()
+                .map(ProductInfoDetailsResponse::from)
                 .toList();
 
         return AdminProductInfoResponse.from(product, productInfoList, productPrice);
@@ -182,8 +182,8 @@ public class AdminProductService {
             );
         });
 
-        List<ProductInfoResponse> responses = infoMap.values().stream()
-                .map(ProductInfoResponse::from)
+        List<ProductInfoDetailsResponse> responses = infoMap.values().stream()
+                .map(ProductInfoDetailsResponse::from)
                 .toList();
 
         return AdminProductInfoResponse.from(product, responses, createdPrice);

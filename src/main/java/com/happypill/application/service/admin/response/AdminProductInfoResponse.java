@@ -2,7 +2,7 @@ package com.happypill.application.service.admin.response;
 
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductPrice;
-import com.happypill.application.service.product.response.ProductInfoResponse;
+import com.happypill.application.service.product.response.ProductInfoDetailsResponse;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ public record AdminProductInfoResponse(
         boolean isAvailable,
         Integer stock,
         Integer price,
-        List<ProductInfoResponse> productInfo
+        List<ProductInfoDetailsResponse> productInfo
 ) {
 
-    public static AdminProductInfoResponse from(Product product, List<ProductInfoResponse> productInfos, ProductPrice productPrice) {
+    public static AdminProductInfoResponse from(Product product, List<ProductInfoDetailsResponse> productInfos, ProductPrice productPrice) {
         return new AdminProductInfoResponse(
                 product.getId().toString(),
                 product.getCategory().getId().toString(),

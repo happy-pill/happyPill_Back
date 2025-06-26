@@ -2,29 +2,21 @@ package com.happypill.application.service.product.response;
 
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
-import com.happypill.application.entity.ProductPrice;
-import com.happypill.application.entity.enums.Language;
 
-public record ProductInfoResponse(
-        Language language,
-        String name,
-        String briefDescription,
-        String description,
-        String contentImageUrl,
-        String company,
-        String quantityDetails,
-        String usage,
-        String warningMessage
+public record ProductInfoResponse (String productId, String name, String company, int price, String briefDescription,
+                                   String description, String thumbnailUrl, String contentImageUrl, String quantityDetails,
+                                   String usage, String warningMessage) {
 
-) {
-    public static ProductInfoResponse from(ProductInfo productInfo) {
+    public static ProductInfoResponse from(Product product, ProductInfo productInfo) {
         return new ProductInfoResponse(
-                productInfo.getLanguage(),
+                product.getId().toString(),
                 productInfo.getName(),
+                productInfo.getCompany(),
+                product.getPrice(),
                 productInfo.getBriefDescription(),
                 productInfo.getDescription(),
+                product.getThumbnailUrl(),
                 productInfo.getContentImageUrl(),
-                productInfo.getCompany(),
                 productInfo.getQuantityDetails(),
                 productInfo.getUsage(),
                 productInfo.getWarningMessage()

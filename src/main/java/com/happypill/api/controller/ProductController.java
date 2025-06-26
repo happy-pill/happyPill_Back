@@ -1,9 +1,9 @@
 package com.happypill.api.controller;
 
 import com.happypill.application.service.product.ProductService;
-import com.happypill.application.service.product.dto.response.CustomPageResponse;
-import com.happypill.application.service.product.dto.response.ProductInfoResponse;
-import com.happypill.application.service.product.dto.response.ProductResponse;
+import com.happypill.application.service.product.response.CustomPageResponse;
+import com.happypill.application.service.product.response.ProductInfoResponse;
+import com.happypill.application.service.product.response.ProductResponse;
 import com.happypill.application.service.product.response.ProductRelatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
