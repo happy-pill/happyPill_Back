@@ -16,7 +16,7 @@ public record AdminProductInfoResponse(
         List<ProductInfoDetailsResponse> productInfo
 ) {
 
-    public static AdminProductInfoResponse from(Product product, List<ProductInfoDetailsResponse> productInfos, ProductPrice productPrice) {
+    public static AdminProductInfoResponse fromEntities(Product product, List<ProductInfoDetailsResponse> productInfos, ProductPrice productPrice) {
         return new AdminProductInfoResponse(
                 product.getId().toString(),
                 product.getCategory().getId().toString(),
