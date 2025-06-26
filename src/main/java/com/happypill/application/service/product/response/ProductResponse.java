@@ -1,4 +1,4 @@
-package com.happypill.application.service.product.dto.response;
+package com.happypill.application.service.product.response;
 
 import com.happypill.application.entity.Category;
 import com.happypill.application.entity.Product;
