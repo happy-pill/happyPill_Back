@@ -83,7 +83,7 @@ public class AdminProductService {
                 .map(ProductInfoDetailsResponse::from)
                 .toList();
 
-        return AdminProductInfoResponse.fromEntities(product, productInfoList, productPrice);
+        return AdminProductInfoResponse.of(product, productInfoList, productPrice);
     }
 
     //금액 기록 조회
@@ -186,7 +186,7 @@ public class AdminProductService {
                 .map(ProductInfoDetailsResponse::from)
                 .toList();
 
-        return AdminProductInfoResponse.fromEntities(product, responses, createdPrice);
+        return AdminProductInfoResponse.of(product, responses, createdPrice);
     }
 
     //상품 삭제
