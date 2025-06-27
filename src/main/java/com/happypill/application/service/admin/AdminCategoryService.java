@@ -107,13 +107,16 @@ public class AdminCategoryService {
 
         category.update(request.thumbnailUrl(), request.bannerUrl());
 
+        List<CategoryInfo> categoryInfoList = categoryInfoRepository.getAllCategoryInfosById(category.getId());
+
         for(CategoryInfoRequest dto : request.categoryInfos()){
             if(dto.categoryInfoId() == null){ //만약 등록되어 있지 않은 CategoryInfo 가 작성되는 경우 객체 생성
                 categoryInfoRepository.save(CategoryInfo.of(SnowflakeUtil.nextId(), dto.language(), dto.name(), dto.description(), category));
             }
             else{
-                CategoryInfo categoryInfo = categoryInfoRepository.findById(dto.categoryInfoId())
-                        .filter(info -> info.getCategory().equals(category))
+                CategoryInfo categoryInfo = categoryInfoList.stream()
+                        .filter(ci -> ci.getId().equals(dto.categoryInfoId()))
+                        .findFirst()
                         .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_INFO_NOT_FOUND));
 
                 categoryInfo.update(dto.name(), dto.description());
