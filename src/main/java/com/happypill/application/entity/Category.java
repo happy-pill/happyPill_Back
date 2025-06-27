@@ -30,4 +30,9 @@ public class Category extends BaseEntity<Long> {
     public static Category of(Long categoryId, String thumbnailUrl, String bannerUrl) {
         return new Category(categoryId, thumbnailUrl, bannerUrl);
     }
+
+    public void update(String thumbnailUrl, String bannerUrl){
+        this.thumbnailUrl = thumbnailUrl;
+        this.bannerUrl = bannerUrl;
+    }
 }

@@ -10,9 +10,11 @@ import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
+import com.happypill.application.service.admin.request.AdminCategoryUpdateRequest;
 import com.happypill.application.service.admin.response.AdminCategoryInfoResponse;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
 import com.happypill.application.service.category.dto.response.CategoryNamesResponse;
+import com.happypill.application.service.category.request.CategoryInfoRequest;
 import com.happypill.application.util.SnowflakeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -97,5 +99,29 @@ public class AdminCategoryService {
         return grouped.entrySet().stream()
                 .map(entry -> CategoryNamesResponse.fromCategoryIdAndInfos(entry.getKey(), entry.getValue()))
                 .toList();
+    }
+
+    public AdminCategoryInfoResponse updateCategory(Long categoryId, AdminCategoryUpdateRequest request){
+        Category category = this.categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
+
+        category.update(request.thumbnailUrl(), request.bannerUrl());
+
+        List<CategoryInfo> categoryInfoList = categoryInfoRepository.getAllCategoryInfosById(category.getId());
+
+        for(CategoryInfoRequest dto : request.categoryInfos()){
+            if(dto.categoryInfoId() == null){ //만약 등록되어 있지 않은 CategoryInfo 가 작성되는 경우 객체 생성
+                categoryInfoRepository.save(CategoryInfo.of(SnowflakeUtil.nextId(), dto.language(), dto.name(), dto.description(), category));
+            }
+            else{
+                CategoryInfo categoryInfo = categoryInfoList.stream()
+                        .filter(ci -> ci.getId().equals(dto.categoryInfoId()))
+                        .findFirst()
+                        .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_INFO_NOT_FOUND));
+
+                categoryInfo.update(dto.name(), dto.description());
+            }
+        }
+        return AdminCategoryInfoResponse.fromCategoryAndInfos(category, categoryInfoRepository.findAllByCategory(category));
     }
 }

@@ -1,5 +1,6 @@
 package com.happypill.application.repository.categoryinfo;
 
+import com.happypill.application.entity.Category;
 import com.happypill.application.entity.CategoryInfo;
 import com.happypill.application.entity.enums.Language;
 import org.springframework.data.domain.Page;
@@ -36,4 +37,6 @@ public interface CategoryInfoRepository extends JpaRepository<CategoryInfo, Long
             ORDER BY c.id
             """)
     List<CategoryInfo> findAllCategoryInfoOrderById();
+
+    List<CategoryInfo> findAllByCategory(Category category);
 }

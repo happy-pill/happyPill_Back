@@ -38,4 +38,9 @@ public class CategoryInfo extends BaseEntity<Long> {
     public static CategoryInfo of(Long categoryInfoId, Language language, String name, String description, Category category) {
         return new CategoryInfo(categoryInfoId, language, name, description, category);
     }
+
+    public void update(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
 }
