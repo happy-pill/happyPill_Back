@@ -10,9 +10,11 @@ import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
+import com.happypill.application.service.admin.request.AdminCategoryUpdateRequest;
 import com.happypill.application.service.admin.response.AdminCategoryInfoResponse;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
 import com.happypill.application.service.category.dto.response.CategoryNamesResponse;
+import com.happypill.application.service.category.request.CategoryInfoRequest;
 import com.happypill.application.util.SnowflakeUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -162,5 +164,77 @@ class AdminCategoryServiceTest {
         //then
         assertThat(responses).hasSize(1);
         assertThat(responses.get(0).categoryId()).isEqualTo(String.valueOf(category.getId()));
+    }
+
+    @Test
+    @DisplayName("[카테고리 수정] 경로 변수의 categoryId 가 존재하지 않는 Category 면 예외가 발생한다.")
+    void updateCategory_1(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        List<CategoryInfo> categoryInfoList = List.of(
+                CategoryInfo.of(1L, Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(2L, Language.EN, "카테고리명_EN", "설명_EN", category)
+        );
+        categoryRepository.save(category);
+        categoryInfoRepository.saveAll(categoryInfoList);
+
+        List<CategoryInfoRequest> infoRequests = List.of(
+                new CategoryInfoRequest(1L, Language.KO, "변경된_카테고리명_KO", "변경된_설명_KO"),
+                new CategoryInfoRequest(2L, Language.EN, "변경된_카테고리명_EN", "변경된_설명_EN")
+        );
+        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", "https://xxxxx.com/xxxxx", infoRequests);
+
+        //when //then
+        assertThatThrownBy(() -> adminCategoryService.updateCategory(0L, updateRequest))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.CATEGORY_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[카테고리 수정] CategoryInfoRequest 의 categoryInfoId 가 category 에 속해있지 않는 값이면 예외가 발생한다.")
+    void updateCategory_2(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        List<CategoryInfo> categoryInfoList = List.of(
+                CategoryInfo.of(1L, Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(2L, Language.EN, "카테고리명_EN", "설명_EN", category)
+        );
+        categoryRepository.save(category);
+        categoryInfoRepository.saveAll(categoryInfoList);
+
+        List<CategoryInfoRequest> infoRequests = List.of(
+                new CategoryInfoRequest(3L, Language.KO, "변경된_카테고리명_KO", "변경된_설명_KO"),
+                new CategoryInfoRequest(4L, Language.EN, "변경된_카테고리명_EN", "변경된_설명_EN")
+        );
+        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", "https://xxxxx.com/xxxxx", infoRequests);
+
+        //when //then
+        assertThatThrownBy(() -> adminCategoryService.updateCategory(category.getId(), updateRequest))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.CATEGORY_INFO_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[카테고리 수정] 언어가 KO로 된 CategoryInfo 만 존재할 때 EN로 된 CategoryInfo 정보를 작성할 경우 EN 으로 된 CategoryInfo 객체가 새로 생성된다.")
+    void updateCategory_3(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        CategoryInfo categoryInfo = CategoryInfo.of(1L, Language.KO, "카테고리명_KO", "설명_KO", category);
+
+        categoryRepository.save(category);
+        categoryInfoRepository.save(categoryInfo);
+
+        List<CategoryInfoRequest> infoRequests = List.of(
+                new CategoryInfoRequest(1L, Language.KO, "변경된_카테고리명_KO", "변경된_설명_KO"),
+                new CategoryInfoRequest(null, Language.EN, "추가된_카테고리명_EN", "추가된_설명_EN")
+        );
+        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", "https://xxxxx.com/xxxxx", infoRequests);
+
+        //when
+        AdminCategoryInfoResponse response = adminCategoryService.updateCategory(category.getId(), updateRequest);
+        List<CategoryInfo> categoryInfos = categoryInfoRepository.findAllByCategory(category);
+
+        // then
+        assertThat(categoryInfos).hasSize(2);
     }
 }
