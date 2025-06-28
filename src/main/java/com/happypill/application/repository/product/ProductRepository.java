@@ -1,5 +1,6 @@
 package com.happypill.application.repository.product;
 
+import com.happypill.application.entity.Category;
 import com.happypill.application.entity.Product;
 import com.happypill.application.entity.ProductInfo;
 import com.happypill.application.entity.enums.Language;
@@ -77,4 +78,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             WHERE p.id IN :productIds
             """)
     List<Product> findAllByIdIn(@Param("productIds") List<Long> productIds);
+
+    List<Product> findAllByCategory(Category category);
 }

@@ -67,4 +67,10 @@ public class AdminCategoryController {
                                                     @Valid @RequestBody AdminCategoryUpdateRequest request) {
         return adminCategoryService.updateCategory(categoryId, request);
     }
+
+    @DeleteMapping("/{categoryId}")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public void deleteCategory(@PathVariable Long categoryId){
+        adminCategoryService.deleteCategory(categoryId);
+    }
 }

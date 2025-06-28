@@ -34,7 +34,7 @@ public class Product extends BaseEntity<Long> {
     private boolean isDeleted;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @Version
@@ -69,5 +69,9 @@ public class Product extends BaseEntity<Long> {
     public void deleteProduct(){
         this.isDeleted = true;
         this.isAvailable = false;
+    }
+
+    public void removeCategory(){
+        this.category = null;
     }
 }
