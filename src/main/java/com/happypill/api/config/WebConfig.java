@@ -1,6 +1,6 @@
 package com.happypill.api.config;
 
-import com.happypill.api.config.auth.usercontext.UserContextArgumentResolver;
+import com.happypill.api.config.argumentresolver.UserContextArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

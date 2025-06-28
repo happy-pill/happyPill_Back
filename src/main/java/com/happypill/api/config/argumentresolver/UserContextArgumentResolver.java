@@ -1,5 +1,6 @@
-package com.happypill.api.config.auth.usercontext;
+package com.happypill.api.config.argumentresolver;
 
+import com.happypill.api.config.auth.usercontext.HappypillUser;
 import com.happypill.application.auth.UserContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;

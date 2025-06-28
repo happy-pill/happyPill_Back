@@ -1,24 +1,22 @@
 package com.happypill.application.entity.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum Language {
     KO("Korean"),
     EN("English");
 
     private final String description;
 
-    Language(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     public static Language parseLanguage(String language) {
-        try {
-            return Language.valueOf(language.toUpperCase());
-        } catch (Exception e) {
-            return Language.KO;
+        for (var l : Language.values()) {
+            if (l.name().equalsIgnoreCase(language)) {
+                return l;
+            }
         }
+        return KO;
     }
 }
