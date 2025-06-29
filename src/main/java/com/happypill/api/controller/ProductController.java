@@ -24,15 +24,13 @@ public class ProductController {
     @Operation(summary = "모든 상품 조회", description = "상품 목록들을 더보기 형식으로 조회합니다.")
     @GetMapping
     public CustomPageResponse<ProductResponse> getProducts(@RequestParam Long categoryId, @RequestParam(required = false) Long lastProductId,
-                                                           @RequestHeader(LANGUAGE_HEADER) String headerLanguage, @RequestParam int size) {
-        Locale locale = Locale.of(headerLanguage);
+                                                           Locale locale, @RequestParam int size) {
         return productService.getAllProducts(categoryId, lastProductId, locale, size);
     }
 
     @Operation(summary = "특정 상품 조회", description = "특정 상품을 조회합니다.")
     @GetMapping("/{productId}")
-    public ProductInfoResponse getProduct(@PathVariable("productId") Long productId, @RequestHeader(LANGUAGE_HEADER) String headerLanguage) {
-        Locale locale = Locale.of(headerLanguage);
+    public ProductInfoResponse getProduct(@PathVariable("productId") Long productId, Locale locale) {
         return productService.getProduct(productId, locale);
     }
 

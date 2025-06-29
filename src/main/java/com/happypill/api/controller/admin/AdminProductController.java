@@ -25,7 +25,6 @@ import java.util.Locale;
 @RequestMapping("/api/admin/products")
 public class AdminProductController {
 
-    private static final String LANGUAGE_HEADER = "Language";
 
     private final AdminProductService adminProductService;
 
@@ -35,8 +34,7 @@ public class AdminProductController {
     public CustomPage<AdminProductListResponse> getProducts(@RequestParam(value = "categories", required = false) Long categoryId,
                                                             @RequestParam(value = "page", defaultValue = "1") int page,
                                                             @RequestParam(value = "size", defaultValue = "8") int size,
-                                                            @RequestHeader(LANGUAGE_HEADER) String headerLanguage) {
-        Locale locale = Locale.forLanguageTag(headerLanguage);
+                                                            Locale locale) {
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminProductService.getAllProducts(categoryId, pageable, locale);
     }

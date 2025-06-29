@@ -7,9 +7,9 @@ import com.happypill.application.service.admin.request.AdminCategoryUpdateReques
 import com.happypill.application.service.admin.response.AdminCategoryInfoResponse;
 import com.happypill.application.service.admin.response.AdminCategoryListResponse;
 import com.happypill.application.service.category.dto.response.CategoryNamesResponse;
-import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +26,6 @@ import java.util.Locale;
 @RequestMapping("/api/admin/categories")
 public class AdminCategoryController {
 
-    private static final String LANGUAGE_HEADER = "Language";
-
     private final AdminCategoryService adminCategoryService;
 
     @Operation(summary = "모든 카테고리 조회", description = "카테고리 리스트를 조회합니다.")
@@ -35,8 +33,7 @@ public class AdminCategoryController {
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public CustomPage<AdminCategoryListResponse> getCategories(@RequestParam(value = "page", defaultValue = "1") int page,
                                                                @RequestParam(value = "size", defaultValue = "5") int size,
-                                                               @RequestHeader(LANGUAGE_HEADER) String headerLanguage) {
-        Locale locale = Locale.forLanguageTag(headerLanguage);
+                                                               Locale locale) {
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminCategoryService.getAllCategories(pageable, locale);
     }
