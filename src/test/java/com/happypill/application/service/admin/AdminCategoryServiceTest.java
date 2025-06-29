@@ -2,12 +2,14 @@ package com.happypill.application.service.admin;
 
 import com.happypill.application.entity.Category;
 import com.happypill.application.entity.CategoryInfo;
+import com.happypill.application.entity.Product;
 import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
+import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
 import com.happypill.application.service.admin.request.AdminCategoryUpdateRequest;
@@ -42,6 +44,9 @@ class AdminCategoryServiceTest {
 
     @Autowired
     private CategoryInfoRepository categoryInfoRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Test
     @DisplayName("[모든 카테고리 조회] 요청한 locale 에 따라 AdminCategoryListResponse 를 페이지네이션하여 반환한다.")
@@ -236,5 +241,72 @@ class AdminCategoryServiceTest {
 
         // then
         assertThat(categoryInfos).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("[카테고리 삭제] 경로변수의 CategoryId 가 존재하지 않는 값일 때 예외를 반환한다.")
+    void deleteCategory_1(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        List<CategoryInfo> categoryInfoList = List.of(
+                CategoryInfo.of(1L, Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(2L, Language.EN, "카테고리명_EN", "설명_EN", category)
+        );
+
+        categoryRepository.save(category);
+        categoryInfoRepository.saveAll(categoryInfoList);
+
+        //when //then
+        assertThatThrownBy(() -> adminCategoryService.deleteCategory(0L))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.CATEGORY_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[카테고리 삭제] 카테고리가 삭제될 때 그 카테고리와 관련된 상품들의 category 필드는 null 값으로 변경된다.")
+    void deleteCategory_2(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        List<CategoryInfo> categoryInfoList = List.of(
+                CategoryInfo.of(1L, Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(2L, Language.EN, "카테고리명_EN", "설명_EN", category)
+        );
+        Product product = Product.of(SnowflakeUtil.nextId(), 3500, 5, "https://xxxxx.com/xxxxx", category);
+
+        categoryRepository.save(category);
+        categoryInfoRepository.saveAll(categoryInfoList);
+        productRepository.save(product);
+
+        //when
+        adminCategoryService.deleteCategory(category.getId());
+
+        //then
+        assertThat(product.getCategory()).isNull();
+    }
+
+    @Test
+    @DisplayName("[카테고리 삭제] 카테고리가 삭제될 때 그 카테고리와 관련된 CategoryInfo 객체들은 모두 DB 내에서 삭제된다.")
+    void deleteCategory_3(){
+        //given
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxxxx.com/xxxxx");
+        List<CategoryInfo> categoryInfoList = List.of(
+                CategoryInfo.of(1L, Language.KO, "카테고리명_KO", "설명_KO", category),
+                CategoryInfo.of(2L, Language.EN, "카테고리명_EN", "설명_EN", category)
+        );
+
+        categoryRepository.save(category);
+        categoryInfoRepository.saveAll(categoryInfoList);
+
+        //when
+        adminCategoryService.deleteCategory(category.getId());
+
+        //then
+        for(CategoryInfo ci : categoryInfoList){
+            boolean categoryInfoExists = categoryInfoRepository.existsById(ci.getId());
+            assertThat(categoryInfoExists).isFalse();
+        }
+
+        boolean categoryExists = categoryRepository.existsById(category.getId());
+        assertThat(categoryExists).isFalse();
     }
 }

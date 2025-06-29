@@ -2,12 +2,14 @@ package com.happypill.application.service.admin;
 
 import com.happypill.application.entity.Category;
 import com.happypill.application.entity.CategoryInfo;
+import com.happypill.application.entity.Product;
 import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
+import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.service.admin.request.AdminCategoryInfoRequest;
 import com.happypill.application.service.admin.request.AdminCategoryRequest;
 import com.happypill.application.service.admin.request.AdminCategoryUpdateRequest;
@@ -32,6 +34,7 @@ public class AdminCategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryInfoRepository categoryInfoRepository;
+    private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)
     //모든 카테고리 조회
@@ -123,5 +126,18 @@ public class AdminCategoryService {
             }
         }
         return AdminCategoryInfoResponse.fromCategoryAndInfos(category, categoryInfoRepository.findAllByCategory(category));
+    }
+
+    public void deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
+
+        List<CategoryInfo> categoryInfos = categoryInfoRepository.getAllCategoryInfosById(categoryId);
+
+        List<Product> products = productRepository.findAllByCategory(category);
+        products.forEach(Product::removeCategory);
+
+        categoryInfoRepository.deleteAll(categoryInfos);
+        categoryRepository.delete(category);
     }
 }
