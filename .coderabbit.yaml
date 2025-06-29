@@ -10,7 +10,7 @@ reviews:
   high_level_summary_placeholder: '@coderabbitai summary'
   auto_title_placeholder: '@coderabbitai title'
   poem: false
-  review_status: false
+  review_status: true
   collapse_walkthrough: false #접기
   suggested_reviewers: false
 
@@ -19,7 +19,7 @@ reviews:
       enabled: false
 
   auto_review:
-    enabled: false
+    enabled: true
     drafts: false
     auto_incremental_review: true
 
