@@ -42,6 +42,10 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
+    implementation("io.github.openfeign.querydsl:querydsl-core:7.0")
+    implementation("io.github.openfeign.querydsl:querydsl-jpa:7.0")
+    annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:7.0:jpa")
+
     runtimeOnly("org.postgresql:postgresql")
 
     compileOnly("org.projectlombok:lombok")
@@ -67,4 +71,8 @@ tasks.withType<Test> {
 
 tasks.named<Jar>("jar") {
     enabled = false
+}
+
+tasks.named<Delete>("clean") {
+    delete("build/generate")
 }
