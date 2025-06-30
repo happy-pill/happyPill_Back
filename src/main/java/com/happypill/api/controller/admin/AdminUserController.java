@@ -3,6 +3,7 @@ package com.happypill.api.controller.admin;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.service.admin.AdminUserService;
 import com.happypill.application.service.admin.request.AdminUserUpdateRequest;
+import com.happypill.application.service.admin.response.AdminSubscriptionListResponse;
 import com.happypill.application.service.admin.response.AdminUserDetailResponse;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Locale;
 
 @Tag(name = "[관리자] 회원", description = "관리자가 사용자 정보를 조회/관리하기 위한 API")
 @RestController
@@ -42,5 +45,15 @@ public class AdminUserController {
     public AdminUserDetailResponse updateUser(@PathVariable Long userId,
                                               @Valid @RequestBody AdminUserUpdateRequest request) {
         return adminUserService.updateUserProfile(userId, request);
+    }
+
+    //모든 구독 상품 조회
+    @GetMapping("/subscriptions")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public CustomPage<AdminSubscriptionListResponse> getSubscriptions(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                      @RequestParam(value = "size", defaultValue = "8") int size,
+                                                                      Locale locale){
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return adminUserService.getAllSubscriptions(pageable, locale);
     }
 }
