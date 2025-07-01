@@ -1,13 +1,22 @@
 package com.happypill.application.service.admin;
 
-import com.happypill.application.entity.HappypillUser;
+import com.happypill.application.entity.*;
+import com.happypill.application.entity.enums.Language;
+import com.happypill.application.entity.enums.PaymentMethod;
 import com.happypill.application.entity.enums.Provider;
 import com.happypill.application.entity.enums.Role;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
+import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
+import com.happypill.application.repository.order.OrderRepository;
+import com.happypill.application.repository.orderline.OrderLineRepository;
+import com.happypill.application.repository.product.ProductRepository;
+import com.happypill.application.repository.productinfo.ProductInfoRepository;
+import com.happypill.application.repository.subscription.SubscriptionRepository;
 import com.happypill.application.service.admin.request.AdminUserUpdateRequest;
+import com.happypill.application.service.admin.response.AdminSubscriptionListResponse;
 import com.happypill.application.service.admin.response.AdminUserDetailResponse;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import com.happypill.application.util.SnowflakeUtil;
@@ -20,7 +29,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,6 +51,24 @@ class AdminUserServiceTest {
 
     @Autowired
     private HappypillUserRepository userRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderLineRepository orderLineRepository;
+
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private ProductInfoRepository productInfoRepository;
 
     private HappypillUser generateTestUser() {
         String loginEmail = faker.internet().emailAddress();
@@ -158,5 +189,60 @@ class AdminUserServiceTest {
         //then
         assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
         assertThat(updatedUser.getNotifyEmail()).isEqualTo(UPDATED_NOTIFY_EMAIL);
+    }
+
+    @Test
+    @DisplayName("[모든 구독 상품 조회] KO 언어로 요청할 경우 상품명이 한글로 출력된다.")
+    void getAllSubscriptions_1() {
+        //given
+        HappypillUser savedUser = generateTestUser();
+        userRepository.save(savedUser);
+
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        categoryRepository.save(category);
+
+        List<Product> products = List.of(
+                Product.of(SnowflakeUtil.nextId(), 3000, 10, true, "https://xxx.com/xxx", false, category),
+                Product.of(SnowflakeUtil.nextId(), 5000, 10, true, "https://xxx.com/xxx", false, category)
+        );
+        productRepository.saveAll(products);
+
+        List<ProductInfo> productInfos = Arrays.asList(
+                ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "제품명1_KO", "수량 상세1_KO", "경고 메시지1_KO", "사용법1_KO", "https://xxx.com/xxx_KO", "설명1_KO", "회사명1_KO", "간략 설명1_KO", products.get(0)),
+                ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "제품명1_EN", "수량 상세1_EN", "경고 메시지1_EN", "사용법1_EN", "https://xxx.com/xxx_EN", "설명1_EN", "회사명1_EN", "간략 설명1_EN", products.get(0)),
+                ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "제품명2_KO", "수량 상세2_KO", "경고 메시지2_KO", "사용법2_KO", "https://xxx.com/xxx_KO", "설명2_KO", "회사명2_KO", "간략 설명2_KO", products.get(1)),
+                ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "제품명2_EN", "수량 상세2_EN", "경고 메시지2_EN", "사용법2_EN", "https://xxx.com/xxx_EN", "설명2_EN", "회사명2_EN", "간략 설명2_EN", products.get(1))
+        );
+        productInfoRepository.saveAll(productInfos);
+
+        OrderRecipientInfo orderRecipientInfo = OrderRecipientInfo.create("홍길동", "010-1234-5678", "test@gmail.com");
+
+        List<OrderLine> orderLines = List.of(
+                OrderLine.create(1L, 3000, LocalDate.now(), 1, products.get(0)),
+                OrderLine.create(2L, 15000, LocalDate.now(), 3, products.get(1))
+        );
+        Order order = Order.create(SnowflakeUtil.nextId(), "00-00000", PaymentMethod.CARD, orderRecipientInfo, savedUser, orderLines);
+        order.complete();
+        orderRepository.save(order);
+        orderLineRepository.saveAll(orderLines);
+
+        List<Subscription> subscriptions = List.of(
+            Subscription.of(SnowflakeUtil.nextId(), ZonedDateTime.now().plusMonths(orderLines.get(0).getMonth()), ZonedDateTime.now().plusMonths(1), false, orderLines.get(0), savedUser),
+            Subscription.of(SnowflakeUtil.nextId(), ZonedDateTime.now().plusMonths(orderLines.get(1).getMonth()), ZonedDateTime.now().plusMonths(1), false, orderLines.get(1), savedUser)
+        );
+        subscriptionRepository.saveAll(subscriptions);
+
+        Pageable pageable = PageRequest.of(0,5);
+        Locale locale = Locale.KOREA;
+
+        //when
+        CustomPage<AdminSubscriptionListResponse> result = adminUserService.getAllSubscriptions(pageable, locale);
+
+        //then
+        assertThat(result.contents())
+                .hasSize(2);
+        assertThat(result.contents())
+                .extracting(AdminSubscriptionListResponse::getSubscriptionId)
+                .contains(String.valueOf(subscriptions.get(0).getId()));
     }
 }
