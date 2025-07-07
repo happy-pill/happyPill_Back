@@ -56,4 +56,11 @@ public class AdminUserController {
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminUserService.getAllSubscriptions(pageable, locale);
     }
+
+    @Operation(summary = "회원 계정 비활성화/복구", description = "회원 계정을 탈퇴 처리하거나 복구하기 위한 API")
+    @PatchMapping("/{userId}/status")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public AdminUserDetailResponse updateUserStatus(@PathVariable Long userId){
+        return adminUserService.updateUserStatus(userId);
+    }
 }

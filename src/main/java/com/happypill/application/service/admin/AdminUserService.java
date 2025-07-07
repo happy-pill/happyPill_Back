@@ -71,6 +71,21 @@ public class AdminUserService {
         return new CustomPage<>(responses);
     }
 
+    //회원 계정 비활성화/복구
+    @Transactional
+    public AdminUserDetailResponse updateUserStatus(Long userId){
+        HappypillUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
+
+        if(user.isDeleted()) {
+            user.restore();
+        } else {
+            user.deactivate();
+        }
+
+        return AdminUserDetailResponse.from(user);
+    }
+
     private void updateNickname(HappypillUser user, AdminUserUpdateRequest request){
         String newNickname = request.nickName();
         if(newNickname != null && !newNickname.isBlank()){

@@ -245,4 +245,46 @@ class AdminUserServiceTest {
                 .extracting(AdminSubscriptionListResponse::getSubscriptionId)
                 .contains(String.valueOf(subscriptions.get(0).getId()));
     }
+
+    @Test
+    @DisplayName("[회원 계정 비활성화/복구] 경로 변수의 userId 가 존재하지 않는 회원일 경우 예외를 반환한다.")
+    void updateUserStatus_1() {
+        //given
+        HappypillUser user = generateTestUser();
+        userRepository.save(user);
+
+        //when //then
+        assertThatThrownBy(() -> adminUserService.updateUserStatus(0L))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[회원 계정 비활성화/복구] 회원을 비활성화 시 isDeleted 필드는 true 로 수정된다.")
+    void updateUserStatus_2() {
+        //given
+        HappypillUser user = generateTestUser();
+        userRepository.save(user);
+
+        //when
+        adminUserService.updateUserStatus(user.getId());
+
+        //then
+        assertThat(user.isDeleted()).isTrue();
+    }
+
+    @Test
+    @DisplayName("[회원 계정 비활성화/복구] 회원을 복구 시 isDeleted 필드는 false 로 수정된다.")
+    void updateUserStatus_3() {
+        //given
+        HappypillUser user = generateTestUser();
+        user.deactivate();
+        userRepository.save(user);
+
+        //when
+        adminUserService.updateUserStatus(user.getId());
+
+        //then
+        assertThat(user.isDeleted()).isFalse();
+    }
 }
