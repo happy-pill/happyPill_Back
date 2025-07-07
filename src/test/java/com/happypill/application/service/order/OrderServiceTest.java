@@ -62,7 +62,7 @@ class OrderServiceTest {
     void test1() {
         HappypillUser savedTestUser = getSavedTestUser();
         SecurityUserContext userContext = SecurityUserContext.from(savedTestUser.getId());
-        Category category = categoryRepository.save(Category.of(SnowflakeUtil.nextId(), "www.happypill.com/image", "www.happypill.com/banner"));
+        Category category = categoryRepository.save(Category.of(SnowflakeUtil.nextId(), "www.happypill.com/image"));
         Product product1 = productRepository.save(Product.of(SnowflakeUtil.nextId(), 1000, 100, "www.happypill.com/product1-thumbnail", category));
         Product product2 = productRepository.save(Product.of(SnowflakeUtil.nextId(), 2000, 200, "www.happypill.com/product2-thumbnail", category));
         var orderLineCreateRequest1 = new OrderCreateRequest.OrderLineCreateRequest(product1.getId(), 3, LocalDate.of(2026, 1, 1));

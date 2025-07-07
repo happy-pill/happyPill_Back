@@ -39,28 +39,21 @@ public class DataInitialiser implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         List<Category> categoryList = Arrays.asList(
-                Category.of(SnowflakeUtil.nextId(), "www.vitamin_thumbnail.com", "www.vitamin_banner.com"),
-                Category.of(SnowflakeUtil.nextId(), "www.mineral_thumbnail.com", "www.mineral_banner.com"),
-                Category.of(SnowflakeUtil.nextId(), "www.herb_thumbnail.com", "www.herb_banner.com"),
-                Category.of(SnowflakeUtil.nextId(), "www.probiotics_thumbnail.com", "www.probiotics_banner.com")
+                Category.of(SnowflakeUtil.nextId(), "www.vitamin_thumbnail.com"),
+                Category.of(SnowflakeUtil.nextId(), "www.mineral_thumbnail.com"),
+                Category.of(SnowflakeUtil.nextId(), "www.herb_thumbnail.com"),
+                Category.of(SnowflakeUtil.nextId(), "www.probiotics_thumbnail.com")
         );
 
         List<CategoryInfo> categoryInfoList = Arrays.asList(
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민", "비타민은 신진대사와 면역 기능을 유지하는 데 꼭 필요한 필수 영양소입니다." +
-                        "부족할 경우 피로, 면역력 저하, 피부 트러블 등 다양한 건강 문제가 발생할 수 있습니다.",  categoryList.get(0)),
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "vitamin", "Vitamins are chemical compounds that are needed in small amounts " +
-                        "for the human body to work correctly.",  categoryList.get(0)),
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "미네랄", "미네랄은 뼈 건강, 신경 전달, 체내 수분 균형 등 다양한 생리 기능에 필수적인 영양소입니다." +
-                        "불균형하거나 부족하면 피로, 근육 경련, 면역력 저하 등이 나타날 수 있습니다.",  categoryList.get(1)),
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "mineral", "Minerals are chemical elements required as an essential nutrient " +
-                        "by our body to perform essential functions. ",  categoryList.get(1)),
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "허브", "허브는 자연에서 유래한 식물 성분으로, 면역 강화, 소화 개선, 스트레스 완화 등에 도움을 줍니다." +
-                        "오랜 전통과 현대 과학이 입증한 천연 건강 보조 원료로 널리 사용됩니다.",  categoryList.get(2)),
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "herb", "Herbal supplements are made from plants and used for their therapeutic properties.",  categoryList.get(2)),
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "유산균", "유산균은 장내 유익균을 늘려 소화 기능을 개선하고 면역력을 높여줍니다." +
-                        "장 건강은 곧 전신 건강으로 이어지며, 꾸준한 유산균 섭취가 중요합니다.",  categoryList.get(3)),
-                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "probiotics", "Probiotics are live bacteria and yeasts that support your digestive system health. " +
-                        "We select strains that have been thoroughly studied for their benefits.",  categoryList.get(3))
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민", categoryList.get(0)),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "vitamin", categoryList.get(0)),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "미네랄", categoryList.get(1)),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "mineral", categoryList.get(1)),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "허브", categoryList.get(2)),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "herb", categoryList.get(2)),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "유산균", categoryList.get(3)),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "probiotics", categoryList.get(3))
         );
         // 10 비타민, 6 미네랄, 4 허브, 유산균 2
 
@@ -326,14 +319,14 @@ public class DataInitialiser implements ApplicationRunner {
                 Role.USER
         ));
 
-        Category category1 = categoryRepository.save(Category.of(1L, "www.vitamin_thumbnail.com", "www.vitamin_banner.com"));
-        Category category2 = categoryRepository.save(Category.of(2L, "www.mineral_thumbnail.com", "www.mineral_banner.com"));
+        Category category1 = categoryRepository.save(Category.of(1L, "www.vitamin_thumbnail.com"));
+        Category category2 = categoryRepository.save(Category.of(2L, "www.mineral_thumbnail.com"));
 
         categoryInfoRepository.saveAll(List.of(
-                        CategoryInfo.of(1L, Language.KO, "비타민", "비타민은 신진대사와 면역 기능을 유지하는 데 꼭 필요한 필수 영양소입니다.부족할 경우 피로, 면역력 저하, 피부 트러블 등 다양한 건강 문제가 발생할 수 있습니다.", category1),
-                        CategoryInfo.of(2L, Language.EN, "vitamin", "Vitamins are chemical compounds that are needed in small amounts for the human body to work correctly.", category1),
-                        CategoryInfo.of(3L, Language.KO, "미네랄", "미네랄은 뼈 건강, 신경 전달, 체내 수분 균형 등 다양한 생리 기능에 필수적인 영양소입니다 불균형하거나 부족하면 피로, 근육 경련, 면역력 저하 등이 나타날 수 있습니다.", category2),
-                        CategoryInfo.of(4L, Language.EN, "mineral", "Minerals are chemical elements required as an essential nutrient by our body to perform essential functions. ", category2)
+                        CategoryInfo.of(1L, Language.KO, "비타민", category1),
+                        CategoryInfo.of(2L, Language.EN, "vitamin", category1),
+                        CategoryInfo.of(3L, Language.KO, "미네랄", category2),
+                        CategoryInfo.of(4L, Language.EN, "mineral", category2)
                 )
         );
 

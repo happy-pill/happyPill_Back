@@ -58,7 +58,7 @@ class AdminProductServiceTest {
     @DisplayName("[특정 상품 조회] ProductPrice 가 존재하지 않으면 에러가 발생한다.")
     void getProductDetails_1() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -83,7 +83,7 @@ class AdminProductServiceTest {
     @DisplayName("[특정 상품 조회] ProductInfo 가 존재하지 않으면 에러가 발생한다.")
     void getProductDetails_2() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -105,7 +105,7 @@ class AdminProductServiceTest {
     @DisplayName("[특정 상품 조회] Product, ProductInfo, ProductPrice 가 존재하면 200 상태코드로 응답한다.")
     void getProductDetails_3() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -137,7 +137,7 @@ class AdminProductServiceTest {
     @DisplayName("[모든 상품 조회] categoryId, locale, pageable 값이 올바르게 주어졌을 때 커스텀 페이지의 contents 에는 1개의 값이 포함된다.")
     void getAllProducts_1() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -167,7 +167,7 @@ class AdminProductServiceTest {
     @DisplayName("[모든 상품 조회] categoryId 값이 null 값이 아닌 존재하지 않는 값인 경우 에러가 발생한다.")
     void getAllProducts_2() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -198,7 +198,7 @@ class AdminProductServiceTest {
     @DisplayName("[모든 상품 조회] locale 값이 en인 경우 커스텀 페이지의 contents 에는 영어로 작성된 내용들이 포함된다.")
     void getAllProducts_3() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -229,7 +229,7 @@ class AdminProductServiceTest {
     @DisplayName("[금액 기록 조회] product 와 productPrice 가 존재하는 경우 productPrice 를 반환한다.")
     void getAllProductPrices_1() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -259,7 +259,7 @@ class AdminProductServiceTest {
     @DisplayName("[금액 기록 조회]  productId 가 존재하지 않는 값인 경우 에러가 발생한다.")
     void getAllProductPrices_2() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -289,7 +289,7 @@ class AdminProductServiceTest {
     @DisplayName("[상품 등록] 한국어로 된 ProductInfo 가 없으면 에러를 반환한다.")
     void createProduct_1() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -319,7 +319,7 @@ class AdminProductServiceTest {
     @DisplayName("[상품 등록] AdminProductCreateRequest 필드 모두 유효하면 ProductId 를 반환한다.")
     void createProduct_2() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
@@ -351,7 +351,7 @@ class AdminProductServiceTest {
     @DisplayName("[상품 등록] Category 가 존재하지 않으면 에러를 반환한다.")
     void createProduct_4() {
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
@@ -382,7 +382,7 @@ class AdminProductServiceTest {
     @DisplayName("[상품 수정] 경로 변수의 productId가 존재하지 않는 Product 면 에러를 반환한다.")
     void updateProduct_1(){
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
@@ -413,7 +413,7 @@ class AdminProductServiceTest {
     @DisplayName("[상품 수정] price 수정 시 기존의 ProductPrice 엔티티의 isUsed 필드는 false 로 설정하고 새로운 ProductPrice 를 생성한다.")
     void updateProduct_2(){
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
@@ -450,7 +450,7 @@ class AdminProductServiceTest {
     @DisplayName("[상품 수정] 기존에 한국어와 영어로 된 ProductInfo 가 있을 때 한국어로 된 ProductInfo 만 수정 시 영어로 된 ProductInfo 는 수정되지 않고 한국어로 된 ProductInfo 만 수정된다.")
     void updateProduct_3(){
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
@@ -484,7 +484,7 @@ class AdminProductServiceTest {
     @DisplayName("[상품 삭제] 경로 변수의 productId가 존재하지 않는 Product면 에러를 반환한다.")
     void deleteProduct_1(){
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);
@@ -500,7 +500,7 @@ class AdminProductServiceTest {
     @DisplayName("[상품 삭제] 상품이 삭제되면 isAvailable 은 false, isDeleted 는 true 가 된다.")
     void deleteProduct_2(){
         //given
-        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx");
         categoryRepository.save(category);
 
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, "https://xxx.com/xxx", false, category);

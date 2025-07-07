@@ -55,13 +55,13 @@ public class ProductServiceTest {
 
     @BeforeEach
     void setUpDB() {
-        Category categoryOne = Category.of(SnowflakeUtil.nextId(), "www.category_firstThumbnail.com", "www.category_firstBanner.com");
-        Category categoryTwo = Category.of(SnowflakeUtil.nextId(), "www.category_secondThumbnail.com", "www.category_secondBanner.com");
+        Category categoryOne = Category.of(SnowflakeUtil.nextId(), "www.category_firstThumbnail.com");
+        Category categoryTwo = Category.of(SnowflakeUtil.nextId(), "www.category_secondThumbnail.com");
         List<Category> categoryList = Arrays.asList(categoryOne, categoryTwo);
 
-        CategoryInfo categoryInfoOne = CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민", "비타민은 몸에 좋아요",  categoryOne);
-        CategoryInfo categoryInfoTwo = CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "vitamin", "vitamin is necessary for health",  categoryOne);
-        CategoryInfo categoryInfoThree = CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "철분", "몸이 튼튼해져요",  categoryTwo);
+        CategoryInfo categoryInfoOne = CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민", categoryOne);
+        CategoryInfo categoryInfoTwo = CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "vitamin", categoryOne);
+        CategoryInfo categoryInfoThree = CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "철분", categoryTwo);
         List<CategoryInfo> categoryInfoList = Arrays.asList(categoryInfoOne, categoryInfoTwo, categoryInfoThree);
 
         Product productOne = Product.of(SnowflakeUtil.nextId(), 25000, 300, "www.product_firstThumbnail.com", categoryOne);

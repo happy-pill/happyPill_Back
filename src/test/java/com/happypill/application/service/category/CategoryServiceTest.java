@@ -40,10 +40,10 @@ public class CategoryServiceTest {
     @DisplayName("카테고리 있을 때 불러오기 테스트")
     public void shouldReturnCategories() {
         Locale locale = Locale.of("KO");
-        Category category = Category.of(1L, "first thum url", "first banner url");
+        Category category = Category.of(1L, "first thum url");
         List<CategoryInfo> categoryResponses = Arrays.asList(
-                CategoryInfo.of(1L, Language.KO, "first name", "first desc", category),
-                CategoryInfo.of(2L, Language.KO, "second name", "second desc", category)
+                CategoryInfo.of(1L, Language.KO, "first name", category),
+                CategoryInfo.of(2L, Language.KO, "second name", category)
         );
 
         categoryRepository.save(category);

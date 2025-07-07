@@ -9,7 +9,6 @@ import java.util.List;
 public record AdminCategoryInfoResponse(
         String categoryId,
         String thumbnailUrl,
-        String bannerUrl,
         List<CategoryInfoResponse> categoryInfo
 ) {
     public static AdminCategoryInfoResponse fromCategoryAndInfos(Category category, List<CategoryInfo> categoryInfos){
@@ -20,7 +19,6 @@ public record AdminCategoryInfoResponse(
         return new AdminCategoryInfoResponse(
                 category.getId().toString(),
                 category.getThumbnailUrl(),
-                category.getBannerUrl(),
                 categoryInfoList
         );
     }

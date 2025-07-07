@@ -6,15 +6,13 @@ import com.happypill.application.entity.enums.Language;
 public record CategoryInfoResponse(
         String categoryInfoId,
         Language language,
-        String name,
-        String description
+        String name
 ) {
     public static CategoryInfoResponse fromEntity(CategoryInfo categoryInfo){
         return new CategoryInfoResponse(
                 categoryInfo.getId().toString(),
                 categoryInfo.getLanguage(),
-                categoryInfo.getName(),
-                categoryInfo.getDescription()
+                categoryInfo.getName()
         );
     }
 }

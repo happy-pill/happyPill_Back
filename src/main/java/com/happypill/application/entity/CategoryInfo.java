@@ -28,19 +28,15 @@ public class CategoryInfo extends BaseEntity<Long> {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false)
-    private String description;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public static CategoryInfo of(Long categoryInfoId, Language language, String name, String description, Category category) {
-        return new CategoryInfo(categoryInfoId, language, name, description, category);
+    public static CategoryInfo of(Long categoryInfoId, Language language, String name, Category category) {
+        return new CategoryInfo(categoryInfoId, language, name, category);
     }
 
-    public void update(String name, String description){
+    public void update(String name){
         this.name = name;
-        this.description = description;
     }
 }

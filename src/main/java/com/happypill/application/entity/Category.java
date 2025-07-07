@@ -24,15 +24,11 @@ public class Category extends BaseEntity<Long> {
     @Column(nullable = false)
     private String thumbnailUrl;
 
-    @Column(nullable = false)
-    private String bannerUrl;
-
-    public static Category of(Long categoryId, String thumbnailUrl, String bannerUrl) {
-        return new Category(categoryId, thumbnailUrl, bannerUrl);
+    public static Category of(Long categoryId, String thumbnailUrl) {
+        return new Category(categoryId, thumbnailUrl);
     }
 
-    public void update(String thumbnailUrl, String bannerUrl){
+    public void update(String thumbnailUrl){
         this.thumbnailUrl = thumbnailUrl;
-        this.bannerUrl = bannerUrl;
     }
 }

@@ -198,7 +198,7 @@ class AdminUserServiceTest {
         HappypillUser savedUser = generateTestUser();
         userRepository.save(savedUser);
 
-        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx", "https://xxx.com/xxx");
+        Category category = Category.of(SnowflakeUtil.nextId(), "https://xxx.com/xxx");
         categoryRepository.save(category);
 
         List<Product> products = List.of(

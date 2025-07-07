@@ -29,7 +29,7 @@ public class CategoryService {
         for (CategoryInfo categoryInfo : categoryInfoList) {
             category = categoryInfo.getCategory();
             response = new CategoryResponse(category.getId().toString(), category.getThumbnailUrl(),
-                    categoryInfo.getName(), categoryInfo.getDescription(), category.getBannerUrl());
+                    categoryInfo.getName());
             results.add(response);
         }
 

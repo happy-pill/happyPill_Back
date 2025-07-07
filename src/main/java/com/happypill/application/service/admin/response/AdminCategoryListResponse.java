@@ -6,17 +6,13 @@ import com.happypill.application.entity.CategoryInfo;
 public record AdminCategoryListResponse(
         String categoryId,
         String name,
-        String description,
-        String thumbnailUrl,
-        String bannerImgUrl
+        String thumbnailUrl
 ) {
     public static AdminCategoryListResponse from(CategoryInfo categoryInfo, Category category){
         return new AdminCategoryListResponse(
                 category.getId().toString(),
                 categoryInfo.getName(),
-                categoryInfo.getDescription(),
-                category.getThumbnailUrl(),
-                category.getBannerUrl()
+                category.getThumbnailUrl()
         );
     }
 }

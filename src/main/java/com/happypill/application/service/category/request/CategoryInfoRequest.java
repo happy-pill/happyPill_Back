@@ -12,9 +12,6 @@ public record CategoryInfoRequest(
         Language language,
 
         @NotEmpty(message = "이름은 필수 입력란입니다")
-        String name,
-
-        @NotEmpty(message = "설명란은 필수 입력란입니다")
-        String description
+        String name
 ) {
 }

@@ -64,12 +64,12 @@ public class AdminCategoryService {
         List<CategoryInfo> categoryInfos = new ArrayList<>();
         CategoryInfo categoryInfo;
         Language language;
-        Category category = Category.of(SnowflakeUtil.nextId(), adminCategoryCreateRequest.thumbnailUrl(), adminCategoryCreateRequest.bannerImgUrl());
+        Category category = Category.of(SnowflakeUtil.nextId(), adminCategoryCreateRequest.thumbnailUrl());
         categories.add(category);
 
         for (AdminCategoryInfoRequest request : adminCategoryCreateRequest.categoryInfoRequests()) {
             language = Language.parseLanguage(request.language());
-            categoryInfo = CategoryInfo.of(SnowflakeUtil.nextId(), language, request.name(), request.description(), category);
+            categoryInfo = CategoryInfo.of(SnowflakeUtil.nextId(), language, request.name(), category);
 
             categoryInfos.add(categoryInfo);
         }
@@ -108,13 +108,13 @@ public class AdminCategoryService {
         Category category = this.categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND));
 
-        category.update(request.thumbnailUrl(), request.bannerUrl());
+        category.update(request.thumbnailUrl());
 
         List<CategoryInfo> categoryInfoList = categoryInfoRepository.getAllCategoryInfosById(category.getId());
 
         for(CategoryInfoRequest dto : request.categoryInfos()){
             if(dto.categoryInfoId() == null){ //만약 등록되어 있지 않은 CategoryInfo 가 작성되는 경우 객체 생성
-                categoryInfoRepository.save(CategoryInfo.of(SnowflakeUtil.nextId(), dto.language(), dto.name(), dto.description(), category));
+                categoryInfoRepository.save(CategoryInfo.of(SnowflakeUtil.nextId(), dto.language(), dto.name(), category));
             }
             else{
                 CategoryInfo categoryInfo = categoryInfoList.stream()
@@ -122,7 +122,7 @@ public class AdminCategoryService {
                         .findFirst()
                         .orElseThrow(() -> new BusinessException(ExceptionCode.CATEGORY_INFO_NOT_FOUND));
 
-                categoryInfo.update(dto.name(), dto.description());
+                categoryInfo.update(dto.name());
             }
         }
         return AdminCategoryInfoResponse.fromCategoryAndInfos(category, categoryInfoRepository.findAllByCategory(category));
