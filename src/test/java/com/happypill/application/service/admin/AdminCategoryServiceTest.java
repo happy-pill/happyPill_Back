@@ -76,8 +76,7 @@ class AdminCategoryServiceTest {
     @DisplayName("새로운 카테고리 1개와 정보 1개 저장")
     void saveCategoryWithOneInfo() {
         List<AdminCategoryInfoRequest> categoryInfoRequests = List.of(new AdminCategoryInfoRequest("ko", "1번째 카테고리"));
-        AdminCategoryRequest request = new AdminCategoryRequest("www.first_banner.com",
-                "www.first_thumbnail.com", categoryInfoRequests);
+        AdminCategoryRequest request = new AdminCategoryRequest("www.first_thumbnail.com", categoryInfoRequests);
 
         adminCategoryService.saveCategories(request);
         List<Category> categories = categoryRepository.findAllCategories();
@@ -95,8 +94,7 @@ class AdminCategoryServiceTest {
         List<AdminCategoryInfoRequest> categoryInfoRequests = List.of(
                 new AdminCategoryInfoRequest("ko", "1번째 카테고리"),
                 new AdminCategoryInfoRequest("en", "first category"));
-        AdminCategoryRequest request = new AdminCategoryRequest("www.first_banner.com",
-                "www.first_thumbnail.com", categoryInfoRequests);
+        AdminCategoryRequest request = new AdminCategoryRequest("www.first_thumbnail.com", categoryInfoRequests);
 
         adminCategoryService.saveCategories(request);
         List<Category> categories = categoryRepository.findAllCategories();
@@ -182,7 +180,7 @@ class AdminCategoryServiceTest {
                 new CategoryInfoRequest(1L, Language.KO, "변경된_카테고리명_KO"),
                 new CategoryInfoRequest(2L, Language.EN, "변경된_카테고리명_EN")
         );
-        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", "https://xxxxx.com/xxxxx", infoRequests);
+        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", infoRequests);
 
         //when //then
         assertThatThrownBy(() -> adminCategoryService.updateCategory(0L, updateRequest))
@@ -206,7 +204,7 @@ class AdminCategoryServiceTest {
                 new CategoryInfoRequest(3L, Language.KO, "변경된_카테고리명_KO"),
                 new CategoryInfoRequest(4L, Language.EN, "변경된_카테고리명_EN")
         );
-        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", "https://xxxxx.com/xxxxx", infoRequests);
+        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", infoRequests);
 
         //when //then
         assertThatThrownBy(() -> adminCategoryService.updateCategory(category.getId(), updateRequest))
@@ -228,7 +226,7 @@ class AdminCategoryServiceTest {
                 new CategoryInfoRequest(1L, Language.KO, "변경된_카테고리명_KO"),
                 new CategoryInfoRequest(null, Language.EN, "추가된_카테고리명_EN")
         );
-        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", "https://xxxxx.com/xxxxx", infoRequests);
+        AdminCategoryUpdateRequest updateRequest = new AdminCategoryUpdateRequest("https://xxx.com/xxx", infoRequests);
 
         //when
         AdminCategoryInfoResponse response = adminCategoryService.updateCategory(category.getId(), updateRequest);
