@@ -38,6 +38,7 @@ public class AdminCategoryController {
         return adminCategoryService.getAllCategories(pageable, locale);
     }
 
+    @Operation(summary = "카테고리 등록", description = "카테고리를 등록합니다.")
     @PostMapping
 //   ToDo @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> saveCategories(@RequestBody @Valid AdminCategoryRequest adminCategoryCreateRequestList) {
@@ -46,18 +47,21 @@ public class AdminCategoryController {
         return ResponseEntity.created(URI.create("/api/admin/categories")).build();
     }
 
+    @Operation(summary = "특정 카테고리 조회", description = "특정 카테고리에 대한 정보를 조회합니다.")
     @GetMapping("{categoryId}")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public AdminCategoryInfoResponse getCategoryDetail(@PathVariable Long categoryId){
         return adminCategoryService.getCategoryDetails(categoryId);
     }
 
+    @Operation(summary = "카테고리 목록 조회", description = "드롭다운에 출력할 카테고리를 조회합니다.")
     @GetMapping("/names")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryNamesResponse> getCategoryNames(){
         return adminCategoryService.getCategoryNames();
     }
 
+    @Operation(summary = "카테고리 수정", description = "카테고리 정보를 수정합니다.")
     @PatchMapping("/{categoryId}")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public AdminCategoryInfoResponse updateCategory(@PathVariable Long categoryId,
@@ -65,6 +69,7 @@ public class AdminCategoryController {
         return adminCategoryService.updateCategory(categoryId, request);
     }
 
+    @Operation(summary = "카테고리 삭제", description = "특정 카테고리를 삭제합니다.")
     @DeleteMapping("/{categoryId}")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategory(@PathVariable Long categoryId){

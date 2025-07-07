@@ -76,6 +76,17 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public GroupedOpenApi orderApi(OpenApiCustomizer globalResponseCustomizer,
+                                   OperationCustomizer securityResponseCustomizer) {
+        return GroupedOpenApi.builder()
+                .group("주문 API")
+                .pathsToMatch("/api/order/**")
+                .addOpenApiCustomizer(globalResponseCustomizer)
+                .addOperationCustomizer(securityResponseCustomizer)
+                .build();
+    }
+
+    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()

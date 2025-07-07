@@ -34,6 +34,7 @@ public class ProductController {
         return productService.getProduct(productId, locale);
     }
 
+    @Operation(summary = "다른 고객이 함께 본 상품 조회", description = "다른 고객이 함께 본 상품을 조회합니다.")
     @GetMapping("/related")
     public List<ProductRelatedResponse> getRecommendation() {
         return productService.getRecommendation();
