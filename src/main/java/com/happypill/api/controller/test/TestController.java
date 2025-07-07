@@ -2,12 +2,14 @@ package com.happypill.api.controller.test;
 
 import com.happypill.api.config.auth.jwt.JwtService;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.management.ManagementFactory;
 
+@Hidden
 @RestController
 @RequiredArgsConstructor
 public class TestController {

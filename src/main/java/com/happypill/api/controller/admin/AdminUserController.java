@@ -40,14 +40,14 @@ public class AdminUserController {
         return adminUserService.getUserDetails(userId);
     }
 
-    //회원 정보 수정
+    @Operation(summary = "회원 정보 수정", description = "회원 정보를 수정하기 위한 API")
     @PatchMapping("/{userId}")
     public AdminUserDetailResponse updateUser(@PathVariable Long userId,
                                               @Valid @RequestBody AdminUserUpdateRequest request) {
         return adminUserService.updateUserProfile(userId, request);
     }
 
-    //모든 구독 상품 조회
+    @Operation(summary = "모든 구독 상품 조회", description = "회원들의 구독 상품을 조회하기 위한 API")
     @GetMapping("/subscriptions")
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public CustomPage<AdminSubscriptionListResponse> getSubscriptions(@RequestParam(value = "page", defaultValue = "1") int page,
