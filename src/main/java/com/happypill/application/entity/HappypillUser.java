@@ -59,7 +59,7 @@ public class HappypillUser extends BaseEntity<Long> {
         this.isDeleted = true;
     }
 
-    public void restore() {
+    public void activate() {
         this.isDeleted = false;
     }
 }
