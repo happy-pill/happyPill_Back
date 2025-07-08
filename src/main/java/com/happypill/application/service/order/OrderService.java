@@ -3,6 +3,9 @@ package com.happypill.application.service.order;
 import com.happypill.application.auth.UserContext;
 import com.happypill.application.entity.*;
 import com.happypill.application.entity.enums.PaymentMethod;
+import com.happypill.application.event.HappypillEventType;
+import com.happypill.application.event.outbox.OutboxEventPublisher;
+import com.happypill.application.event.payload.OrderCompletedEventPayload;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
@@ -42,6 +45,8 @@ public class OrderService {
     private final HappypillUserRepository userRepository;
 
     private final PPaymentClient pPaymentClient;
+
+    private final OutboxEventPublisher outboxEventPublisher;
 
     @Transactional
     @Retryable(
@@ -124,6 +129,24 @@ public class OrderService {
         }
 
         order.complete();
+
+        outboxEventPublisher.publish(
+                HappypillEventType.ORDER_COMPLETED,
+                OrderCompletedEventPayload.of(
+                        order.getId(),
+                        order.getCreatedAt(),
+                        order.getOrderLines().stream()
+                                .map(orderLine -> OrderCompletedEventPayload.OrderLinePayload.of(
+                                        orderLine.getId(),
+                                        orderLine.getMonth(),
+                                        "테스트"
+                                ))
+                                .toList(),
+                        order.getOrderRecipientInfo().getName(),
+                        order.getOrderRecipientInfo().getMobile(),
+                        order.getOrderRecipientInfo().getEmail()
+                )
+        );
 
         return new PaymentConfirmResponse(
                 String.valueOf(order.getId()),

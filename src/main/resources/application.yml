@@ -74,6 +74,13 @@ springdoc:
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
 
+
+
+message-relay:
+  fixed-delay-seconds: 600000
+  initial-delay-seconds: 6000
+  lock-duration: 120S
+
 --- # dev
 spring.config.activate.on-profile: dev
 spring:
