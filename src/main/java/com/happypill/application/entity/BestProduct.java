@@ -26,8 +26,8 @@ public class BestProduct extends BaseEntity<Long> {
     @JoinColumn(name = "product_id", nullable = false, unique = true)
     private Product product;
 
-    public static BestProduct from(Product product) {
+    public static BestProduct of(Long id, Product product) {
         Objects.requireNonNull(product, "Product cannot be null");
-        return new BestProduct(SnowflakeUtil.nextId(), product);
+        return new BestProduct(id, product);
     }
 }
