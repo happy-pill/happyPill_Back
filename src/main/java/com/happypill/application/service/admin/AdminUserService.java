@@ -71,6 +71,34 @@ public class AdminUserService {
         return new CustomPage<>(responses);
     }
 
+    //회원 계정 활성화
+    @Transactional
+    public AdminUserDetailResponse activateUser(Long userId){
+        HappypillUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
+
+        if(!user.isDeleted()) {
+            throw new BusinessException(ExceptionCode.USER_NOT_DELETED);
+        }
+
+        user.activate();
+        return AdminUserDetailResponse.from(user);
+    }
+
+    //회원 계정 비활성화
+    @Transactional
+    public AdminUserDetailResponse deactivateUser(Long userId){
+        HappypillUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ExceptionCode.USER_NOT_FOUND));
+
+        if(user.isDeleted()) {
+            throw new BusinessException(ExceptionCode.USER_ALREADY_DELETED);
+        }
+
+        user.deactivate();
+        return AdminUserDetailResponse.from(user);
+    }
+
     private void updateNickname(HappypillUser user, AdminUserUpdateRequest request){
         String newNickname = request.nickName();
         if(newNickname != null && !newNickname.isBlank()){

@@ -245,4 +245,86 @@ class AdminUserServiceTest {
                 .extracting(AdminSubscriptionListResponse::getSubscriptionId)
                 .contains(String.valueOf(subscriptions.get(0).getId()));
     }
+
+    @Test
+    @DisplayName("[회원 계정 활성화] 경로 변수의 userId 가 존재하지 않는 회원일 경우 예외를 반환한다.")
+    void activateUser_1() {
+        //given
+        HappypillUser user = generateTestUser();
+        userRepository.save(user);
+
+        //when //then
+        assertThatThrownBy(() -> adminUserService.activateUser(0L))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[회원 계정 활성화] 회원 계정이 이미 활성화된 경우 이를 활성화하려고 하면 예외를 반환한다.")
+    void activateUser_2() {
+        //given
+        HappypillUser user = generateTestUser();
+        userRepository.save(user);
+
+        //when //then
+        assertThatThrownBy(() -> adminUserService.activateUser(user.getId()))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_NOT_DELETED.getMessage());
+    }
+
+    @Test
+    @DisplayName("[회원 계정 활성화] 회원을 활성화 시 isDeleted 필드는 false 로 수정된다.")
+    void activateUser_3() {
+        //given
+        HappypillUser user = generateTestUser();
+        user.deactivate();
+        userRepository.save(user);
+
+        //when
+        adminUserService.activateUser(user.getId());
+
+        //then
+        assertThat(user.isDeleted()).isFalse();
+    }
+
+    @Test
+    @DisplayName("[회원 계정 비활성화] 경로 변수의 userId 가 존재하지 않는 회원일 경우 예외를 반환한다.")
+    void deactivateUser_1() {
+        //given
+        HappypillUser user = generateTestUser();
+        userRepository.save(user);
+
+        //when //then
+        assertThatThrownBy(() -> adminUserService.deactivateUser(0L))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("[회원 계정 비활성화] 회원 계정이 이미 비활성화된 경우 이를 비활성화하려고 하면 예외를 반환한다.")
+    void deactivateUser_2() {
+        //given
+        HappypillUser user = generateTestUser();
+        user.deactivate();
+        userRepository.save(user);
+
+        //when //then
+        assertThatThrownBy(() -> adminUserService.deactivateUser(user.getId()))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_ALREADY_DELETED.getMessage());
+    }
+
+    @Test
+    @DisplayName("[회원 계정 비활성화] 회원을 비활성화 시 isDeleted 필드는 true 로 수정된다.")
+    void deactivateUser_3() {
+        //given
+        HappypillUser user = generateTestUser();
+        userRepository.save(user);
+
+        //when
+        adminUserService.deactivateUser(user.getId());
+
+        //then
+        assertThat(user.isDeleted()).isTrue();
+    }
 }

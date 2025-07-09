@@ -56,4 +56,18 @@ public class AdminUserController {
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminUserService.getAllSubscriptions(pageable, locale);
     }
+
+    @Operation(summary = "회원 계정 활성화", description = "회원 계정을 활성화하기 위한 API")
+    @PatchMapping("/{userId}/activate")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public AdminUserDetailResponse activateUser(@PathVariable Long userId){
+        return adminUserService.activateUser(userId);
+    }
+
+    @Operation(summary = "회원 계정 비활성화", description = "회원 계정을 비활성화하기 위한 API")
+    @PatchMapping("/{userId}/deactivate")
+    //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
+    public AdminUserDetailResponse deactivateUser(@PathVariable Long userId){
+        return adminUserService.deactivateUser(userId);
+    }
 }

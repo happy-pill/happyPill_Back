@@ -28,7 +28,10 @@ public enum ExceptionCode {
     CATEGORY_NOT_FOUND(NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."),
 
     // 카테고리 정보
-    CATEGORY_INFO_NOT_FOUND(NOT_FOUND, "해당 카테고리 정보를 찾을 수 없습니다");
+    CATEGORY_INFO_NOT_FOUND(NOT_FOUND, "해당 카테고리 정보를 찾을 수 없습니다"),
+
+    USER_ALREADY_DELETED(BAD_REQUEST, "이미 삭제된 회원입니다."),
+    USER_NOT_DELETED(BAD_REQUEST, "삭제되지 않은 회원입니다.");
 
     private final HttpStatus status;
     private final String message;

@@ -54,4 +54,12 @@ public class HappypillUser extends BaseEntity<Long> {
     public void changeNotifyEmail(String notifyEmail) {
         this.notifyEmail = notifyEmail;
     }
+
+    public void deactivate() {
+        this.isDeleted = true;
+    }
+
+    public void activate() {
+        this.isDeleted = false;
+    }
 }
