@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
@@ -25,6 +27,7 @@ public class BestProduct extends BaseEntity<Long> {
     private Product product;
 
     public static BestProduct from(Product product) {
+        Objects.requireNonNull(product, "Product cannot be null");
         return new BestProduct(SnowflakeUtil.nextId(), product);
     }
 }
