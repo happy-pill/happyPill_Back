@@ -1,10 +1,7 @@
 package com.happypill.api.controller;
 
 import com.happypill.application.service.product.ProductService;
-import com.happypill.application.service.product.response.CustomPageResponse;
-import com.happypill.application.service.product.response.ProductInfoResponse;
-import com.happypill.application.service.product.response.ProductResponse;
-import com.happypill.application.service.product.response.ProductRelatedResponse;
+import com.happypill.application.service.product.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +20,11 @@ public class ProductController {
 
     @Operation(summary = "모든 상품 조회", description = "상품 목록들을 더보기 형식으로 조회합니다.")
     @GetMapping
-    public CustomPageResponse<ProductResponse> getProducts(@RequestParam Long categoryId, @RequestParam(required = false) Long lastProductId,
-                                                           Locale locale, @RequestParam int size) {
-        return productService.getAllProducts(categoryId, lastProductId, locale, size);
+    public CustomPageResponse<ProductListResponse> getProducts(@RequestParam(required = false) Long categoryId,
+                                                               @RequestParam(required = false) Long lastProductId,
+                                                               @RequestParam(defaultValue = "3") int size,
+                                                               Locale locale) {
+        return productService.loadAllProducts(categoryId, lastProductId, size, locale);
     }
 
     @Operation(summary = "특정 상품 조회", description = "특정 상품을 조회합니다.")

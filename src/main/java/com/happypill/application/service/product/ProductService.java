@@ -7,12 +7,10 @@ import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
-import com.happypill.application.service.product.response.CustomPageResponse;
-import com.happypill.application.service.product.response.ProductInfoResponse;
-import com.happypill.application.service.product.response.ProductResponse;
-import com.happypill.application.service.product.response.ProductRelatedResponse;
+import com.happypill.application.service.product.response.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -27,6 +25,10 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductPriceRepository productPriceRepository;
 
+    /**
+     * loadAllProducts 메소드로 대체됨
+     */
+    @Deprecated
     public CustomPageResponse<ProductResponse> getAllProducts(Long categoryId, Long lastProductId, Locale locale, int size) {
         Language language = Language.parseLanguage(locale.getLanguage());
         List<ProductInfo> productInfos;
@@ -58,6 +60,20 @@ public class ProductService {
         );
 
         return response;
+    }
+
+    public CustomPageResponse<ProductListResponse> loadAllProducts(Long categoryId, Long lastProductId, int size, Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+
+        List<ProductListResponse> content = productRepository.findAllProductsByLanguage(categoryId, lastProductId, size, language);
+
+        boolean hasNext = content.size() > size;
+
+        List<ProductListResponse> result = hasNext ? content.subList(0, size) : content;
+
+        Long nextLastProductId = result.isEmpty() ? null : Long.valueOf(result.getLast().getProductId());
+
+        return new CustomPageResponse<>(result, hasNext, nextLastProductId);
     }
 
     public ProductInfoResponse getProduct(Long productId, Locale locale) {
