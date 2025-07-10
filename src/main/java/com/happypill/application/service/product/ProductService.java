@@ -7,10 +7,7 @@ import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
-import com.happypill.application.service.product.response.CustomPageResponse;
-import com.happypill.application.service.product.response.ProductInfoResponse;
-import com.happypill.application.service.product.response.ProductResponse;
-import com.happypill.application.service.product.response.ProductRelatedResponse;
+import com.happypill.application.service.product.response.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -73,6 +70,12 @@ public class ProductService {
                 .stream()
                 .map(ProductRelatedResponse::from)
                 .toList();
+    }
+
+    public List<ProductListResponse> getBestProducts(Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+
+        return productRepository.findAllBestProductsByLanguage(language);
     }
 
     private int getCurrentPrice(ProductInfo productInfo) {

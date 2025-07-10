@@ -1,10 +1,7 @@
 package com.happypill.api.controller;
 
 import com.happypill.application.service.product.ProductService;
-import com.happypill.application.service.product.response.CustomPageResponse;
-import com.happypill.application.service.product.response.ProductInfoResponse;
-import com.happypill.application.service.product.response.ProductResponse;
-import com.happypill.application.service.product.response.ProductRelatedResponse;
+import com.happypill.application.service.product.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +35,11 @@ public class ProductController {
     @GetMapping("/related")
     public List<ProductRelatedResponse> getRecommendation() {
         return productService.getRecommendation();
+    }
+
+    @Operation(summary = "모든 Best 상품 조회", description = "Best 상품들을 조회하기 위한 API")
+    @GetMapping("/best")
+    public List<ProductListResponse> getBestProducts(Locale locale) {
+        return productService.getBestProducts(locale);
     }
 }
