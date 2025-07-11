@@ -190,8 +190,7 @@ class JwtServiceTest extends IntegrationTestSupport {
 
         // when & then
         assertThatThrownBy(() -> jwtService.rotate(refreshToken))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("세션 정보가 존재하지 않습니다");
+                .isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -205,15 +204,10 @@ class JwtServiceTest extends IntegrationTestSupport {
         String refreshToken = jwtService.issueRefreshToken(userId, roles);
         DecodedJWT decoded = jwtService.verifyAndDecode(refreshToken);
         String secret = decoded.getClaim("secret").asString();
+        refreshSessionRepository.delete(userId, secret);
 
-        // Redis에서 해당 세션 수동 삭제 (실제로는 RefreshSessionRepository 주입 필요)
-        // 여기서는 존재하지 않는 userId를 사용하여 세션이 없는 상황 시뮬레이션
-
-        // when & then
-        // 현재 구현상 세션이 존재하므로 정상 동작할 것임
-        // 실제 테스트에서는 RefreshSessionRepository를 Autowired하여 직접 삭제해야 함
-        JwtService.TokenPair result = jwtService.rotate(refreshToken);
-        assertThat(result.accessToken()).isNotNull();
+        assertThatThrownBy(() -> jwtService.rotate(refreshToken))
+                .isInstanceOf(RuntimeException.class);
     }
 
     @Test

@@ -82,7 +82,7 @@ public class JwtService {
     }
 
     public TokenPair rotate(String refreshToken) {
-        DecodedJWT decode = JWT.decode(refreshToken);
+        DecodedJWT decode = decode(refreshToken);
         long userId = Long.parseLong(decode.getSubject());
         String secret = decode.getClaim(REFRESH_TOKEN_SECRET).asString();
 
@@ -94,7 +94,7 @@ public class JwtService {
         }
 
         // 만료됬을경우 이전 세션을 지우고, 새로운 토큰을 생성한 후 다시 저장.
-        roles = refreshRepository.getUserInfoAndDelete(userId, secret).orElseThrow(() -> new RuntimeException("세션 정보가 존재하지 않습니다"));
+        roles = refreshRepository.getUserInfoAndDelete(userId, secret).orElseThrow(() -> new RuntimeException("세션 정보가 존재하지 않습니다."));
         return new TokenPair(
                 issueAccessToken(userId, roles),
                 issueRefreshToken(userId, roles)
