@@ -6,5 +6,8 @@ import com.happypill.application.service.product.response.ProductListResponse;
 import java.util.List;
 
 public interface ProductRepositoryCustom {
+    List<ProductListResponse> scrollProductsByLanguageAndCategoryWithBestProduct(Long categoryId, Long lastProductId, int size, Language language);
+
     List<ProductListResponse> findAllBestProductsByLanguage(Language language);
 }
+

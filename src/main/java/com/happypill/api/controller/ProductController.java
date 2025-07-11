@@ -15,14 +15,16 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
 public class ProductController {
-    private static final String LANGUAGE_HEADER = "Language";
+
     private final ProductService productService;
 
     @Operation(summary = "모든 상품 조회", description = "상품 목록들을 더보기 형식으로 조회합니다.")
     @GetMapping
-    public CustomPageResponse<ProductResponse> getProducts(@RequestParam Long categoryId, @RequestParam(required = false) Long lastProductId,
-                                                           Locale locale, @RequestParam int size) {
-        return productService.getAllProducts(categoryId, lastProductId, locale, size);
+    public CustomPageResponse<ProductListResponse> getProducts(@RequestParam(required = false) Long categoryId,
+                                                               @RequestParam(required = false) Long lastProductId,
+                                                               @RequestParam int size,
+                                                               Locale locale) {
+        return productService.loadAllProducts(categoryId, lastProductId, size, locale);
     }
 
     @Operation(summary = "특정 상품 조회", description = "특정 상품을 조회합니다.")

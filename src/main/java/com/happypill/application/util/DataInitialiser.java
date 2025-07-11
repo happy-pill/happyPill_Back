@@ -5,6 +5,7 @@ import com.happypill.application.entity.enums.Language;
 import com.happypill.application.entity.enums.PaymentMethod;
 import com.happypill.application.entity.enums.Provider;
 import com.happypill.application.entity.enums.Role;
+import com.happypill.application.repository.bestproduct.BestProductRepository;
 import com.happypill.application.repository.category.CategoryRepository;
 import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
@@ -35,6 +36,8 @@ public class DataInitialiser implements ApplicationRunner {
 
     private final HappypillUserRepository userRepository;
     private final OrderRepository orderRepository;
+
+    private final BestProductRepository bestProductRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -313,6 +316,8 @@ public class DataInitialiser implements ApplicationRunner {
         productPriceRepository.saveAll(productPriceList);
 
         generateDevData();
+
+        createBestProduct(productList.subList(0, 10));
     }
 
     private void generateDevData() {
@@ -370,5 +375,13 @@ public class DataInitialiser implements ApplicationRunner {
                 )
         ));
 
+    }
+
+    private void createBestProduct(List<Product> product) {
+        List<BestProduct> bestProducts = product.stream()
+                .map(p -> BestProduct.of(SnowflakeUtil.nextId(), p))
+                .toList();
+
+        bestProductRepository.saveAll(bestProducts);
     }
 }
