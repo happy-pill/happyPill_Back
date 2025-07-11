@@ -90,6 +90,12 @@ public class ProductService {
                 .toList();
     }
 
+    public List<ProductListResponse> getBestProducts(Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+
+        return productRepository.findAllBestProductsByLanguage(language);
+    }
+
     private int getCurrentPrice(ProductInfo productInfo) {
 //        ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getProductId()).orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));
 //        return price.getPrice();

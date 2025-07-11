@@ -85,4 +85,36 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .limit(size + 1)
                 .fetch();
     }
+
+    @Override
+    public List<ProductListResponse> findAllBestProductsByLanguage(Language language) {
+        return jpaQueryFactory
+                .select(new QProductListResponse(
+                        product.id.stringValue(),
+                        category.id.stringValue(),
+                        productInfo.name,
+                        categoryInfo.name,
+                        productInfo.company,
+                        product.price,
+                        productInfo.briefDescription,
+                        product.thumbnailUrl,
+                        bestProduct.id.isNotNull()
+                ))
+                .from(product)
+                .join(productInfo)
+                    .on(
+                            productInfo.product.eq(product)
+                                    .and(productInfo.language.eq(language))
+                    )
+                .join(product.category, category)
+                .join(categoryInfo)
+                    .on(
+                            categoryInfo.category.eq(category)
+                                    .and(categoryInfo.language.eq(language))
+                    )
+                .leftJoin(bestProduct)
+                    .on(bestProduct.product.eq(product))
+                .where(bestProduct.isNotNull())
+                .fetch();
+    }
 }

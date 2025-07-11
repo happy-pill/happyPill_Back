@@ -38,4 +38,10 @@ public class ProductController {
     public List<ProductRelatedResponse> getRecommendation() {
         return productService.getRecommendation();
     }
+
+    @Operation(summary = "모든 Best 상품 조회", description = "Best 상품들을 조회하기 위한 API")
+    @GetMapping("/best")
+    public List<ProductListResponse> getBestProducts(Locale locale) {
+        return productService.getBestProducts(locale);
+    }
 }
