@@ -101,10 +101,19 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         bestProduct.id.isNotNull()
                 ))
                 .from(product)
-                .join(productInfo).on(productInfo.product.eq(product).and(productInfo.language.eq(language)))
+                .join(productInfo)
+                    .on(
+                            productInfo.product.eq(product)
+                                    .and(productInfo.language.eq(language))
+                    )
                 .join(product.category, category)
-                .join(categoryInfo).on(categoryInfo.category.eq(category).and(categoryInfo.language.eq(language)))
-                .leftJoin(bestProduct).on(bestProduct.product.eq(product))
+                .join(categoryInfo)
+                    .on(
+                            categoryInfo.category.eq(category)
+                                    .and(categoryInfo.language.eq(language))
+                    )
+                .leftJoin(bestProduct)
+                    .on(bestProduct.product.eq(product))
                 .where(bestProduct.isNotNull())
                 .fetch();
     }
