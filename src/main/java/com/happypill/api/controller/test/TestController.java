@@ -31,7 +31,7 @@ public class TestController {
 
     @GetMapping("/testToken")
     public String getTestToken() {
-        return jwtService.generateAccessToken(1L, new String[]{"USER", "ADMIN"});
+        return jwtService.issueAccessToken(1L, new String[]{"USER", "ADMIN"});
     }
 
 }
