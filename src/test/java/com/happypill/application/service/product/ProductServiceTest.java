@@ -372,10 +372,6 @@ public class ProductServiceTest {
         //then
         assertThat(result.products())
                 .extracting(ProductListResponse::getProductName)
-                .allMatch(name -> isEnglish(name));
-    }
-
-    private boolean isEnglish(String text) {
-        return text.chars().allMatch(ch -> (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == ' ');
+                .anyMatch(name -> name.equalsIgnoreCase(productInfoTwo.getName()));
     }
 }

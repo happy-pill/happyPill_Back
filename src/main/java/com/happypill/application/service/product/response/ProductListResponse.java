@@ -4,7 +4,6 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 @NoArgsConstructor
-@Setter
 @Getter
 public class ProductListResponse {
     private String productId;

@@ -64,7 +64,7 @@ public class ProductService {
     public CustomPageResponse<ProductListResponse> loadAllProducts(Long categoryId, Long lastProductId, int size, Locale locale) {
         Language language = Language.parseLanguage(locale.getLanguage());
 
-        List<ProductListResponse> content = productRepository.findAllProductsByLanguage(categoryId, lastProductId, size, language);
+        List<ProductListResponse> content = productRepository.scrollProductsByLanguageAndCategoryWithBestProduct(categoryId, lastProductId, size, language);
 
         boolean hasNext = content.size() > size;
 

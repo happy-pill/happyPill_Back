@@ -25,16 +25,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<ProductListResponse> findAllProductsByLanguage(Long categoryId, Long lastProductId, int size, Language language) {
-        Boolean lastIsBest = null; //이전 요청에서 받은 lastProductId 가 bestProduct 에 포함된 상품인지 여부
-        if (lastProductId != null) {
-            lastIsBest = jpaQueryFactory
-                    .selectOne()
-                    .from(bestProduct)
-                    .where(bestProduct.product.id.eq(lastProductId)) //lastProductId 가 bestProduct 에 포함되어있는지 필터 적용
-                    .fetchFirst() != null;
-        }
-
+    public List<ProductListResponse> scrollProductsByLanguageAndCategoryWithBestProduct(Long categoryId, Long lastProductId, int size, Language language) {
         BooleanBuilder baseCondition = new BooleanBuilder();
         baseCondition.and(product.isAvailable.isTrue());
 
@@ -42,16 +33,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             baseCondition.and(category.id.eq(categoryId));
         }
 
-        if (lastProductId != null && lastIsBest != null) { //첫 번째 요청 이후 적용
-            BooleanExpression isBestExpr = bestProduct.id.isNotNull();
-            BooleanExpression cursorCondition;
+        if (lastProductId != null) {
+            boolean lastIsBest = jpaQueryFactory
+                    .selectOne()
+                    .from(bestProduct)
+                    .where(bestProduct.product.id.eq(lastProductId))
+                    .fetchFirst() != null;
 
-            if (Boolean.TRUE.equals(lastIsBest)) { //isBest = true 이면서 product.id < lastProductId 인 데이터 출력 또는 isBest = false 인 데이터 출력
-                cursorCondition = isBestExpr.and(product.id.lt(lastProductId))
-                        .or(isBestExpr.not());
-            } else { //이전 상품이 bestProduct 가 아니었다면 isBest = false 이면서 product.id < lastProductId 만 출력
-                cursorCondition = isBestExpr.not().and(product.id.lt(lastProductId));
-            }
+            BooleanExpression isBestExpr = bestProduct.id.isNotNull();
+            BooleanExpression cursorCondition = lastIsBest
+                    ? isBestExpr.and(product.id.lt(lastProductId)).or(isBestExpr.not())
+                    : isBestExpr.not().and(product.id.lt(lastProductId));
 
             baseCondition.and(cursorCondition);
         }
@@ -69,10 +61,19 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         bestProduct.id.isNotNull()
                 ))
                 .from(product)
-                .join(productInfo).on(productInfo.product.eq(product).and(productInfo.language.eq(language)))
+                .join(productInfo)
+                    .on(
+                            productInfo.product.eq(product)
+                                .and(productInfo.language.eq(language))
+                    )
                 .join(product.category, category)
-                .join(categoryInfo).on(categoryInfo.category.eq(category).and(categoryInfo.language.eq(language)))
-                .leftJoin(bestProduct).on(bestProduct.product.eq(product))
+                .join(categoryInfo)
+                    .on(
+                            categoryInfo.category.eq(category)
+                                .and(categoryInfo.language.eq(language))
+                    )
+                .leftJoin(bestProduct)
+                    .on(bestProduct.product.eq(product))
                 .where(baseCondition)
                 .orderBy(
                         new CaseBuilder()
