@@ -19,6 +19,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Slf4j
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(request -> true); // requiresAuthentication을 오버라이드하면 동작하지 않는다. 그냥 생성자때문에 넣어놓는것.
         setAuthenticationManager(authenticationManager);
@@ -27,13 +29,13 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override // 상위 구현체에서, 생성자의 RequestMatcher를 사용하기 때문에, 커스텀하게 오버라이드하는 순간 동작하지 않는다.
     protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
         String bearerHeader = request.getHeader(AUTHORIZATION);
-        return bearerHeader != null && bearerHeader.startsWith("Bearer ");
+        return bearerHeader != null && bearerHeader.startsWith(BEARER_PREFIX);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         log.info("attemptAuthentication - URI: {} | Thread: {}", request.getRequestURI(), Thread.currentThread().getName());
-        String accessToken = request.getHeader(AUTHORIZATION).substring(7);
+        String accessToken = request.getHeader(AUTHORIZATION).substring(BEARER_PREFIX.length());
         JwtAuthenticationToken jwtAuthenticationToken = JwtAuthenticationToken.unAuthenticated(accessToken);
         return getAuthenticationManager().authenticate(jwtAuthenticationToken);
     }

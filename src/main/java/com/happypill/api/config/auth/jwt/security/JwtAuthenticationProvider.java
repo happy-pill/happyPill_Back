@@ -28,7 +28,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         try {
 
             String accessToken = (String) authentication.getCredentials();
-            DecodedJWT parsedJwt = jwtService.parse(accessToken);
+            DecodedJWT parsedJwt = jwtService.verifyAndDecode(accessToken);
 
             String subject = parsedJwt.getSubject();
             Long userId = Long.valueOf(subject);

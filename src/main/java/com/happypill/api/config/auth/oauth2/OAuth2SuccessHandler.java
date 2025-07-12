@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -22,8 +21,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2UserPrincipal principal = (OAuth2UserPrincipal) authentication.getPrincipal();
 
-        String accessToken = jwtService.generateAccessToken(principal.getId(), principal.getRoleNames());
-        String refreshToken = UUID.randomUUID().toString();
+        String accessToken = jwtService.issueAccessToken(principal.getId(), principal.getRoleNames());
+        String refreshToken = jwtService.issueRefreshToken(principal.getId(), principal.getRoleNames());
 
         //TODO refreshToken 전략
         String redirectUrl = UriComponentsBuilder
