@@ -55,7 +55,7 @@ public class ProductService {
                         .map(pi -> ProductResponse.from(pi, getCurrentPrice(pi)))
                         .toList(),
                 hasNext,
-                productInfoList.getLast().getProduct().getId()
+                productInfoList.getLast().getProduct().getId().toString()
         );
 
         return response;
@@ -70,7 +70,7 @@ public class ProductService {
 
         List<ProductListResponse> result = hasNext ? content.subList(0, size) : content;
 
-        Long nextLastProductId = result.isEmpty() ? null : Long.valueOf(result.getLast().getProductId());
+        String nextLastProductId = result.isEmpty() ? null : result.getLast().getProductId();
 
         return new CustomPageResponse<>(result, hasNext, nextLastProductId);
     }
