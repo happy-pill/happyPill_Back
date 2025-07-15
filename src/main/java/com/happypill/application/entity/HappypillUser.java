@@ -50,9 +50,6 @@ public class HappypillUser extends BaseEntity<Long> {
     }
 
     public void changeNickname(String nickName) {
-        if(this.nickName != null) {
-            throw new BusinessException(ExceptionCode.USER_NICKNAME_ALREADY_REGISTERED);
-        }
         this.nickName = nickName;
     }
 

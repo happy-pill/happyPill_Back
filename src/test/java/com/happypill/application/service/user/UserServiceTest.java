@@ -132,21 +132,6 @@ class UserServiceTest extends IntegrationTestSupport {
 
     }
 
-    @DisplayName("이미 회원 닉네임이 등록되어 있으면 에러를 반환한다.")
-    @Test
-    void registerNickname_2() {
-        //given
-        HappypillUser user = generateTestUser();
-        UserContext userContext = SecurityUserContext.from(user.getId());
-        UserUpdateRequest request = new UserUpdateRequest("testNickname");
-
-        //when //then
-        assertThatThrownBy(() -> service.updateUser(userContext, request))
-                .isInstanceOf(BusinessException.class)
-                .hasMessageContaining(ExceptionCode.USER_NICKNAME_ALREADY_REGISTERED.getMessage());
-
-    }
-
     @DisplayName("유효한 닉네임 등록 시 유저의 닉네임이 변경된다.")
     @Test
     void registerNickname_3() {
