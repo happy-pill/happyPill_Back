@@ -8,6 +8,7 @@ import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.repository.happypilluser.HappypillUserRepository;
 import com.happypill.application.service.user.email.EmailVerificationRedisRepository;
 import com.happypill.application.service.user.request.EmailVerificationRequest;
+import com.happypill.application.service.user.request.UserNicknameRegisterRequest;
 import com.happypill.application.service.user.request.UserNotifyEmailUpdateRequest;
 import com.happypill.application.service.user.request.UserUpdateRequest;
 import com.happypill.application.service.user.response.UserInfoResponse;
@@ -71,6 +72,13 @@ public class UserService {
         HappypillUser user = userRepository.findById(userContext.getId())
                 .orElseThrow(() -> new BusinessException(USER_NOT_FOUND));
         user.changeNotifyEmail(request.notifyEmail());
+    }
+
+    @Transactional
+    public void registerNickname(UserContext userContext, UserNicknameRegisterRequest userNicknameRegisterRequest) {
+        HappypillUser user = userRepository.findById(userContext.getId())
+                .orElseThrow(() -> new BusinessException(USER_NOT_FOUND));
+        user.registerNickName(userNicknameRegisterRequest.nickName());
     }
 
     private void verifyNotifyEmail(UserContext userContext, UserNotifyEmailUpdateRequest request) {

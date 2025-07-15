@@ -11,6 +11,7 @@ import com.happypill.application.repository.happypilluser.HappypillUserRepositor
 import com.happypill.application.service.IntegrationTestSupport;
 import com.happypill.application.service.user.email.EmailVerificationRedisRepository;
 import com.happypill.application.service.user.request.EmailVerificationRequest;
+import com.happypill.application.service.user.request.UserNicknameRegisterRequest;
 import com.happypill.application.service.user.request.UserNotifyEmailUpdateRequest;
 import com.happypill.application.util.SnowflakeUtil;
 import net.datafaker.Faker;
@@ -43,6 +44,19 @@ class UserServiceTest extends IntegrationTestSupport {
         return userRepository.save(HappypillUser.ofSocial(
                 SnowflakeUtil.nextId(),
                 "nickname",
+                Provider.GOOGLE,
+                String.valueOf(SnowflakeUtil.nextId()),
+                email,
+                email,
+                Role.USER
+        ));
+    }
+
+    private HappypillUser generateTestUserWithoutNickname() {
+        String email = faker.internet().emailAddress();
+        return userRepository.save(HappypillUser.ofSocial(
+                SnowflakeUtil.nextId(),
+                null,
                 Provider.GOOGLE,
                 String.valueOf(SnowflakeUtil.nextId()),
                 email,
@@ -98,5 +112,32 @@ class UserServiceTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("UserContext 의 id 가 존재하지 않는 유저일 경우 에러를 반환한다.")
+    @Test
+    void registerNickname_1() {
+        //given
+        HappypillUser user = generateTestUser();
+        UserContext userContext = SecurityUserContext.from(user.getId());
+        UserNicknameRegisterRequest request = new UserNicknameRegisterRequest("UserNickname");
 
+        //when //then
+        assertThatThrownBy(() -> service.registerNickname(userContext, request))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ExceptionCode.USER_NICKNAME_ALREADY_REGISTERED.getMessage());
+    }
+
+    @DisplayName("UserContext 의 id 가 존재하는 유저일 경우 유저의 닉네임이 등록된다.")
+    @Test
+    void registerNickname_2() {
+        //given
+        HappypillUser user = generateTestUserWithoutNickname();
+        UserContext userContext = SecurityUserContext.from(user.getId());
+        UserNicknameRegisterRequest request = new UserNicknameRegisterRequest("UserNickname");
+
+        //when
+        service.registerNickname(userContext, request);
+
+        //then
+        assertThat(user.getNickName().equals(request.nickName())).isTrue();
+    }
 }

@@ -5,6 +5,7 @@ import com.happypill.application.auth.UserContext;
 import com.happypill.application.exception.global.ErrorResponse;
 import com.happypill.application.service.user.UserService;
 import com.happypill.application.service.user.request.EmailVerificationRequest;
+import com.happypill.application.service.user.request.UserNicknameRegisterRequest;
 import com.happypill.application.service.user.request.UserNotifyEmailUpdateRequest;
 import com.happypill.application.service.user.request.UserUpdateRequest;
 import com.happypill.application.service.user.response.UserInfoResponse;
@@ -62,4 +63,13 @@ public class UserController {
                                            @RequestBody @Valid UserNotifyEmailUpdateRequest request) {
         userService.verifyAndUpdateUserNotifyEmail(userContext, request);
     }
+
+    @Operation(summary = "회원 닉네임 입력 및 등록", description = "회원이 닉네임을 직접 등록하기 위한 API")
+    @PatchMapping("/api/user/me/nickname")
+    @PreAuthorize("hasRole('USER')")
+    public void registerNickname(@HappypillUser UserContext userContext,
+                                 @RequestBody @Valid UserNicknameRegisterRequest userNicknameRegisterRequest) {
+        userService.registerNickname(userContext, userNicknameRegisterRequest);
+    }
+
 }
