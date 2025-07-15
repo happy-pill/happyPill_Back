@@ -2,6 +2,8 @@ package com.happypill.application.entity;
 
 import com.happypill.application.entity.enums.Provider;
 import com.happypill.application.entity.enums.Role;
+import com.happypill.application.exception.custom.ExceptionCode;
+import com.happypill.application.exception.global.BusinessException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,7 +49,10 @@ public class HappypillUser extends BaseEntity<Long> {
         return new HappypillUser(id, nickName, provider, socialSub, loginEmail, notifyEmail, false, role);
     }
 
-    public void changeUser(String nickName) {
+    public void changeNickname(String nickName) {
+        if(this.nickName != null) {
+            throw new BusinessException(ExceptionCode.USER_NICKNAME_ALREADY_REGISTERED);
+        }
         this.nickName = nickName;
     }
 
