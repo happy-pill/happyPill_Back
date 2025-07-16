@@ -144,6 +144,6 @@ class UserServiceTest extends IntegrationTestSupport {
         UserInfoResponse response = service.updateUser(userContext, request);
 
         // then
-        assertThat(response.nickname().equals(request.nickName())).isTrue();
+assertThat(response.nickname()).isEqualTo(request.nickName());
     }
 }
