@@ -100,7 +100,7 @@ public class AdminUserService {
     }
 
     public CustomPage<AdminUserListResponse> searchUsers(Pageable pageable, String keyword) {
-        Page<AdminUserListResponse> responses = userRepository.searchUsersByLanguage(
+        Page<AdminUserListResponse> responses = userRepository.searchUsersByKeyword(
                 pageable,
                 keyword
         );

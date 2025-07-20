@@ -22,7 +22,7 @@ public class HappypillUserRepositoryImpl implements HappypillUserRepositoryCusto
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<AdminUserListResponse> searchUsersByLanguage(Pageable pageable, String keyword) {
+    public Page<AdminUserListResponse> searchUsersByKeyword(Pageable pageable, String keyword) {
         BooleanBuilder keywordBuilder = new BooleanBuilder();
 
         if(keyword != null && !keyword.isBlank()) {
