@@ -63,10 +63,9 @@ public class AdminUserController {
     @GetMapping("/search")
     public CustomPage<AdminUserListResponse> searchUsers(@RequestParam(value = "keyword") String keyword,
                                                          @RequestParam(value = "page") int page,
-                                                         @RequestParam(value = "size") int size,
-                                                         Locale locale) {
+                                                         @RequestParam(value = "size") int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        return adminUserService.searchUsers(pageable, keyword, locale);
+        return adminUserService.searchUsers(pageable, keyword);
     }
 
     @Operation(summary = "회원 계정 활성화", description = "회원 계정을 활성화하기 위한 API")

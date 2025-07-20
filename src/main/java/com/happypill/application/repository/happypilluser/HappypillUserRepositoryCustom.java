@@ -6,5 +6,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface HappypillUserRepositoryCustom {
-    Page<AdminUserListResponse> searchUsersByLanguage(Pageable pageable, String keyword, Language language);
+    Page<AdminUserListResponse> searchUsersByLanguage(Pageable pageable, String keyword);
 }

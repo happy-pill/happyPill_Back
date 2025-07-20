@@ -99,13 +99,10 @@ public class AdminUserService {
         return AdminUserDetailResponse.from(user);
     }
 
-    public CustomPage<AdminUserListResponse> searchUsers(Pageable pageable, String keyword, Locale locale) {
-        Language language = Language.parseLanguage(locale.getLanguage());
-
+    public CustomPage<AdminUserListResponse> searchUsers(Pageable pageable, String keyword) {
         Page<AdminUserListResponse> responses = userRepository.searchUsersByLanguage(
                 pageable,
-                keyword,
-                language
+                keyword
         );
 
         return new CustomPage<>(responses);
