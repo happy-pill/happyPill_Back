@@ -99,6 +99,18 @@ public class AdminUserService {
         return AdminUserDetailResponse.from(user);
     }
 
+    public CustomPage<AdminSubscriptionListResponse> searchSubscriptions(Pageable pageable, String keyword, Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+
+        Page<AdminSubscriptionListResponse> responses = subscriptionRepository.searchSubscriptionsByLanguage(
+                pageable,
+                keyword,
+                language
+        );
+
+        return new CustomPage<>(responses);
+    }
+
     public CustomPage<AdminUserListResponse> searchUsers(Pageable pageable, String keyword) {
         Page<AdminUserListResponse> responses = userRepository.searchUsersByKeyword(
                 pageable,

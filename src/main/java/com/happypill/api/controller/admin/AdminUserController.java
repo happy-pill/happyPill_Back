@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +55,16 @@ public class AdminUserController {
                                                                       Locale locale){
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminUserService.getAllSubscriptions(pageable, locale);
+    }
+
+    @Operation(summary = "구독 상품 검색", description = "회원들의 구독 상품들을 검색하기 위한 API")
+    @GetMapping("/subscriptions/search")
+    public CustomPage<AdminSubscriptionListResponse> searchSubscriptions(@RequestParam(value = "keyword") String keyword,
+                                                                         @RequestParam(value = "page") int page,
+                                                                         @RequestParam(value = "size") int size,
+                                                                         Locale locale) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return adminUserService.searchSubscriptions(pageable, keyword, locale);
     }
 
     @Operation(summary = "회원 검색", description = "회원들의 정보를 검색하기 위한 API")
