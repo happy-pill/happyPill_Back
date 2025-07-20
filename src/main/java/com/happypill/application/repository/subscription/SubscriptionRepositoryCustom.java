@@ -10,4 +10,6 @@ public interface SubscriptionRepositoryCustom {
     Page<AdminSubscriptionListResponse> findSubscriptionsByLanguageAndCompletionAndStatus(
             Language language, boolean isCompleted, OrderStatus orderStatus, Pageable pageable
     );
+
+    Page<AdminSubscriptionListResponse> searchSubscriptionsByLanguage(Pageable pageable, String keyword, Language language);
 }
