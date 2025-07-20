@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface HappypillUserRepository extends JpaRepository<HappypillUser, Long> {
+public interface HappypillUserRepository extends JpaRepository<HappypillUser, Long>, HappypillUserRepositoryCustom {
     
     Optional<HappypillUser> findBySocialSub(@Param("socialSub") String socialSub);
 

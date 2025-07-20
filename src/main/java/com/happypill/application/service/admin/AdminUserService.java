@@ -99,6 +99,18 @@ public class AdminUserService {
         return AdminUserDetailResponse.from(user);
     }
 
+    public CustomPage<AdminUserListResponse> searchUsers(Pageable pageable, String keyword, Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+
+        Page<AdminUserListResponse> responses = userRepository.searchUsersByLanguage(
+                pageable,
+                keyword,
+                language
+        );
+
+        return new CustomPage<>(responses);
+    }
+
     private void updateNickname(HappypillUser user, AdminUserUpdateRequest request){
         String newNickname = request.nickName();
         if(newNickname != null && !newNickname.isBlank()){
