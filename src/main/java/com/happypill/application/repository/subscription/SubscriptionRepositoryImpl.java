@@ -4,12 +4,15 @@ import com.happypill.application.entity.enums.Language;
 import com.happypill.application.entity.enums.OrderStatus;
 import com.happypill.application.service.admin.response.AdminSubscriptionListResponse;
 import com.happypill.application.service.admin.response.QAdminSubscriptionListResponse;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -66,4 +69,46 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepositoryCustom{
 
         return new PageImpl<>(content, pageable, total != null ? total : 0L);
     }
+
+    @Override
+    public Page<AdminSubscriptionListResponse> searchSubscriptionsByLanguage(Pageable pageable, String keyword, Language language) {
+
+        BooleanBuilder whereBuilder = new BooleanBuilder();
+
+        if(keyword != null && !keyword.isBlank()) {
+            whereBuilder.or(productInfo.name.containsIgnoreCase(keyword));
+            whereBuilder.or(happypillUser.notifyEmail.containsIgnoreCase(keyword));
+            whereBuilder.or(subscription.id.stringValue().containsIgnoreCase(keyword));
+        }
+
+        List<AdminSubscriptionListResponse> content = jpaQueryFactory
+                .select(new QAdminSubscriptionListResponse(
+                      productInfo.name,
+                      happypillUser.notifyEmail,
+                      subscription.id.stringValue(),
+                      subscription.nextDeliveryDate
+                ))
+                .from(subscription)
+                .join(subscription.orderLine, orderLine)
+                .join(orderLine.product, product)
+                .join(subscription.user, happypillUser)
+                .join(productInfo).on(productInfo.product.eq(product).and(productInfo.language.eq(language)))
+                .where(whereBuilder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = jpaQueryFactory
+                .select(subscription.count())
+                .from(subscription)
+                .join(subscription.orderLine, orderLine)
+                .join(orderLine.product, product)
+                .join(subscription.user, happypillUser)
+                .join(productInfo).on(productInfo.product.eq(product).and(productInfo.language.eq(language)))
+                .where(whereBuilder)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total != null ? total : 0L);
+    }
+
 }

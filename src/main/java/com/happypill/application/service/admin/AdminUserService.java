@@ -13,6 +13,7 @@ import com.happypill.application.service.admin.response.AdminSubscriptionListRes
 import com.happypill.application.service.admin.response.AdminUserDetailResponse;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -97,6 +98,18 @@ public class AdminUserService {
 
         user.deactivate();
         return AdminUserDetailResponse.from(user);
+    }
+
+    public CustomPage<AdminSubscriptionListResponse> searchSubscriptions(Pageable pageable, String keyword, Locale locale) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+
+        Page<AdminSubscriptionListResponse> responses = subscriptionRepository.searchSubscriptionsByLanguage(
+                pageable,
+                keyword,
+                language
+        );
+
+        return new CustomPage<>(responses);
     }
 
     private void updateNickname(HappypillUser user, AdminUserUpdateRequest request){
