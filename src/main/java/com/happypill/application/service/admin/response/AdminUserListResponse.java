@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
 
-@NoArgsConstructor
+import static lombok.AccessLevel.PROTECTED;
+
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class AdminUserListResponse {
     private String userId;
