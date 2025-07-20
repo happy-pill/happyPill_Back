@@ -75,10 +75,16 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepositoryCustom{
 
         BooleanBuilder whereBuilder = new BooleanBuilder();
 
-        if(keyword != null && !keyword.isBlank()) {
-            whereBuilder.or(productInfo.name.containsIgnoreCase(keyword));
-            whereBuilder.or(happypillUser.notifyEmail.containsIgnoreCase(keyword));
-            whereBuilder.or(subscription.id.stringValue().containsIgnoreCase(keyword));
+        whereBuilder.and(subscription.isCompleted.eq(false));
+        whereBuilder.and(order.status.eq(OrderStatus.COMPLETED));
+
+        if (keyword != null && !keyword.isBlank()) {
+            BooleanBuilder keywordBuilder = new BooleanBuilder();
+            keywordBuilder.or(productInfo.name.containsIgnoreCase(keyword));
+            keywordBuilder.or(happypillUser.notifyEmail.containsIgnoreCase(keyword));
+            keywordBuilder.or(subscription.id.stringValue().containsIgnoreCase(keyword));
+
+            whereBuilder.and(keywordBuilder);
         }
 
         List<AdminSubscriptionListResponse> content = jpaQueryFactory
@@ -90,6 +96,7 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepositoryCustom{
                 ))
                 .from(subscription)
                 .join(subscription.orderLine, orderLine)
+                .join(orderLine.order, order)
                 .join(orderLine.product, product)
                 .join(subscription.user, happypillUser)
                 .join(productInfo).on(productInfo.product.eq(product).and(productInfo.language.eq(language)))
@@ -102,6 +109,7 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepositoryCustom{
                 .select(subscription.count())
                 .from(subscription)
                 .join(subscription.orderLine, orderLine)
+                .join(orderLine.order, order)
                 .join(orderLine.product, product)
                 .join(subscription.user, happypillUser)
                 .join(productInfo).on(productInfo.product.eq(product).and(productInfo.language.eq(language)))
