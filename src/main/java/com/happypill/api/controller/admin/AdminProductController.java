@@ -5,7 +5,6 @@ import com.happypill.application.service.admin.AdminProductService;
 import com.happypill.application.service.admin.request.AdminProductCreateRequest;
 import com.happypill.application.service.admin.request.AdminProductUpdateRequest;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
-import com.happypill.application.service.admin.response.AdminProductListResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,10 +30,10 @@ public class AdminProductController {
     @Operation(summary = "모든 상품 조회", description = "모든 상품들을 출력하기 위한 API")
     @GetMapping
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
-    public CustomPage<AdminProductListResponse> getProducts(@RequestParam(value = "categories", required = false) Long categoryId,
-                                                            @RequestParam(value = "page", defaultValue = "1") int page,
-                                                            @RequestParam(value = "size", defaultValue = "8") int size,
-                                                            Locale locale) {
+    public CustomPage<?> getProducts(@RequestParam(value = "categories", required = false) Long categoryId,
+                                     @RequestParam(value = "page", defaultValue = "1") int page,
+                                     @RequestParam(value = "size", defaultValue = "8") int size,
+                                     Locale locale) {
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminProductService.getAllProducts(categoryId, pageable, locale);
     }

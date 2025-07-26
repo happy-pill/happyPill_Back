@@ -15,8 +15,8 @@ import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.admin.request.AdminProductCreateRequest;
 import com.happypill.application.service.admin.request.AdminProductUpdateRequest;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
-import com.happypill.application.service.admin.response.AdminProductListResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
+import com.happypill.application.service.admin.response.AdminProductResponse;
 import com.happypill.application.service.product.request.ProductInfoRequest;
 import com.happypill.application.util.SnowflakeUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -156,44 +156,13 @@ class AdminProductServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         //when
-        CustomPage<AdminProductListResponse> result = adminProductService.getAllProducts(category.getId(), pageable, locale);
+        CustomPage<AdminProductResponse> result = adminProductService.getAllProducts(category.getId(), pageable, locale);
 
         //then
         assertThat(result.contents()).isNotNull();
         assertThat(result.contents()).hasSize(1);
     }
-
-    @Test
-    @DisplayName("[모든 상품 조회] categoryId 값이 null 값이 아닌 존재하지 않는 값인 경우 에러가 발생한다.")
-    void getAllProducts_2() {
-        //given
-        Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
-        categoryRepository.save(category);
-
-        Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
-        productRepository.save(product);
-
-        List<ProductInfo> productInfo = Arrays.asList(
-                ProductInfo.of(SnowflakeUtil.nextId(), Language.KO, "제품명_KO", "수량 상세_KO", "경고 메시지_KO", "사용법_KO", "https://xxx.com/xxx_KO", "설명_KO", "회사명_KO", "간략 설명_KO", product),
-                ProductInfo.of(SnowflakeUtil.nextId(), Language.EN, "제품명_EN", "수량 상세_EN", "경고 메시지_EN", "사용법_EN", "https://xxx.com/xxx_EN", "설명_EN", "회사명_EN", "간략 설명_EN", product)
-        );
-        productInfoRepository.saveAll(productInfo);
-
-        ProductPrice productPrice = ProductPrice.of(SnowflakeUtil.nextId(), 3500, true, product);
-        productPriceRepository.save(productPrice);
-
-        Locale locale = Locale.forLanguageTag("ko");
-        Pageable pageable = PageRequest.of(0, 10);
-
-        //when
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            adminProductService.getAllProducts(1000L, pageable, locale);
-        });
-
-        // then
-        assertThat(exception.getExceptionCode()).isEqualTo(ExceptionCode.CATEGORY_NOT_FOUND);
-    }
-
+    
     @Test
     @DisplayName("[모든 상품 조회] locale 값이 en인 경우 커스텀 페이지의 contents 에는 영어로 작성된 내용들이 포함된다.")
     void getAllProducts_3() {
@@ -217,11 +186,11 @@ class AdminProductServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         //when
-        CustomPage<AdminProductListResponse> result = adminProductService.getAllProducts(category.getId(), pageable, locale);
+        CustomPage<AdminProductResponse> result = adminProductService.getAllProducts(category.getId(), pageable, locale);
 
         //then
         assertThat(result.contents())
-                .extracting(AdminProductListResponse::briefDescription)
+                .extracting(AdminProductResponse::briefDescription)
                 .containsExactly("간략 설명_EN");
     }
 

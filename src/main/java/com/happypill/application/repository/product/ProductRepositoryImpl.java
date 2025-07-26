@@ -1,6 +1,8 @@
 package com.happypill.application.repository.product;
 
 import com.happypill.application.entity.enums.Language;
+import com.happypill.application.service.admin.response.AdminProductResponse;
+import com.happypill.application.service.admin.response.QAdminProductResponse;
 import com.happypill.application.service.product.response.ProductListResponse;
 import com.happypill.application.service.product.response.QProductListResponse;
 import com.querydsl.core.BooleanBuilder;
@@ -8,6 +10,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -116,5 +121,57 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     .on(bestProduct.product.eq(product))
                 .where(bestProduct.isNotNull())
                 .fetch();
+    }
+
+    @Override
+    public Page<AdminProductResponse> getAdminProductsByLanguageAndOptionalCategory(Language language, Long categoryId, Pageable pageable) {
+
+
+        List<AdminProductResponse> content = jpaQueryFactory
+                .select(new QAdminProductResponse(
+                        product.id,
+                        product.category.id,
+                        productInfo.name,
+                        productInfo.company,
+                        product.price,
+                        product.stock,
+
+                        productInfo.briefDescription,
+                        product.thumbnailUrl,
+                        product.isAvailable
+                ))
+                .from(product)
+                .join(productInfo)
+                .on(
+                        productInfo.language.eq(language)
+                                .and(product.id.eq(productInfo.product.id))
+                ).where(
+                        categoryIdEq(categoryId)
+                ).orderBy(product.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+
+        //noinspection DataFlowIssue 0일경우에도 NPE 발생하지 않는다.
+        long total = jpaQueryFactory
+                .select(product.count())
+                .from(product)
+                .join(productInfo)
+                .on(
+                        productInfo.language.eq(language)
+                                .and(product.id.eq(productInfo.product.id))
+                )
+                .where(
+                        categoryIdEq(categoryId)
+                )
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+
+    public BooleanExpression categoryIdEq(Long categoryId) {
+        return categoryId == null ? null : product.category.id.eq(categoryId);
     }
 }
