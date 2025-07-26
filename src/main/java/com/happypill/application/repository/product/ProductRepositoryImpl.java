@@ -147,7 +147,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                                 .and(product.id.eq(productInfo.product.id))
                 ).where(
                         categoryIdEq(categoryId)
-                )
+                ).orderBy(product.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
