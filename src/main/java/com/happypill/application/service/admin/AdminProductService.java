@@ -15,8 +15,8 @@ import com.happypill.application.repository.productprice.ProductPriceRepository;
 import com.happypill.application.service.admin.request.AdminProductCreateRequest;
 import com.happypill.application.service.admin.request.AdminProductUpdateRequest;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
-import com.happypill.application.service.admin.response.AdminProductListResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
+import com.happypill.application.service.admin.response.AdminProductResponse;
 import com.happypill.application.service.product.request.ProductInfoRequest;
 import com.happypill.application.service.product.response.ProductInfoDetailsResponse;
 import com.happypill.application.util.SnowflakeUtil;
@@ -44,26 +44,11 @@ public class AdminProductService {
     private final CategoryRepository categoryRepository;
 
     //모든 상품 조회
-    public CustomPage<AdminProductListResponse> getAllProducts(Long categoryId, Pageable pageable, Locale locale) {
+    public CustomPage<AdminProductResponse> getAllProducts(Long categoryId, Pageable pageable, Locale locale) {
         Language language = Language.parseLanguage(locale.getLanguage());
 
-        if (categoryId != null) {
-            boolean isExist = categoryRepository.existsById(categoryId);
-            if (!isExist)
-                throw new BusinessException(ExceptionCode.CATEGORY_NOT_FOUND);
-        }
-
-        Page<ProductInfo> productInfos = (categoryId == null) ?
-                productInfoRepository.getAllProductInfosByLanguage(language, pageable) :
-                productInfoRepository.getAllProductInfosByCategoryAndLanguage(categoryId, language, pageable);
-
-        Page<AdminProductListResponse> responsePage = productInfos.map(productInfo -> {
-                    Product product = productInfo.getProduct();
-                    int price = getCurrentPrice(productInfo);
-                    return AdminProductListResponse.from(product, productInfo, price);
-                }
-        );
-        return new CustomPage<>(responsePage);
+        Page<AdminProductResponse> page = productRepository.getAdminProductsByLanguageAndOptionalCategory(language, categoryId, pageable);
+        return new CustomPage<>(page);
     }
 
     //특정 상품 조회
