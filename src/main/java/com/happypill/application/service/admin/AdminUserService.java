@@ -13,7 +13,6 @@ import com.happypill.application.service.admin.response.AdminSubscriptionListRes
 import com.happypill.application.service.admin.response.AdminUserDetailResponse;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -107,6 +106,15 @@ public class AdminUserService {
                 pageable,
                 keyword,
                 language
+        );
+
+        return new CustomPage<>(responses);
+    }
+
+    public CustomPage<AdminUserListResponse> searchUsers(Pageable pageable, String keyword) {
+        Page<AdminUserListResponse> responses = userRepository.searchUsersByKeyword(
+                pageable,
+                keyword
         );
 
         return new CustomPage<>(responses);
