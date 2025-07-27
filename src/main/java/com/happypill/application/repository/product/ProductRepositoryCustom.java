@@ -14,5 +14,7 @@ public interface ProductRepositoryCustom {
     List<ProductListResponse> findAllBestProductsByLanguage(Language language);
 
     Page<AdminProductResponse> getAdminProductsByLanguageAndOptionalCategory(Language language, Long categoryId, Pageable pageable);
+
+    Page<AdminProductResponse> searchProductsByKeywordAndLanguage(Pageable pageable, Language language, String keyword);
 }
 

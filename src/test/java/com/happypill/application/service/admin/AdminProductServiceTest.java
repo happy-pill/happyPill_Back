@@ -1,14 +1,12 @@
 package com.happypill.application.service.admin;
 
-import com.happypill.application.entity.Category;
-import com.happypill.application.entity.Product;
-import com.happypill.application.entity.ProductInfo;
-import com.happypill.application.entity.ProductPrice;
+import com.happypill.application.entity.*;
 import com.happypill.application.entity.enums.Language;
 import com.happypill.application.exception.custom.ExceptionCode;
 import com.happypill.application.exception.global.BusinessException;
 import com.happypill.application.pagination.CustomPage;
 import com.happypill.application.repository.category.CategoryRepository;
+import com.happypill.application.repository.categoryinfo.CategoryInfoRepository;
 import com.happypill.application.repository.product.ProductRepository;
 import com.happypill.application.repository.productinfo.ProductInfoRepository;
 import com.happypill.application.repository.productprice.ProductPriceRepository;
@@ -44,6 +42,9 @@ class AdminProductServiceTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CategoryInfoRepository categoryInfoRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -140,6 +141,12 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
+        List<CategoryInfo> categoryInfos = Arrays.asList(
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민", "카테고리설명", category),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "Bitamin", "categoryDescription", category)
+        );
+        categoryInfoRepository.saveAll(categoryInfos);
+
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
@@ -152,7 +159,7 @@ class AdminProductServiceTest {
         ProductPrice productPrice = ProductPrice.of(SnowflakeUtil.nextId(), 3500, true, product);
         productPriceRepository.save(productPrice);
 
-        Locale locale = Locale.forLanguageTag("ko");
+        Locale locale = Locale.KOREAN;
         Pageable pageable = PageRequest.of(0, 10);
 
         //when
@@ -170,6 +177,12 @@ class AdminProductServiceTest {
         Category category = Category.of(SnowflakeUtil.nextId(), " https://xxx.com/xxx", " https://xxx.com/xxx");
         categoryRepository.save(category);
 
+        List<CategoryInfo> categoryInfos = Arrays.asList(
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.KO, "비타민", "카테고리설명", category),
+                CategoryInfo.of(SnowflakeUtil.nextId(), Language.EN, "Bitamin", "categoryDescription", category)
+        );
+        categoryInfoRepository.saveAll(categoryInfos);
+
         Product product = Product.of(SnowflakeUtil.nextId(), 1000, 3, true, " https://xxx.com/xxx", false, category);
         productRepository.save(product);
 
@@ -182,7 +195,7 @@ class AdminProductServiceTest {
         ProductPrice productPrice = ProductPrice.of(SnowflakeUtil.nextId(), 3500, true, product);
         productPriceRepository.save(productPrice);
 
-        Locale locale = Locale.forLanguageTag("en");
+        Locale locale = Locale.ENGLISH;
         Pageable pageable = PageRequest.of(0, 10);
 
         //when

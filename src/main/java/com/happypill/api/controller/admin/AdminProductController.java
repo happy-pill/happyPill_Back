@@ -6,6 +6,7 @@ import com.happypill.application.service.admin.request.AdminProductCreateRequest
 import com.happypill.application.service.admin.request.AdminProductUpdateRequest;
 import com.happypill.application.service.admin.response.AdminProductInfoResponse;
 import com.happypill.application.service.admin.response.AdminProductPriceResponse;
+import com.happypill.application.service.admin.response.AdminProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -76,5 +77,15 @@ public class AdminProductController {
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public void deleteProduct(@PathVariable(value = "productId") Long productId) {
         adminProductService.deleteProduct(productId);
+    }
+
+    @Operation(summary = "상품 검색", description = "관리자가 특정 상품을 검색하기 위한 API")
+    @GetMapping("/search")
+    public CustomPage<AdminProductResponse> searchProducts(@RequestParam(value = "keyword") String keyword,
+                                               @RequestParam(value = "page") int page,
+                                               @RequestParam(value = "size") int size,
+                                               Locale locale) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return adminProductService.searchProducts(pageable, locale, keyword);
     }
 }
