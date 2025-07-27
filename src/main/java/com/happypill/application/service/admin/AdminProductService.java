@@ -182,6 +182,20 @@ public class AdminProductService {
         product.deleteProduct();
     }
 
+    //상품 검색
+    public CustomPage<AdminProductResponse> searchProducts(Pageable pageable, Locale locale, String keyword) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+
+        Page<AdminProductResponse> responses = productRepository.searchProductsByKeywordAndLanguage(
+                pageable,
+                language,
+                keyword
+        );
+
+        return new CustomPage<>(responses);
+    }
+
+
     private int getCurrentPrice(ProductInfo productInfo) {
         ProductPrice price = productPriceRepository.getCurrentPriceByProductId(productInfo.getProduct().getId())
                 .orElseThrow(() -> new BusinessException(ExceptionCode.PRODUCT_PRICE_NOT_FOUND));

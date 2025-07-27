@@ -132,10 +132,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.id,
                         product.category.id,
                         productInfo.name,
+                        categoryInfo.name,
                         productInfo.company,
                         product.price,
                         product.stock,
-
                         productInfo.briefDescription,
                         product.thumbnailUrl,
                         product.isAvailable
@@ -145,7 +145,15 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .on(
                         productInfo.language.eq(language)
                                 .and(product.id.eq(productInfo.product.id))
-                ).where(
+                )
+                .join(category)
+                .on(product.category.eq(category))
+                .join(categoryInfo)
+                .on(
+                        categoryInfo.language.eq(language)
+                                .and(categoryInfo.category.eq(category))
+                )
+                .where(
                         categoryIdEq(categoryId)
                 ).orderBy(product.id.desc())
                 .offset(pageable.getOffset())
@@ -162,12 +170,87 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         productInfo.language.eq(language)
                                 .and(product.id.eq(productInfo.product.id))
                 )
+                .join(category)
+                .on(product.category.eq(category))
+                .join(categoryInfo)
+                .on(
+                        categoryInfo.language.eq(language)
+                                .and(categoryInfo.category.eq(category))
+                )
                 .where(
                         categoryIdEq(categoryId)
                 )
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<AdminProductResponse> searchProductsByKeywordAndLanguage(Pageable pageable, Language language, String keyword) {
+        BooleanBuilder keyBuilder = new BooleanBuilder();
+
+        if(keyword != null && !keyword.isBlank()) {
+            keyBuilder.or(productInfo.name.containsIgnoreCase(keyword));
+            keyBuilder.or(productInfo.company.containsIgnoreCase(keyword));
+            keyBuilder.or(productInfo.briefDescription.containsIgnoreCase(keyword));
+            keyBuilder.or(categoryInfo.name.containsIgnoreCase(keyword));
+            keyBuilder.or(product.price.stringValue().containsIgnoreCase(keyword));
+            keyBuilder.or(product.stock.stringValue().containsIgnoreCase(keyword));
+        }
+
+        List<AdminProductResponse> content = jpaQueryFactory
+                .select(new QAdminProductResponse(
+                        product.id,
+                        product.category.id,
+                        productInfo.name,
+                        categoryInfo.name,
+                        productInfo.company,
+                        product.price,
+                        product.stock,
+                        productInfo.briefDescription,
+                        product.thumbnailUrl,
+                        product.isAvailable
+                ))
+                .from(product)
+                .join(productInfo).on(
+                        productInfo.language.eq(language)
+                                .and(product.eq(productInfo.product))
+                )
+                .join(category).on(
+                        product.category.eq(category)
+                )
+                .join(categoryInfo).on(
+                        categoryInfo.language.eq(language)
+                                        .and(categoryInfo.category.eq(category))
+                )
+                .where(
+                        keyBuilder
+                )
+                .orderBy(product.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = jpaQueryFactory
+                .select(product.count())
+                .from(product)
+                .join(productInfo).on(
+                        productInfo.language.eq(language)
+                                .and(product.eq(productInfo.product))
+                )
+                .join(category).on(
+                        product.category.eq(category)
+                )
+                .join(categoryInfo).on(
+                        categoryInfo.language.eq(language)
+                                .and(categoryInfo.category.eq(category))
+                )
+                .where(
+                    keyBuilder
+                )
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total != null ? total : 0L);
     }
 
 

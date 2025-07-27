@@ -5,7 +5,8 @@ import com.querydsl.core.annotations.QueryProjection;
 public record AdminProductResponse(
         String productId,
         String categoryId,
-        String name,
+        String productName,
+        String categoryName,
         String company,
         Integer price,
         Integer stock,
@@ -18,7 +19,8 @@ public record AdminProductResponse(
     public AdminProductResponse(
             Long productId,
             Long categoryId,
-            String name,
+            String productName,
+            String categoryName,
             String company,
             Integer price,
             Integer stock,
@@ -28,7 +30,8 @@ public record AdminProductResponse(
     ) {
         this(String.valueOf(productId),
                 String.valueOf(categoryId),
-                name,
+                productName,
+                categoryName,
                 company,
                 price,
                 stock,
