@@ -52,6 +52,19 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        Long total = jpaQueryFactory
+                    .select(category.count())
+                    .from(category)
+                    .join(categoryInfo)
+                    .on(
+                        categoryInfo.language.eq(language)
+                        .and(categoryInfo.category.id.eq(category.id))
+                    )
+                    .where(
+                        keyBuilder
+                    )
+                    .fetchOne();
+
+        return new PageImpl<>(content, pageable, total != null ? total : 0L);
     }
 }
