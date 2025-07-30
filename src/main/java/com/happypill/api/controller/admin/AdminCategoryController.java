@@ -32,7 +32,7 @@ public class AdminCategoryController {
     @GetMapping
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public CustomPage<AdminCategoryListResponse> getCategories(@RequestParam(value = "page", defaultValue = "1") int page,
-                                                               @RequestParam(value = "size", defaultValue = "5") int size,
+                                                               @RequestParam(value = "size", defaultValue = "10") int size,
                                                                Locale locale) {
         Pageable pageable = PageRequest.of(page - 1, size);
         return adminCategoryService.getAllCategories(pageable, locale);

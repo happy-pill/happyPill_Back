@@ -8,15 +8,17 @@ public record AdminCategoryListResponse(
         String name,
         String description,
         String thumbnailUrl,
-        String bannerImgUrl
+        String bannerImgUrl,
+        int numOfProducts
 ) {
-    public static AdminCategoryListResponse from(CategoryInfo categoryInfo, Category category){
+    public static AdminCategoryListResponse from(CategoryInfo categoryInfo, Category category, int numOfProducts){
         return new AdminCategoryListResponse(
                 category.getId().toString(),
                 categoryInfo.getName(),
                 categoryInfo.getDescription(),
                 category.getThumbnailUrl(),
-                category.getBannerUrl()
+                category.getBannerUrl(),
+                numOfProducts
         );
     }
 }
