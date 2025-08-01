@@ -40,7 +40,7 @@ public class AdminCategoryController {
 
     @Operation(summary = "카테고리 등록", description = "카테고리를 등록합니다.")
     @PostMapping
-//   ToDo @PreAuthorize("hasRole('ADMIN')")
+    //   ToDo @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> saveCategories(@RequestBody @Valid AdminCategoryRequest adminCategoryCreateRequestList) {
         adminCategoryService.saveCategories(adminCategoryCreateRequestList);
 
@@ -74,5 +74,15 @@ public class AdminCategoryController {
     //TODO : 추가 예정 @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategory(@PathVariable Long categoryId){
         adminCategoryService.deleteCategory(categoryId);
+    }
+
+    @Operation(summary = "카테고리 검색", description = "관리자가 특정 카테고리를 검색합니다")
+    @GetMapping("/search")
+    public CustomPage<AdminCategoryListResponse> searchCategory(@RequestParam(value = "keyword") String keyword,
+                                                                 @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                 @RequestParam(value = "size", defaultValue = "5") int size,
+                                                                 Locale locale) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return adminCategoryService.searchCategory(pageable, locale, keyword);
     }
 }
