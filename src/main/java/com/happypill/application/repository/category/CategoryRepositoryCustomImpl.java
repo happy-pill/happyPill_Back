@@ -15,10 +15,11 @@ import java.util.List;
 
 import static com.happypill.application.entity.QCategory.category;
 import static com.happypill.application.entity.QCategoryInfo.categoryInfo;
+import static com.happypill.application.entity.QProduct.product;
 
 @Repository
 @RequiredArgsConstructor
-public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
+public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -36,13 +37,18 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                         categoryInfo.name,
                         categoryInfo.description,
                         category.thumbnailUrl,
-                        category.bannerUrl
+                        category.bannerUrl,
+                        product.count().intValue()
                 ))
                 .from(category)
                 .join(categoryInfo)
                 .on(
                         categoryInfo.language.eq(language)
                                 .and(categoryInfo.category.id.eq(category.id))
+                )
+                .join(product)
+                .on(
+                        product.category.id.eq(category.id)
                 )
                 .where(
                         keyBuilder

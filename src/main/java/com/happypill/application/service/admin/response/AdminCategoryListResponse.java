@@ -17,6 +17,7 @@ public class AdminCategoryListResponse
     private String description;
     private String thumbnailUrl;
     private String bannerImgUrl;
+    private int numOfProducts;
 
     @QueryProjection
     public AdminCategoryListResponse(
@@ -24,22 +25,25 @@ public class AdminCategoryListResponse
             String name,
             String description,
             String thumbnailUrl,
-            String bannerImgUrl
+            String bannerImgUrl,
+            int numOfProducts
     ) {
         this.categoryId = String.valueOf(categoryId);
         this.name = name;
         this.description = "";
         this.thumbnailUrl = thumbnailUrl;
         this.bannerImgUrl = "";
+        this.numOfProducts = numOfProducts;
     }
 
-    public static AdminCategoryListResponse from(CategoryInfo categoryInfo, Category category){
+public static AdminCategoryListResponse from(CategoryInfo categoryInfo, Category category, int numOfProducts){
         return new AdminCategoryListResponse(
                 category.getId(),
                 categoryInfo.getName(),
                 categoryInfo.getDescription(),
                 category.getThumbnailUrl(),
-                category.getBannerUrl()
+                category.getBannerUrl(),
+                numOfProducts
         );
     }
 }

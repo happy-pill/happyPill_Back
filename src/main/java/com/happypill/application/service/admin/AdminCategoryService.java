@@ -45,7 +45,8 @@ public class AdminCategoryService {
 
         Page<AdminCategoryListResponse> responsePage = categoryInfos.map(categoryInfo -> {
                     Category category = categoryInfo.getCategory();
-                    return AdminCategoryListResponse.from(categoryInfo, category);
+                    int numOfProducts = categoryRepository.findAllProductsInTheCategory(category.getId()).size();
+                    return AdminCategoryListResponse.from(categoryInfo, category, numOfProducts);
                 }
         );
         return new CustomPage<>(responsePage);
