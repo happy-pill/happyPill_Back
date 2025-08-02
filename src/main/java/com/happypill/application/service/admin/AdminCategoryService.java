@@ -141,4 +141,13 @@ public class AdminCategoryService {
         categoryInfoRepository.deleteAll(categoryInfos);
         categoryRepository.delete(category);
     }
+
+    public CustomPage<AdminCategoryListResponse> searchCategory(Pageable pageable, Locale locale, String keyword) {
+        Language language = Language.parseLanguage(locale.getLanguage());
+
+        Page<AdminCategoryListResponse> responses = categoryRepository.searchCategoriesByKeyword(pageable, language, keyword);
+
+        return new CustomPage<>(responses);
+    }
+
 }

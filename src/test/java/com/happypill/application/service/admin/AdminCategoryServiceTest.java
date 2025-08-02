@@ -68,7 +68,7 @@ class AdminCategoryServiceTest {
 
         //then
         assertThat(result.contents())
-                .extracting(AdminCategoryListResponse::name)
+                .extracting(AdminCategoryListResponse::getName)
                 .anyMatch(name -> name.contains("KO"));
     }
 
