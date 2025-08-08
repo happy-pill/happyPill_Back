@@ -14,7 +14,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 public class AdminUserListResponse {
     private String userId;
-    private String nickName;
+    private String nickname;
     private String loginEmail;
     private Provider provider;
     private ZonedDateTime createdAt;
@@ -24,7 +24,7 @@ public class AdminUserListResponse {
     @QueryProjection
     public AdminUserListResponse(
             String userId,
-            String nickName,
+            String nickname,
             String loginEmail,
             Provider provider,
             ZonedDateTime createdAt,
@@ -32,7 +32,7 @@ public class AdminUserListResponse {
             boolean isDeleted
     ) {
         this.userId = userId;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.loginEmail = loginEmail;
         this.provider = provider;
         this.createdAt = createdAt;
@@ -43,7 +43,7 @@ public class AdminUserListResponse {
     public static AdminUserListResponse from(HappypillUser user) {
         return new AdminUserListResponse(
                 user.getId().toString(),
-                user.getNickName(),
+                user.getNickname(),
                 user.getLoginEmail(),
                 user.getProvider(),
                 user.getCreatedAt(),

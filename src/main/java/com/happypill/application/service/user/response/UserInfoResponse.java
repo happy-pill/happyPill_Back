@@ -20,7 +20,7 @@ public record UserInfoResponse(
         return new UserInfoResponse(
                 String.valueOf(happypillUser.getId()),
                 happypillUser.getProvider(),
-                happypillUser.getNickName(),
+                happypillUser.getNickname(),
                 happypillUser.getLoginEmail(),
                 happypillUser.getNotifyEmail(),
                 happypillUser.getRole(),

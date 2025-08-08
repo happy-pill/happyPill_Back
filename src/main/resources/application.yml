@@ -76,6 +76,11 @@ springdoc:
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
 
+aws:
+  s3:
+    bucket-name: happypill-s3
+    cdn-base-url: https://happypill-cdn.jiheon2234.dev
+
 --- # dev
 spring.config.activate.on-profile: dev
 spring:
@@ -114,7 +119,3 @@ spring:
         nodes:
           - ${REDIS_HOST}
 
-aws:
-  s3:
-    bucket-name: happypill-s3
-    cdn-base-url: https://happypill-cdn.jiheon2234.dev
