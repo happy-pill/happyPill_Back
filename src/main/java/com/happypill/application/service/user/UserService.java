@@ -51,7 +51,7 @@ public class UserService {
     public UserInfoResponse updateUser(UserContext userContext, UserUpdateRequest userUpdateRequest) {
         HappypillUser user = userRepository.findById(userContext.getId())
                 .orElseThrow(() -> new BusinessException(USER_NOT_FOUND));
-        user.changeUser(userUpdateRequest.nickName());
+        user.changeUser(userUpdateRequest.nickname());
         return UserInfoResponse.from(user);
     }
 

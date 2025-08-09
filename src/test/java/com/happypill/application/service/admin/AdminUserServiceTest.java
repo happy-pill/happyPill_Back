@@ -157,7 +157,7 @@ class AdminUserServiceTest {
     }
 
     @Test
-    @DisplayName("[회원 정보 수정] AdminUserUpdateRequest 에서 nickName 값만 있고 notifyEmail 은 null 일 때 nickName 만 수정된다.")
+    @DisplayName("[회원 정보 수정] AdminUserUpdateRequest 에서 nickname 값만 있고 notifyEmail 은 null 일 때 nickname 만 수정된다.")
     void updateUserProfile_2() {
         //given
         HappypillUser savedUser = generateTestUser();
@@ -170,11 +170,11 @@ class AdminUserServiceTest {
         HappypillUser updatedUser = userRepository.findById(savedUser.getId()).orElseThrow();
 
         // then
-        assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
+        assertThat(updatedUser.getNickname()).isEqualTo(UPDATED_NICKNAME);
     }
 
     @Test
-    @DisplayName("[회원 정보 수정] AdminUserUpdateRequest 에서 nickName, notifyEmail 값 모두 존재할 때 두 필드 값 모두 수정된다.")
+    @DisplayName("[회원 정보 수정] AdminUserUpdateRequest 에서 nickname, notifyEmail 값 모두 존재할 때 두 필드 값 모두 수정된다.")
     void updateUserProfile_3(){
         //given
         HappypillUser savedUser = generateTestUser();
@@ -187,7 +187,7 @@ class AdminUserServiceTest {
         HappypillUser updatedUser = userRepository.findById(savedUser.getId()).orElseThrow();
 
         //then
-        assertThat(updatedUser.getNickName()).isEqualTo(UPDATED_NICKNAME);
+        assertThat(updatedUser.getNickname()).isEqualTo(UPDATED_NICKNAME);
         assertThat(updatedUser.getNotifyEmail()).isEqualTo(UPDATED_NOTIFY_EMAIL);
     }
 

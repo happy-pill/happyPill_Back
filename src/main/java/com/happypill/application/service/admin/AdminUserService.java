@@ -121,7 +121,7 @@ public class AdminUserService {
     }
 
     private void updateNickname(HappypillUser user, AdminUserUpdateRequest request){
-        String newNickname = request.nickName();
+        String newNickname = request.nickname();
         if(newNickname != null && !newNickname.isBlank()){
             user.changeUser(newNickname);
         }

@@ -20,7 +20,7 @@ public record AdminUserDetailResponse(
         return new AdminUserDetailResponse(
                 user.getId().toString(),
                 user.getLoginEmail(),
-                user.getNickName(),
+                user.getNickname(),
                 user.getNotifyEmail(),
                 user.getProvider(),
                 user.getCreatedAt(),

@@ -1,6 +1,5 @@
 package com.happypill.application.repository.happypilluser;
 
-import com.happypill.application.entity.enums.Language;
 import com.happypill.application.service.admin.response.AdminUserListResponse;
 import com.happypill.application.service.admin.response.QAdminUserListResponse;
 import com.querydsl.core.BooleanBuilder;
@@ -26,14 +25,14 @@ public class HappypillUserRepositoryImpl implements HappypillUserRepositoryCusto
         BooleanBuilder keywordBuilder = new BooleanBuilder();
 
         if(keyword != null && !keyword.isBlank()) {
-            keywordBuilder.or(happypillUser.nickName.containsIgnoreCase(keyword));
+            keywordBuilder.or(happypillUser.nickname.containsIgnoreCase(keyword));
             keywordBuilder.or(happypillUser.loginEmail.containsIgnoreCase(keyword));
         }
 
         List<AdminUserListResponse> content = jpaQueryFactory
                 .select(new QAdminUserListResponse(
                         happypillUser.id.stringValue(),
-                        happypillUser.nickName,
+                        happypillUser.nickname,
                         happypillUser.loginEmail,
                         happypillUser.provider,
                         happypillUser.createdAt,
