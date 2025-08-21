@@ -315,7 +315,7 @@ public class DataInitialiser implements ApplicationRunner {
         productInfoRepository.saveAll(productInfoList);
         productPriceRepository.saveAll(productPriceList);
 
-        generateDevData();
+        //generateDevData();
 
         createBestProduct(productList.subList(0, 10));
     }

@@ -27,7 +27,7 @@ public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
     public Page<AdminCategoryListResponse> searchCategoriesByKeyword(Pageable pageable, Language language, String keyword) {
         BooleanBuilder keyBuilder = new BooleanBuilder();
 
-        if(keyword != null && !keyword.isBlank()) {
+        if (keyword != null && !keyword.isBlank()) {
             keyBuilder.or(categoryInfo.name.containsIgnoreCase(keyword));
         }
 
@@ -38,7 +38,7 @@ public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
                         categoryInfo.description,
                         category.thumbnailUrl,
                         category.bannerUrl,
-                        product.count().intValue()
+                        product.count().intValue() // 카테고리별 상품 개수
                 ))
                 .from(category)
                 .join(categoryInfo)
@@ -46,12 +46,15 @@ public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
                         categoryInfo.language.eq(language)
                                 .and(categoryInfo.category.id.eq(category.id))
                 )
-                .join(product)
-                .on(
-                        product.category.id.eq(category.id)
-                )
-                .where(
-                        keyBuilder
+                .leftJoin(product)
+                .on(product.category.id.eq(category.id))
+                .where(keyBuilder)
+                .groupBy(
+                        category.id,
+                        categoryInfo.name,
+                        categoryInfo.description,
+                        category.thumbnailUrl,
+                        category.bannerUrl
                 )
                 .orderBy(category.id.desc())
                 .offset(pageable.getOffset())
@@ -59,18 +62,17 @@ public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
                 .fetch();
 
         Long total = jpaQueryFactory
-                    .select(category.count())
-                    .from(category)
-                    .join(categoryInfo)
-                    .on(
+                .select(category.id.countDistinct())
+                .from(category)
+                .join(categoryInfo)
+                .on(
                         categoryInfo.language.eq(language)
-                        .and(categoryInfo.category.id.eq(category.id))
-                    )
-                    .where(
-                        keyBuilder
-                    )
-                    .fetchOne();
+                                .and(categoryInfo.category.id.eq(category.id))
+                )
+                .where(keyBuilder)
+                .fetchOne();
 
         return new PageImpl<>(content, pageable, total != null ? total : 0L);
     }
+
 }
